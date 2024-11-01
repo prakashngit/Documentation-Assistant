@@ -2,6 +2,14 @@
 
 A Python application that enables conversational interaction with ReadTheDocs documentation using Retrieval-Augmented Generation (RAG). While demonstrated using Gramine SGX's documentation (included by default), the application can work with any ReadTheDocs content that has been locally scraped. The system features history-aware retrieval, allowing for natural follow-up questions and maintaining conversation context.
 
+
+This project is part of the exercises for the LangChain- Develop LLM powered applications with LangChain course by Eden Marco, and is available via Udemy [here](https://www.udemy.com/course/langchain/learn/). See Section 6 in the course for Marco's version of the project. The main differences are:
+-  I use Ollama instead of OpenAI for the embeddings
+-  I use Chroma instead of PineCone for the vector store
+-  I have ReadTheDocs of Gramine SGX instead of Langchain for illustration. 
+
+For anyone looking to learn LangChain, I highly recommend Marco's course!
+
 ## Features
 - ReadTheDocs documentation ingestion and embedding storage
 - Context-aware chat interface that maintains conversation history
