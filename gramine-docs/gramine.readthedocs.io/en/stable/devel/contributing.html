@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing to Gramine &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Onboarding" href="onboarding.html" />
+    <link rel="prev" title="is-sgx-available – Check environment for SGX compatibility" href="../manpages/is-sgx-available.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/contributing", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/contributing.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="contributing.html#">Contributing to Gramine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#reporting-bugs">Reporting Bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#reporting-security-vulnerabilities">Reporting Security Vulnerabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#architectural-changes">Architectural Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#branch-names">Branch Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#pull-requests">Pull Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pr-life-cycle">PR Life Cycle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pr-merging-policy">PR Merging Policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#reviewing-guidelines">Reviewing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#style-guidelines">Style Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#copyrights-and-licenses">Copyrights and Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#running-regression-tests-by-hand">Running Regression Tests by Hand</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#ltp">LTP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing to Gramine</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/contributing.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="contributing-to-gramine">
+<h1>Contributing to Gramine<a class="headerlink" href="contributing.html#contributing-to-gramine" title="Permalink to this headline"></a></h1>
+<p>First off, thank you for your interest in contributing to Gramine!</p>
+<p>In general, code contributions should be submitted to the Gramine project
+using a <a class="reference external" href="https://github.com/gramineproject/gramine/pulls">pull request</a>.</p>
+<p>To learn more about the knowledge required to start contributing to this project
+as well as some advice on contributing high-quality PRs, read through <a class="reference external" href="https://gramine.readthedocs.io/en/latest/devel/onboarding.html">the
+onboarding guide</a>.</p>
+<section id="reporting-bugs">
+<h2>Reporting Bugs<a class="headerlink" href="contributing.html#reporting-bugs" title="Permalink to this headline"></a></h2>
+<p>In order to report a problem, please open an issue in the <a class="reference external" href="https://github.com/gramineproject/gramine/issues">issue tracker</a>.</p>
+</section>
+<section id="reporting-security-vulnerabilities">
+<h2>Reporting Security Vulnerabilities<a class="headerlink" href="contributing.html#reporting-security-vulnerabilities" title="Permalink to this headline"></a></h2>
+<p>Please report security issues to <a class="reference external" href="mailto:security&#37;&#52;&#48;gramineproject&#46;io">security<span>&#64;</span>gramineproject<span>&#46;</span>io</a>.</p>
+</section>
+<section id="architectural-changes">
+<h2>Architectural Changes<a class="headerlink" href="contributing.html#architectural-changes" title="Permalink to this headline"></a></h2>
+<p>Major reorganizations, architectural changes, or code reorganization are best
+discussed with the maintainers in advance of writing code. We welcome
+contributions, and would hate for anyone to waste time implementing a change
+that will not be accepted for a design flaw. It is much better to reach out for
+advice first by emailing <a class="reference external" href="mailto:devel&#37;&#52;&#48;gramineproject&#46;io">devel<span>&#64;</span>gramineproject<span>&#46;</span>io</a>.</p>
+<p>Or you can see the archives at this google group:
+<a class="reference external" href="https://groups.google.com/g/gramine-devel">https://groups.google.com/g/gramine-devel</a></p>
+<p>Please verify that your change doesn’t introduce any insecure-by-default
+functionality. If an option allows users to introduce a security risk, the
+option should have a name prefixed with <code class="docutils literal notranslate"><span class="pre">insecure__</span></code> and be disabled by
+default. All new insecure options must be added to the Linux-SGX PAL function
+<code class="docutils literal notranslate"><span class="pre">print_warnings_on_insecure_configs()</span></code>.</p>
+<p>Simple bugfixes need not have advance discussion, but we welcome queries from
+newcomers.</p>
+</section>
+<section id="branch-names">
+<h2>Branch Names<a class="headerlink" href="contributing.html#branch-names" title="Permalink to this headline"></a></h2>
+<p>For work in progress (for team members), please use your name/userid as
+a prefix in the branch name.  For example, if user <code class="docutils literal notranslate"><span class="pre">jane</span></code> is adding
+feature <code class="docutils literal notranslate"><span class="pre">foo</span></code>, the branch should be named: <code class="docutils literal notranslate"><span class="pre">jane/foo</span></code>.</p>
+<p>For new contributors, the branch will likely be on a fork of the
+repository.</p>
+<p>Otherwise, branches without this prefix should only be created for
+a specific purpose, as approved by the maintainers.</p>
+</section>
+<section id="pull-requests">
+<h2>Pull Requests<a class="headerlink" href="contributing.html#pull-requests" title="Permalink to this headline"></a></h2>
+<p>The primary mechanism for submitting code changes is with a pull request (PR).</p>
+<p>In general, a PR should:</p>
+<ol class="arabic simple">
+<li><p>Address a single problem.</p></li>
+<li><p>Clearly explain the problem and solution in the PR and commit messages, using
+grammatically correct American English.</p></li>
+<li><p>Include unit tests for the new behavior or bugfix, except in special
+circumstances, namely: when designing a unit test is difficult (e.g., the
+code is deep enough in Gramine that it would require extra hooks for
+testing) or cannot be easily tested (e.g., a performance fix).</p></li>
+<li><p>Follow project’s <a class="reference external" href="https://gramine.readthedocs.io/en/latest/devel/coding-style.html">style guidelines</a>.</p></li>
+<li><p>Be signed-off by the author of the PR in git (i.e., using the <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-s</span></code>, indicating
+that the authors are agreeing to the terms of the <a class="reference external" href="DCO.html">project Developer
+Certificate of Origin</a></p></li>
+</ol>
+<section id="pr-life-cycle">
+<h3>PR Life Cycle<a class="headerlink" href="contributing.html#pr-life-cycle" title="Permalink to this headline"></a></h3>
+<p>We use git-rebase workflow and Reviewable.io for reviews.</p>
+<p>TL;DR: Merge commits are never allowed and force-pushes are not allowed after a
+review has started. Before merging, commits will be cleaned up, rebased onto the
+current master and tested again in CI.</p>
+<p>Detailed explanation:</p>
+<ol class="arabic simple">
+<li><p>A PR is created. If the authors know a good candidate for the review (e.g.,
+the author of the specific component) they should assign a suggested reviewer
+on GitHub.</p></li>
+<li><p>From this point on the branch is public, which means that one should ask
+reviewers’ permission before doing a force-push.</p></li>
+<li><p>Reviewers shouldn’t push commits to the PR, only the authors are allowed to
+do so.</p></li>
+<li><p>Reviewers add comments to the changes using Reviewable.io integration.</p></li>
+<li><p>The author discusses the remarks and implements fixes in separate commits
+(ideally, using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">--fixup</span></code>). Loop to point 4. until the PR is
+approved (see <a class="reference internal" href="contributing.html#merging-policy"><span class="std std-ref">PR Merging Policy</span></a>).</p></li>
+<li><p>One of the maintainers squashes fix-up commits with original ones, rebases
+the branch onto the current master and force-pushes the branch to GitHub to
+share.</p></li>
+</ol>
+</section>
+<section id="pr-merging-policy">
+<span id="merging-policy"></span><h3>PR Merging Policy<a class="headerlink" href="contributing.html#pr-merging-policy" title="Permalink to this headline"></a></h3>
+<p>Before a pull request is merged, it must:</p>
+<ol class="arabic">
+<li><p>Pass all CI tests</p></li>
+<li><p>Follow project’s <a class="reference external" href="https://gramine.readthedocs.io/en/latest/devel/coding-style.html">style guidelines</a>.</p></li>
+<li><p>Be signed-off by the contributor.</p></li>
+<li><p>Introduce no new compilation errors or warnings</p></li>
+<li><p>Have all discussions from reviewers resolved</p></li>
+<li><p>Have a clear, concise and grammatically correct comments and commit messages.</p></li>
+<li><p>Have a quorum of approving reviews from maintainers and/or waited an
+appropriate amount of time. This can be:</p>
+<ul class="simple">
+<li><p>3 approving maintainers</p></li>
+<li><p>2 approving maintainers and 5 days since the PR was created</p></li>
+</ul>
+<p>If the author is a maintainer the limits are lowered by 1.</p>
+</li>
+</ol>
+<p>Additional reviews from anyone are welcome.</p>
+</section>
+<section id="reviewing-guidelines">
+<h3>Reviewing Guidelines<a class="headerlink" href="contributing.html#reviewing-guidelines" title="Permalink to this headline"></a></h3>
+<ol class="arabic simple">
+<li><p>All commits must be atomic (i.e., no unrelated changes in the same commit, no
+formatting fixes mixed with features, no moving files and changing them at
+the same time).</p></li>
+<li><p>Meaningful commit messages (it’s much easier to get them right if commits are
+really atomic). Should include which component was changed (PAL-{Linux,SGX}
+/ LibOS / Docs / CI) in the format “[component] change description”.</p></li>
+<li><p>Every PR description should include: what’s the purpose of the changes, what
+is changed (and how, in case of redesigning a component), and how to test the
+changes.</p></li>
+<li><p>Is it possible to implement this change in a significantly better way?</p></li>
+<li><p>It’s C, so check for common problems: correct buffer sizes, integer
+overflows, memory leaks, violations of pointer ownership etc.</p></li>
+<li><p>Verify if all macro parameters are used with additional parentheses.</p></li>
+<li><p>Check for race conditions.</p></li>
+<li><p>Check if all errors are checked and properly handled.</p></li>
+<li><p>Suggest adding assertions (if appropriate). Especially for ensuring
+invariants after a complex operation.</p></li>
+<li><p>Check for possibilities of undefined behaviours (e.g. signed overflow).</p></li>
+<li><p>If the PR fixed a bug, there should be a regression test included in the
+change. The commit containing it should be committed before the fix, so the
+reviewer can easily run it before and after the fix.</p></li>
+<li><p>Code style must follow our guidelines (see below).</p></li>
+</ol>
+</section>
+<section id="style-guidelines">
+<h3>Style Guidelines<a class="headerlink" href="contributing.html#style-guidelines" title="Permalink to this headline"></a></h3>
+<p>See <a class="reference external" href="https://gramine.readthedocs.io/en/latest/devel/coding-style.html">style guidelines</a>.</p>
+</section>
+<section id="copyrights-and-licenses">
+<h3>Copyrights and Licenses<a class="headerlink" href="contributing.html#copyrights-and-licenses" title="Permalink to this headline"></a></h3>
+<p>All new contributions should be licensed under LGPL-3.0-or-later. All source
+files should include a license notice in <a class="reference external" href="https://spdx.org/licenses/">SPDX format</a>. If you modified a significant portion of a
+file then you should also add an entry to the list of per-file copyright
+notice. Please keep in mind that this list is only a courtesy notice for the
+readers with a rough summary of the copyrights. Because it’s just a summary, we
+inlude only the year of the most recent copyrighted modification to the file
+(to know when all the copyright claims from a specific owner expire).</p>
+</section>
+</section>
+<section id="running-regression-tests-by-hand">
+<span id="running-regression-tests"></span><h2>Running Regression Tests by Hand<a class="headerlink" href="contributing.html#running-regression-tests-by-hand" title="Permalink to this headline"></a></h2>
+<p>All of our regression tests are automated in Jenkins jobs (see the Jenkinsfiles
+directory), and this is the ultimate documentation for application-level
+regression tests, although most tests can be run with <strong class="command">gramine-test</strong>,
+or, in the worst case, should have a simple script called by Jenkins.</p>
+<p>We also have (and are actively growing) PAL and LibOS unit tests.</p>
+<p>In order to run tests, Gramine must be installed. The test binaries, which are
+also built by Meson, must be installed as well. To do that, configure your build
+directory with <code class="docutils literal notranslate"><span class="pre">-Dtests=enabled</span></code> and install Gramine:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># add -Dsgx=enabled and SGX options if necessary</span>
+meson<span class="w"> </span>setup<span class="w"> </span>build/<span class="w"> </span>--werror<span class="w"> </span>-Dtests<span class="o">=</span>enabled<span class="w"> </span>-Ddirect<span class="o">=</span>enabled
+
+ninja<span class="w"> </span>-C<span class="w"> </span>build/
+sudo<span class="w"> </span>ninja<span class="w"> </span>-C<span class="w"> </span>build/<span class="w"> </span>install
+</pre></div>
+</div>
+<p>To run the PAL tests:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>pal/regression
+gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v
+</pre></div>
+</div>
+<p>For SGX, one needs to do the following:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>pal/regression
+gramine-test<span class="w"> </span>--sgx<span class="w"> </span>pytest<span class="w"> </span>-v
+</pre></div>
+</div>
+<p>It is also possible to run a subset of tests:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span>TC_01_Bootstrap
+gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span>test_100_basic_boostrapping
+</pre></div>
+</div>
+<p>The <strong class="command">gramine-test pytest</strong> command is a wrapper for <a class="reference external" href="https://docs.pytest.org/en/stable/usage.html">pytest</a> and accepts the same
+command-line options.</p>
+<p>It is also possible to run a single test binary without the Python harness:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-test<span class="w"> </span>run<span class="w"> </span>Bootstrap
+</pre></div>
+</div>
+<p>or build a manifest and then run the binary directly:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-test<span class="w"> </span>build<span class="w"> </span>Bootstrap
+gramine-direct<span class="w"> </span>Bootstrap
+</pre></div>
+</div>
+<p>For more information, run <strong class="command">gramine-test --help</strong> and
+<strong class="command">gramine-test &lt;command&gt; --help</strong>.</p>
+<p>The LibOS unit tests work similarly, and are under
+<code class="file docutils literal notranslate"><span class="pre">libos/test/regression</span></code>.</p>
+<section id="ltp">
+<h3>LTP<a class="headerlink" href="contributing.html#ltp" title="Permalink to this headline"></a></h3>
+<p>Gramine passes a subset of the LTP tests. New changes should not break
+currently passing LTP tests (and, ideally, might add new passing tests). LTP is
+currently tested only on the Linux PAL; it may or may not work on Linux-SGX PAL.</p>
+<p>To run these tests:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>libos/test/ltp
+<span class="c1"># consider -j$(nproc) or similar to parallelize and improve the build time.</span>
+make
+make<span class="w"> </span>regression
+<span class="c1"># or run an individual test by name:</span>
+python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span>chmod01
+</pre></div>
+</div>
+<p>For more information on how to run the ltp tests, please refer to
+<code class="file docutils literal notranslate"><span class="pre">libos/test/ltp/README.rst</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../manpages/is-sgx-available.html" class="btn btn-neutral float-left" title="is-sgx-available – Check environment for SGX compatibility" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="onboarding.html" class="btn btn-neutral float-right" title="Onboarding" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

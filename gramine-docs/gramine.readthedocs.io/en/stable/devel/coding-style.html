@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coding style guidelines &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to write documentation" href="howto-doc.html" />
+    <link rel="prev" title="Development setup" href="setup.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/coding-style", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/coding-style.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="coding-style.html#">Coding style guidelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="coding-style.html#automatic-reformatting">Automatic reformatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding-style.html#c">C</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="coding-style.html#code-formatting">Code formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coding-style.html#conventions-and-high-level-style">Conventions and high-level style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="coding-style.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding-style.html#meson">Meson</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Coding style guidelines</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/coding-style.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="coding-style-guidelines">
+<h1>Coding style guidelines<a class="headerlink" href="coding-style.html#coding-style-guidelines" title="Permalink to this headline"></a></h1>
+<p>This document describes coding conventions and formatting styles we use in
+Gramine. All newly committed code must conform to them to pass a review.</p>
+<section id="automatic-reformatting">
+<h2>Automatic reformatting<a class="headerlink" href="coding-style.html#automatic-reformatting" title="Permalink to this headline"></a></h2>
+<p>To make formatting easier we’ve added an integration with
+<strong class="program">clang-format</strong> (currently only for C code). You must install
+appropriate package from your distribution to use it. For Ubuntu 18.04 you can
+setup it this way:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>clang-format
+</pre></div>
+</div>
+<p>Usage: (assuming you’ve configured your build into <code class="docutils literal notranslate"><span class="pre">build</span></code> directory)</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ninja<span class="w"> </span>-C<span class="w"> </span>build/<span class="w"> </span>clang-format
+</pre></div>
+</div>
+<p>This command <strong>reformats all source files in-place</strong>, so we recommend you first
+commit them (or add to <a class="reference external" href="https://hackernoon.com/understanding-git-index-4821a0765cf">git index</a> with
+<strong class="command">git add -A</strong>), reformat and then verify reformatting results using
+<strong class="command">git diff</strong> (or <strong class="command">git diff --cached</strong> if you used <strong class="command">git
+add</strong>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Because of bugs in clang-format and its questionable reformats in many places
+(seems it deals with C++ much better than with C) it’s intended only as a helper tool. Adding it to git pre-commit hooks is definitely a bad idea,
+at least currently.</p>
+</aside>
+</section>
+<section id="c">
+<h2>C<a class="headerlink" href="coding-style.html#c" title="Permalink to this headline"></a></h2>
+<p>We use a style derived (and slightly modified) from <a class="reference external" href="https://google.github.io/styleguide/cppguide.html">Google C++ Styleguide</a>.</p>
+<section id="code-formatting">
+<h3>Code formatting<a class="headerlink" href="coding-style.html#code-formatting" title="Permalink to this headline"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See our <code class="file docutils literal notranslate"><span class="pre">.clang-format</span></code> config for precise rules.</p>
+</aside>
+<ol class="arabic">
+<li><p>Indentation: 4 spaces per level.</p></li>
+<li><p>Maximal line length: 100 characters.</p></li>
+<li><p>Brace placement:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">something</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if-else</span></code> formatting:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Asterisks (<code class="docutils literal notranslate"><span class="pre">*</span></code>) should be placed on the left, with the type. Multiple
+pointer declarations in one line are disallowed. Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">pointer</span><span class="p">;</span>
+<span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">another_pointer</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">non_pointer_a</span><span class="p">,</span><span class="w"> </span><span class="n">non_pointer_b</span><span class="p">,</span><span class="w"> </span><span class="n">non_pointer_c</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Function call/declaration folding: aligned to a matching parenthesis.
+Required only if the one-line version would exceed the line length limit.
+Examples:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">many_args</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">something_looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong</span><span class="p">,</span>
+<span class="w">              </span><span class="kt">int</span><span class="w"> </span><span class="n">also_looooooong</span><span class="p">,</span>
+<span class="w">              </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">many_args</span><span class="p">(</span><span class="n">some_looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong_calculations</span><span class="p">,</span>
+<span class="w">          </span><span class="n">many_args</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">also_looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong</span><span class="p">,</span>
+<span class="w">                    </span><span class="mi">789</span><span class="p">),</span>
+<span class="w">          </span><span class="n">many_args</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">));</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span></code>, <code class="docutils literal notranslate"><span class="pre">else</span></code>, <code class="docutils literal notranslate"><span class="pre">do</span></code>, <code class="docutils literal notranslate"><span class="pre">for</span></code>, <code class="docutils literal notranslate"><span class="pre">while</span></code>, <code class="docutils literal notranslate"><span class="pre">switch</span></code> and <code class="docutils literal notranslate"><span class="pre">union</span></code> should
+be followed by a space.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">once</span></code> for include guards.</p></li>
+<li><p>Includes should be grouped and then sorted lexicographically. Groups should
+be separated using a single empty line.</p>
+<p>Groups:</p>
+<ol class="arabic simple">
+<li><p>Standard library headers.</p></li>
+<li><p>Non-standard headers not included in Gramine’s repository (e.g. from
+external dependencies, like <code class="file docutils literal notranslate"><span class="pre">curl.h</span></code>).</p></li>
+<li><p>Gramine’s headers (including matching <code class="file docutils literal notranslate"><span class="pre">.h</span></code> header for <code class="file docutils literal notranslate"><span class="pre">.c</span></code>
+files).</p></li>
+</ol>
+</li>
+<li><p>Assignments may be aligned when assigning some structurized data (e.g. struct
+members). Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">some_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">asdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="n">file</span><span class="o">-&gt;</span><span class="n">size</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+<span class="n">file</span><span class="o">-&gt;</span><span class="n">full_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/asdf/ghjkl&quot;</span><span class="p">;</span>
+<span class="n">file</span><span class="o">-&gt;</span><span class="n">perms</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">PERM_rw_r__r__</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="conventions-and-high-level-style">
+<h3>Conventions and high-level style<a class="headerlink" href="coding-style.html#conventions-and-high-level-style" title="Permalink to this headline"></a></h3>
+<ol class="arabic">
+<li><p>Variable and function names should be sane and easy to understand (example:
+<code class="docutils literal notranslate"><span class="pre">nofpts</span></code> is bad, <code class="docutils literal notranslate"><span class="pre">points_cnt</span></code> is ok). The names <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>, <code class="docutils literal notranslate"><span class="pre">k</span></code> etc.
+should be limited to integers used as array indexes.</p></li>
+<li><p>All non-static function interfaces should be documented in comments
+(especially pointer ownerships). Same for public macros.</p></li>
+<li><p>Prefer readable code and meaningful variable/function names to explaining
+implementation details in comments within a function. Only tricky or
+unintuitive code should be commented.</p></li>
+<li><p>Inline comments should be separated from code (or macros) with one space.</p></li>
+<li><p>Magic numbers (e.g. buffer sizes) shouldn’t be hardcoded in the
+implementation. Use <code class="docutils literal notranslate"><span class="pre">#define</span></code>.</p></li>
+<li><p>Naming:</p>
+<ol class="arabic simple">
+<li><p>Macros and global constants should be <code class="docutils literal notranslate"><span class="pre">NAMED_THIS_WAY</span></code>.</p></li>
+<li><p>Functions, structures and variables should be <code class="docutils literal notranslate"><span class="pre">named_this_way</span></code>.</p></li>
+<li><p>Global variables should be prefixed with <code class="docutils literal notranslate"><span class="pre">g_</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">g_thread_list</span></code>).</p></li>
+<li><p>“size” always means size in bytes, “length” (or “count”) means the number
+of elements (e.g. in an array, or characters in a C-string, excluding the
+terminating null byte).</p></li>
+</ol>
+</li>
+<li><p>Types:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>All in-memory sizes and array indexes should be stored using <code class="docutils literal notranslate"><span class="pre">size_t</span></code>.</p></li>
+<li><p>All file offsets and sizes should be stored using <code class="docutils literal notranslate"><span class="pre">file_off_t</span></code>.</p></li>
+<li><p>In general, C99 types should be used where possible (although some code
+is “grandfathered” in, it should also be changed as time allows).</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">goto</span></code> may be used only for error handling.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Yoda_conditions">Yoda conditions</a>
+(e.g. <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(42</span> <span class="pre">==</span> <span class="pre">x)</span></code>) or any other similar constructions are not allowed.</p></li>
+<li><p>Prefer <code class="docutils literal notranslate"><span class="pre">sizeof(instance)</span></code> to <code class="docutils literal notranslate"><span class="pre">sizeof(type)</span></code>, it’s less error-prone.</p></li>
+</ol>
+</section>
+</section>
+<section id="python">
+<h2>Python<a class="headerlink" href="coding-style.html#python" title="Permalink to this headline"></a></h2>
+<ol class="arabic">
+<li><p>Executable Python scripts must use the shebang with the hardcoded path to
+system Python (e.g., <code class="docutils literal notranslate"><span class="pre">#!/usr/bin/python3</span></code>). This is required because custom
+Python installations (“custom” meaning not provided by distro) lead to a
+problem where packages installed via e.g. <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span></code> are not available
+to this custom Python. If Python scripts would use the <code class="docutils literal notranslate"><span class="pre">#!/usr/bin/env</span>
+<span class="pre">python3</span></code> shebang, Gramine would not be able to locate system-wide-installed
+Python packages.</p>
+<p>Since Gramine currently supports only Debian/Ubuntu and RHEL/AlmaLinux/Fedora
+distros, the shebang must always be <code class="docutils literal notranslate"><span class="pre">#!/usr/bin/python3</span></code>.</p>
+</li>
+</ol>
+</section>
+<section id="meson">
+<h2>Meson<a class="headerlink" href="coding-style.html#meson" title="Permalink to this headline"></a></h2>
+<ol class="arabic">
+<li><p>4-space indent, no tabs. Wrap lines at ~80-100 columns except for unbreakable
+things like URLs.</p></li>
+<li><p>First argument to target functions (<code class="docutils literal notranslate"><span class="pre">shared_library</span></code>, <code class="docutils literal notranslate"><span class="pre">executable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">custom_target</span></code>, …) should be on the same line as opening paren. All
+other arguments should be on next lines, aligned to 4-space indent.</p>
+<p>Arguments to other functions should either be all on the same line, or there
+should be no argument on the same line as opening paren, and arguments should
+be in following lines, indented by 4 spaces.</p>
+</li>
+<li><p>Otherwise, whitespace should generally follow PEP8 instead of meson suggested
+style (i.e., no space inside parens, no space before <code class="docutils literal notranslate"><span class="pre">:</span></code>).</p></li>
+<li><p>No changing (overwriting) variables in different <code class="file docutils literal notranslate"><span class="pre">meson.build</span></code> than it
+was defined in. If you really need to do this, create a temporary variable
+in subdir and use it in the parent <code class="file docutils literal notranslate"><span class="pre">meson.build</span></code>. You can check
+<code class="docutils literal notranslate"><span class="pre">libos_sources_arch</span></code> in <code class="file docutils literal notranslate"><span class="pre">libos/src/meson.build</span></code> for example usage of
+this pattern (appending arch-specific source files to a list).</p></li>
+<li><p>Variables named <code class="docutils literal notranslate"><span class="pre">_prog</span></code> refer to things obtained from <code class="docutils literal notranslate"><span class="pre">find_program()</span></code>.
+Auxiliary commands should reside in <code class="docutils literal notranslate"><span class="pre">scripts/</span></code>, and the variable name is
+tied to the script name (see <code class="file docutils literal notranslate"><span class="pre">meson.build</span></code> there). The scripts should
+be written in Python except for things that clearly benefit from being
+written in <code class="docutils literal notranslate"><span class="pre">sh</span></code>.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup.html" class="btn btn-neutral float-left" title="Development setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="howto-doc.html" class="btn btn-neutral float-right" title="How to write documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

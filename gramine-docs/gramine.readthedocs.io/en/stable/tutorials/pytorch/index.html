@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyTorch PPML Framework Tutorial &mdash; Gramine  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Confidential Computing Zoo project" href="../cczoo/index.html" />
+    <link rel="prev" title="Tutorials" href="../../tutorials-index.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "tutorials/pytorch/index", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/tutorials/pytorch/index.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../tutorials-index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="index.html#">PyTorch PPML Framework Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#executing-native-pytorch">Executing Native PyTorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#executing-pytorch-with-gramine">Executing PyTorch with Gramine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="index.html#executing-pytorch-with-non-sgx-gramine">Executing PyTorch with non-SGX Gramine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#executing-pytorch-with-gramine-in-sgx-enclave">Executing PyTorch with Gramine in SGX Enclave</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#end-to-end-confidential-pytorch-workflow">End-To-End Confidential PyTorch Workflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="index.html#background-on-remote-attestation-ra-tls-and-secret-provisioning">Background on Remote Attestation, RA-TLS and Secret Provisioning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#background-on-encrypted-files">Background on Encrypted Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#preparing-confidential-pytorch-example">Preparing Confidential PyTorch Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#preparing-input-files">Preparing Input Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#preparing-secret-provisioning">Preparing Secret Provisioning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#preparing-manifest-file">Preparing Manifest File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#building-and-executing-end-to-end-pytorch-example">Building and Executing End-To-End PyTorch Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#decrypting-output-file">Decrypting Output File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#cleaning-up">Cleaning Up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cczoo/index.html">Confidential Computing Zoo project</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../tutorials-index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">PyTorch PPML Framework Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/tutorials/pytorch/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="pytorch-ppml-framework-tutorial">
+<h1>PyTorch PPML Framework Tutorial<a class="headerlink" href="index.html#pytorch-ppml-framework-tutorial" title="Permalink to this headline"></a></h1>
+<p>This tutorial presents a framework for developing PPML (Privacy-Preserving
+Machine Learning) applications with Intel SGX and Gramine. We use <a class="reference external" href="https://pytorch.org">PyTorch</a> as an example ML framework. However, this tutorial can
+be applied to other ML frameworks like OpenVINO, TensorFlow, etc.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="index.html#introduction" title="Permalink to this headline"></a></h2>
+<p>Machine Learning (ML) is increasingly utilized in many real-world applications.
+ML algorithms are first trained on massive amounts of known past data and then
+deployed to interpret unknown future data, which allows us to forecast weather,
+classify images, recommend content, and so on.</p>
+<p>As machine learning pervades our daily lives, privacy concerns emerge as one of
+the key issues about this technology. In this tutorial, we focus on protecting
+the confidentiality and integrity of the input data when the computation takes
+place on an untrusted platform such as a public cloud virtual machine. We also
+protect the model for cases where the model owner is concerned about protecting
+their IP. In particular, we highlight how to build the PPML framework based on
+PyTorch in an untrusted cloud using Intel SGX and Gramine.</p>
+<a class="reference external image-reference" href="https://gramine.readthedocs.io/en/stable/tutorials/pytorch/img/intro-01.svg"><img alt="Figure: Training and inference in ML workloads" src="../../_images/intro-01.svg" /></a>
+<p>In general, ML workloads have two phases: training and inference. Both can be
+viewed as an application that takes inputs and produces an output. Training
+applications take a training dataset as input and produce a trained model.
+Inference applications take new data and the trained model as inputs and produce
+the result (the prediction).</p>
+<p>The goal of this tutorial is to show how these applications – PyTorch workloads
+in particular – can run in an untrusted environment (like a public cloud),
+while still ensuring the confidentiality and integrity of sensitive input data
+and the model. To this end, we use Intel SGX enclaves to isolate PyTorch’s
+execution to protect data confidentiality and integrity, and to provide a
+cryptographic proof that the program is correctly initialized and running on
+legitimate hardware with the latest patches. We also use Gramine to simplify
+the task of porting PyTorch to SGX, without any changes to the ML application
+and scripts.</p>
+<a class="reference external image-reference" href="https://gramine.readthedocs.io/en/stable/tutorials/pytorch/img/workflow.svg"><img alt="Figure: Complete workflow of PyTorch with Gramine" src="../../_images/workflow.svg" /></a>
+<p>In this tutorial, we will show the complete workflow for PyTorch running inside
+an SGX enclave using Gramine and its features of Secret Provisioning and
+Encrypted Files. We rely on the ECDSA/DCAP remote attestation scheme developed
+by Intel for untrusted cloud environments.</p>
+<p>To run the PyTorch application on a particular SGX platform, the owner of the
+SGX platform must retrieve the corresponding SGX certificate from the Intel
+Provisioning Certification Service, along with Certificate Revocation Lists
+(CRLs) and other SGX-identifying information (1). Typically, this is a part of
+provisioning the SGX platform in a cloud or a data center environment, and the
+end user can access it as a service (in other words, the end user doesn’t need
+to deal with the details of this SGX platform provisioning but instead uses a
+simpler interface provided by the cloud/data center vendor).</p>
+<p>As a second preliminary step, the user must encrypt the input and model files
+with her encryption key and send these encrypted files to the remote
+storage accessible from the SGX platform (2).</p>
+<p>Next, the remote platform starts PyTorch inside of the SGX enclave. Meanwhile,
+the user starts the secret provisioning application on her own machine. The two
+machines establish a TLS connection using RA-TLS (3), the user verifies that the
+remote platform has a genuine up-to-date SGX processor and that the application
+runs in a genuine SGX enclave (4), and finally provisions the encryption key to
+this remote platform (5).</p>
+<p>After the encryption key is provisioned, the remote platform may start
+executing the application. Gramine uses Encrypted FS to transparently decrypt
+the input and the model files using the provisioned key when the PyTorch
+application starts (6). The application then proceeds with execution on
+plaintext files (7). When the PyTorch script is finished, the output file is
+encrypted with the same encryption key and saved to the cloud provider’s file
+storage (8). At this point, the encrypted output may be forwarded to the remote
+user who will decrypt it and analyze its contents.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="index.html#prerequisites" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Ubuntu 20.04. This tutorial should work on other Linux distributions as well,
+but for simplicity we provide the steps for Ubuntu 20.04 only.</p></li>
+<li><p>PyTorch (Python3). PyTorch is a framework for machine learning based on
+Python. Please <a class="reference external" href="https://pytorch.org/get-started/locally/">install PyTorch</a>
+before you proceed (don’t forget to choose Linux as the target OS and CPU as
+the compute platform).</p></li>
+<li><p>Gramine v1.5, with DCAP support. DCAP software infrastructure must also be
+installed.</p></li>
+</ul>
+</section>
+<section id="executing-native-pytorch">
+<h2>Executing Native PyTorch<a class="headerlink" href="index.html#executing-native-pytorch" title="Permalink to this headline"></a></h2>
+<p>We start with a very simple example script written in Python3 for PyTorch-based
+ML inferencing. Gramine already provides a minimalistic and <em>insecure</em> <a class="reference external" href="https://github.com/gramineproject/examples/tree/master/pytorch">PyTorch
+example</a>
+which does not have confidentiality guarantees for input/output files and does
+not use remote attestation. In this tutorial, we will use this existing PyTorch
+example as a basis and will improve it to protect all user files.</p>
+<p>Go to the directory with Gramine’s PyTorch example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>--branch<span class="w"> </span>v1.5<span class="w"> </span>https://github.com/gramineproject/examples.git
+<span class="nb">cd</span><span class="w"> </span>examples/pytorch
+</pre></div>
+</div>
+<p>The directory contains a Python script <code class="docutils literal notranslate"><span class="pre">pytorchexample.py</span></code> and other relevant
+files. The script reads a <a class="reference external" href="https://pytorch.org/hub/pytorch_vision_alexnet/">pretrained AlexNet model</a> and an image <code class="docutils literal notranslate"><span class="pre">input.jpg</span></code>,
+and infers the class of an object in the image. Then, the script writes the
+top-5 classification results to a file <code class="docutils literal notranslate"><span class="pre">result.txt</span></code>.</p>
+<p>We first download and save the pre-trained AlexNet model:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>download-pretrained-model.py
+</pre></div>
+</div>
+<p>This command uses the <code class="docutils literal notranslate"><span class="pre">download-pretrained-model.py</span></code> script to download a
+pretrained model and save it as a serialized file <code class="docutils literal notranslate"><span class="pre">alexnet-pretrained.pt</span></code>.
+See <a class="reference external" href="https://pytorch.org/tutorials/beginner/saving_loading_models.html">Saving and Loading Models in PyTorch</a> for more
+details.</p>
+<p>Now simply run the following command to run PyTorch inferencing:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>pytorchexample.py
+</pre></div>
+</div>
+<p>This will execute native PyTorch which will write the classification results to
+<code class="docutils literal notranslate"><span class="pre">result.txt</span></code>. The provided example image is a photo of a dog, therefore the
+output file contains “Labrador retriever” as a first result.</p>
+<p>In later sections, we will run exactly the same Python script but with Gramine
+and inside SGX enclaves.</p>
+</section>
+<section id="executing-pytorch-with-gramine">
+<h2>Executing PyTorch with Gramine<a class="headerlink" href="index.html#executing-pytorch-with-gramine" title="Permalink to this headline"></a></h2>
+<p>In the next two sections, we will run the exact same PyTorch example with
+Gramine. We will first run PyTorch with non-SGX Gramine (for illustrative
+purposes) and then with SGX-backed Gramine. Note that this part of the tutorial
+still only shows the non-PPML workflow where Gramine doesn’t protect
+input/output user files; the end-to-end PPML workflow will be described below.</p>
+<p>The porting effort to run PyTorch in Gramine is minimal and boils down to
+creation of the <em>Gramine PyTorch-specific manifest file</em>. When Gramine runs
+an executable, it reads a manifest file that describes the execution environment
+including the security posture, environment variables, dynamic libraries,
+arguments, and so on.  In the rest of this tutorial, we will create this
+manifest file and explain its options and rationale behind them. Note that the
+manifest file contains both general non-SGX options for Gramine and
+SGX-specific ones. Please refer to <a class="reference internal" href="../../manifest-syntax.html"><span class="doc">Manifest syntax</span></a> for further
+details about the syntax of Gramine manifests.</p>
+<section id="executing-pytorch-with-non-sgx-gramine">
+<h3>Executing PyTorch with non-SGX Gramine<a class="headerlink" href="index.html#executing-pytorch-with-non-sgx-gramine" title="Permalink to this headline"></a></h3>
+<p>Let’s run the PyTorch example using Gramine, but without an SGX enclave.</p>
+<p>Navigate to the PyTorch example directory we examined in the previous section:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples/pytorch
+</pre></div>
+</div>
+<p>Let’s take a look at the template manifest file <code class="docutils literal notranslate"><span class="pre">pytorch.manifest.template</span></code>
+(recall that PyTorch is a collection of libraries and utilities but it uses
+Python as the actual executable). For illustrative purposes, we will look at
+only a few entries of the file. Note that we can simply ignore SGX-specific keys
+(starting with the <code class="docutils literal notranslate"><span class="pre">sgx.</span></code> prefix) for our non-SGX run.</p>
+<p>Notice that the manifest file is not secure because it propagates untrusted
+command-line arguments into the enclave. We keep this work-around in this
+tutorial for simplicity, but this configuration must not be used in production:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>loader.insecure__use_cmdline_argv<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>We mount the entire glibc host-level directory to the <code class="docutils literal notranslate"><span class="pre">/lib</span></code> directory seen
+inside Gramine. This trick allows to transparently replace standard C libraries
+with Gramine-patched libraries:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fs.mounts<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/lib&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:{{ gramine.runtimedir() }}&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">  </span>...
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>We also mount other directories such as <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">arch_libdir</span> <span class="pre">}}</span></code> required by Python
+and PyTorch (they search for libraries and utility files in these system
+directories):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fs.mounts<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{ arch_libdir }}&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:{{ arch_libdir }}&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">  </span>...
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>Finally, we mount the paths containing the Python and Pytorch packages using
+special Jinja for-loop syntax and Gramine-specific helper method
+<code class="docutils literal notranslate"><span class="pre">python.get_sys_path()</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fs.mounts<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="o">{</span>%<span class="w"> </span><span class="k">for</span><span class="w"> </span>path<span class="w"> </span><span class="k">in</span><span class="w"> </span>python.get_sys_path<span class="o">(</span>entrypoint<span class="o">)</span><span class="w"> </span>%<span class="o">}</span>
+<span class="w">    </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{ path }}&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:{{ path }}&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">  </span><span class="o">{</span>%<span class="w"> </span>endfor<span class="w"> </span>%<span class="o">}</span>
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>Now we can run <code class="docutils literal notranslate"><span class="pre">make</span></code> to build/copy all required Gramine files:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make
+</pre></div>
+</div>
+<p>This command will autogenerate the non-SGX Gramine manifest (<code class="docutils literal notranslate"><span class="pre">pytorch.manifest</span></code>)
+from the template manifest file. Gramine will parse <code class="docutils literal notranslate"><span class="pre">pytorch.manifest</span></code> upon
+startup to prepare an environment in which PyTorch will be executed (e.g., which
+host directories to mount and which environment variables to set).</p>
+<p>Let’s also remove the file <code class="file docutils literal notranslate"><span class="pre">result.txt</span></code> (it should exist from the previous
+native run). Otherwise in case Gramine fails for unrelated reasons, the file
+will misleadingly be present. So let’s remove it unconditionally:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-f<span class="w"> </span>result.txt
+</pre></div>
+</div>
+<p>Now, launch Gramine via <strong class="command">gramine-direct</strong>. You can simply append the
+arguments after the application path. Our example takes
+<code class="file docutils literal notranslate"><span class="pre">pytorchexample.py</span></code> as an argument:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-direct<span class="w"> </span>./pytorch<span class="w"> </span>pytorchexample.py
+</pre></div>
+</div>
+<p>That’s it. You have run the PyTorch example with Gramine. You can check
+<code class="file docutils literal notranslate"><span class="pre">result.txt</span></code> to make sure it ran correctly.</p>
+</section>
+<section id="executing-pytorch-with-gramine-in-sgx-enclave">
+<h3>Executing PyTorch with Gramine in SGX Enclave<a class="headerlink" href="index.html#executing-pytorch-with-gramine-in-sgx-enclave" title="Permalink to this headline"></a></h3>
+<p>In this section, we will learn how to use Gramine to run the same PyTorch
+example inside an Intel SGX enclave. Let’s go back to the manifest template
+(recall that the manifest keys starting with <code class="docutils literal notranslate"><span class="pre">sgx.</span></code> are SGX-specific syntax;
+these entries are ignored if Gramine runs in non-SGX mode).</p>
+<p>Below, we will highlight some of the SGX-specific manifest options in
+<code class="file docutils literal notranslate"><span class="pre">pytorch.manifest.template</span></code>. SGX syntax is fully described
+<a class="reference internal" href="../../manifest-syntax.html#sgx-syntax"><span class="std std-ref">here</span></a>.</p>
+<p>First, here are the following SGX-specific lines in the manifest template:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sgx.trusted_files<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span><span class="s2">&quot;file:{{ entrypoint }}&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;file:{{ gramine.libos }}&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;file:{{ gramine.runtimedir() }}/&quot;</span>,
+<span class="w">   </span>...
+<span class="o">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">sgx.trusted_files</span></code> specifies a list of files and directories that will be
+hashed during the generation of the final SGX manifest file (using the
+utility <strong class="command">gramine-sgx-sign</strong>) and appended to this manifest file. In
+runtime they will be allowed to be read only if the hash matches. In the case
+of directories they are recursively traversed and all files inside them are
+hashed.</p>
+<p>The PyTorch manifest template also contains <code class="docutils literal notranslate"><span class="pre">sgx.allowed_files</span></code> list. It
+specifies a single file unconditionally allowed by the enclave:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sgx.allowed_files<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span><span class="s2">&quot;file:result.txt&quot;</span>
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>Allowed files are <em>not</em> cryptographically hashed and verified. Thus, this is
+<em>insecure</em> and discouraged for production use (unless you are sure that the
+contents of the files are irrelevant to security of your workload). In the
+following section, we will remove the list of allowed files completely.</p>
+<p>Now we desribed how the manifest template looks like and what the SGX-specific
+manifest entries represent. Let’s prepare all the files needed to run PyTorch in
+an SGX enclave:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-sgx-gen-private-key<span class="w">  </span><span class="c1"># only if you didn&#39;t create the signing key yet</span>
+make<span class="w"> </span><span class="nv">SGX</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>The above <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">SGX=1</span></code> invocation performs the following tasks:</p>
+<ol class="arabic simple">
+<li><p>Generates the final SGX manifest file <code class="file docutils literal notranslate"><span class="pre">pytorch.manifest.sgx</span></code>.</p></li>
+<li><p>Signs the manifest and generates the SGX signature file containing SIGSTRUCT
+(<code class="file docutils literal notranslate"><span class="pre">pytorch.sig</span></code>).</p></li>
+</ol>
+<p>Let’s also remove the file <code class="file docutils literal notranslate"><span class="pre">result.txt</span></code> (it should exist from the previous
+<strong class="command">gramine-direct</strong> run):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-f<span class="w"> </span>result.txt
+</pre></div>
+</div>
+<p>After running the above commands and building all the required files, we can use
+<strong class="command">gramine-sgx</strong> to launch the PyTorch workload inside an SGX enclave:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-sgx<span class="w"> </span>./pytorch<span class="w"> </span>pytorchexample.py
+</pre></div>
+</div>
+<p>It will run exactly the same Python script but inside the SGX enclave. Again,
+you can verify that PyTorch ran correctly by examining <code class="file docutils literal notranslate"><span class="pre">result.txt</span></code>.</p>
+</section>
+</section>
+<section id="end-to-end-confidential-pytorch-workflow">
+<h2>End-To-End Confidential PyTorch Workflow<a class="headerlink" href="index.html#end-to-end-confidential-pytorch-workflow" title="Permalink to this headline"></a></h2>
+<section id="background-on-remote-attestation-ra-tls-and-secret-provisioning">
+<h3>Background on Remote Attestation, RA-TLS and Secret Provisioning<a class="headerlink" href="index.html#background-on-remote-attestation-ra-tls-and-secret-provisioning" title="Permalink to this headline"></a></h3>
+<p>Intel SGX provides a way for the SGX enclave to attest itself to the remote
+user. This way the user gains trust in the SGX enclave running in an untrusted
+environment, ships the application code and data, and is sure that the <em>correct</em>
+application was executed inside a <em>genuine</em> SGX enclave. This process of gaining
+trust in a remote SGX machine is called <a class="reference internal" href="../../attestation.html"><span class="doc">Remote Attestation
+(RA)</span></a>.</p>
+<p>Gramine has two features that transparently add SGX RA to the application: (1)
+RA-TLS augments normal SSL/TLS sessions with an SGX-specific handshake callback,
+and (2) Secret Provisioning establishes a secure SSL/TLS session between the SGX
+enclave and the remote user so that the user may gain trust in the remote
+enclave and provision secrets to it. Secret Provisioning builds on top of RA-TLS
+and typically runs before the application. Both features are provided as opt-in
+libraries.</p>
+<p>The <a class="reference internal" href="../../attestation.html#secret-prov-attest-so"><span class="std std-ref">Secret Provisioning library</span></a> provides a simple
+non-programmatic API to applications: it transparently initializes the
+environment variable <code class="docutils literal notranslate"><span class="pre">SECRET_PROVISION_SECRET_STRING</span></code> with a secret obtained
+from the remote user during remote attestation (note that
+<code class="docutils literal notranslate"><span class="pre">SECRET_PROVISION_CONSTRUCTOR</span></code> must also be set). In our PyTorch example, the
+provisioned secret is the encryption key to encrypt/decrypt user files. To
+inform Gramine that the obtained secret is indeed the key for file encryption,
+it is enough to set the environment variable <code class="docutils literal notranslate"><span class="pre">SECRET_PROVISION_SET_KEY</span></code>.</p>
+<p>Note that RA-TLS and Secret Provisioning work both with the EPID-based and the
+ECDSA/DCAP schemes of SGX remote attestation. Since this tutorial concentrates
+on an untrusted-cloud scenario, we use the ECDSA/DCAP attestation framework.</p>
+</section>
+<section id="background-on-encrypted-files">
+<h3>Background on Encrypted Files<a class="headerlink" href="index.html#background-on-encrypted-files" title="Permalink to this headline"></a></h3>
+<p>Gramine provides a feature of <a class="reference internal" href="../../manifest-syntax.html#encrypted-files"><span class="std std-ref">Encrypted files</span></a>, which encrypts files and
+transparently decrypts them when the application reads or writes them.
+Integrity- or confidentiality-sensitive files (or whole directories) accessed by
+the application must be put under the “encrypted” FS mount in the Gramine
+manifest. New files created in the “encrypted” FS mount are automatically
+treated as encrypted. The encryption format used for encrypted files is borrowed
+from the protected files feature of Intel SGX SDK.</p>
+<p>This feature can be combined with Secret Provisioning such that the files are
+encrypted/decrypted using the provisioned key, as explained in the previous
+section.</p>
+</section>
+<section id="preparing-confidential-pytorch-example">
+<h3>Preparing Confidential PyTorch Example<a class="headerlink" href="index.html#preparing-confidential-pytorch-example" title="Permalink to this headline"></a></h3>
+<p>In this section, we will transform our native PyTorch application into an
+end-to-end confidential application. We will encrypt all user files before
+starting the enclave, mark them as encrypted, let the enclave communicate with
+the secret provisioning server to get attested and receive the master key for
+encryption and decryption of encrypted files, and finally run the actual PyTorch
+inference.</p>
+<p>We will use the reference implementation of the Secret Provisioning server found
+under <code class="docutils literal notranslate"><span class="pre">CI-Examples/ra-tls-secret-prov</span></code> directory (in the core Gramine
+repository), so let’s build the secret provisioning server:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>--branch<span class="w"> </span>v1.5<span class="w"> </span>https://github.com/gramineproject/gramine.git
+<span class="nb">cd</span><span class="w"> </span>gramine/CI-Examples/ra-tls-secret-prov
+make<span class="w"> </span>app<span class="w"> </span>dcap<span class="w"> </span><span class="nv">RA_TYPE</span><span class="o">=</span>dcap
+</pre></div>
+</div>
+<p>The above line builds the secret provisioning server
+<code class="docutils literal notranslate"><span class="pre">secret_prov_pf/server_dcap</span></code> which we will use to provision the master key
+(used to encrypt/decrypt security sensitive input and output files) to the
+PyTorch enclave. See <a class="reference external" href="https://github.com/gramineproject/gramine/tree/master/CI-Examples/ra-tls-secret-prov">Secret Provisioning Minimal Examples</a>
+for more information.</p>
+</section>
+<section id="preparing-input-files">
+<h3>Preparing Input Files<a class="headerlink" href="index.html#preparing-input-files" title="Permalink to this headline"></a></h3>
+<p>We will use the previous non-confidential PyTorch example as a starting point,
+so copy the entire PyTorch directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples
+cp<span class="w"> </span>-R<span class="w"> </span>pytorch<span class="w"> </span>pytorch-confidential
+<span class="nb">cd</span><span class="w"> </span>pytorch-confidential
+</pre></div>
+</div>
+<p>Let’s make sure that <code class="docutils literal notranslate"><span class="pre">alexnet-pretrained.pt</span></code> network-model file exists under
+our new directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>download-pretrained-model.py
+</pre></div>
+</div>
+<p>The user must encrypt all input files: <code class="docutils literal notranslate"><span class="pre">input.jpg</span></code>, <code class="docutils literal notranslate"><span class="pre">classes.txt</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">alexnet-pretrained.pt</span></code>. Let’s start with generating an encryption key:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>files
+dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span>files/wrap_key<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">16</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">gramine-sgx-pf-crypt</span></code> utility to encrypt/decrypt the necessary
+files. Let’s encrypt the original plaintext files. We first move these files
+under the <code class="docutils literal notranslate"><span class="pre">plaintext/</span></code> directory and then encrypt them using the wrap key:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>plaintext/
+mv<span class="w"> </span>input.jpg<span class="w"> </span>classes.txt<span class="w"> </span>alexnet-pretrained.pt<span class="w"> </span>plaintext/
+
+gramine-sgx-pf-crypt<span class="w"> </span>encrypt<span class="w"> </span>-w<span class="w"> </span>files/wrap_key<span class="w"> </span>-i<span class="w"> </span>plaintext/input.jpg<span class="w"> </span>-o<span class="w"> </span>input.jpg
+gramine-sgx-pf-crypt<span class="w"> </span>encrypt<span class="w"> </span>-w<span class="w"> </span>files/wrap_key<span class="w"> </span>-i<span class="w"> </span>plaintext/classes.txt<span class="w"> </span>-o<span class="w"> </span>classes.txt
+gramine-sgx-pf-crypt<span class="w"> </span>encrypt<span class="w"> </span>-w<span class="w"> </span>files/wrap_key<span class="w"> </span>-i<span class="w"> </span>plaintext/alexnet-pretrained.pt<span class="w"> </span>-o<span class="w"> </span>alexnet-pretrained.pt
+</pre></div>
+</div>
+<p>You can verify now that the input files are encrypted. In real deployments,
+these files must be shipped to the remote untrusted cloud.</p>
+</section>
+<section id="preparing-secret-provisioning">
+<h3>Preparing Secret Provisioning<a class="headerlink" href="index.html#preparing-secret-provisioning" title="Permalink to this headline"></a></h3>
+<p>The user must prepare the secret provisioning server and start it. For this,
+copy the secret provisioning executable from <code class="docutils literal notranslate"><span class="pre">CI-Examples/ra-tls-secret-prov</span></code>
+(that you built in one of the previous steps) to the current directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>secret_prov_pf
+cp<span class="w"> </span>gramine/CI-Examples/ra-tls-secret-prov/secret_prov_pf/server_dcap<span class="w"> </span>secret_prov_pf/
+</pre></div>
+</div>
+<p>Also, copy the server-identifying certificates so that in-Gramine secret
+provisioning library can verify the provisioning server (via classical X.509
+PKI):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>-R<span class="w"> </span>gramine/CI-Examples/ra-tls-secret-prov/ssl<span class="w"> </span>./
+</pre></div>
+</div>
+<p>These certificates are dummy auto-generated localhost certificates; in production,
+you would want to generate real certificates for your secret-provisioning server
+and use them.</p>
+<p>Now we can launch the secret provisioning server:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>secret_prov_pf
+./server_dcap<span class="w"> </span>../files/wrap_key<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>(You may need to run the server with <code class="docutils literal notranslate"><span class="pre">RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1</span></code> if
+your platform has outdated TCB.)</p>
+<p>In this tutorial, we simply run it locally (<code class="docutils literal notranslate"><span class="pre">localhost:4433</span></code> as hard-coded in the
+server source code) for simplicity. In reality, the user must run it on a trusted
+remote machine.  In that case, <code class="docutils literal notranslate"><span class="pre">loader.env.SECRET_PROVISION_SERVERS</span></code> in the
+manifest (see below) must point to the address of the remote-user machine. We
+launch the server in the background.</p>
+</section>
+<section id="preparing-manifest-file">
+<h3>Preparing Manifest File<a class="headerlink" href="index.html#preparing-manifest-file" title="Permalink to this headline"></a></h3>
+<p>Finally, let’s modify the manifest file. Open <code class="docutils literal notranslate"><span class="pre">pytorch.manifest.template</span></code>
+with your favorite text editor.</p>
+<p>Remove the input files from <code class="docutils literal notranslate"><span class="pre">sgx.trusted_files</span></code> and move them to the encrypted
+FS mount:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fs.mounts<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/classes.txt&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:classes.txt&quot;</span>,<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;encrypted&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/input.jpg&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:input.jpg&quot;</span>,<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;encrypted&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/alexnet-pretrained.pt&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:alexnet-pretrained.pt&quot;</span>,<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;encrypted&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>Also remove <code class="docutils literal notranslate"><span class="pre">result.txt</span></code> from <code class="docutils literal notranslate"><span class="pre">sgx.allowed_files</span></code> and add it to the encrypted
+FS mount so that PyTorch writes the <em>encrypted</em> result into it:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fs.mounts<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="o">{</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/result.txt&quot;</span>,<span class="w"> </span><span class="nv">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;file:result.txt&quot;</span>,<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;encrypted&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="o">]</span>
+</pre></div>
+</div>
+<p>Our PyTorch uses remote secret provisioning which requires some knowledge about
+the network configuration on the platform. Therefore, we need to enable
+networking information:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sys.enable_extra_runtime_domain_names_conf<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>Add the following lines to enable remote secret provisioning and allow encrypted
+files to be transparently decrypted by the provisioned key. Recall that we
+launched the secret provisioning server locally on the same machine, so we
+re-use the same <code class="docutils literal notranslate"><span class="pre">ssl/</span></code> directory and specify <code class="docutils literal notranslate"><span class="pre">localhost</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sgx.remote_attestation<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dcap&quot;</span>
+
+loader.env.LD_PRELOAD<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;libsecret_prov_attest.so&quot;</span>
+loader.env.SECRET_PROVISION_CONSTRUCTOR<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+loader.env.SECRET_PROVISION_SET_KEY<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+loader.env.SECRET_PROVISION_CA_CHAIN_PATH<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ssl/ca.crt&quot;</span>
+loader.env.SECRET_PROVISION_SERVERS<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;localhost:4433&quot;</span>
+</pre></div>
+</div>
+<p>Finally, you must append the <code class="docutils literal notranslate"><span class="pre">ssl/ca.crt</span></code> to the already-existing
+<code class="docutils literal notranslate"><span class="pre">sgx.trusted_files</span></code> array:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sgx.trusted_files<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="s2">&quot;file:ssl/ca.crt&quot;</span>,
+<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="building-and-executing-end-to-end-pytorch-example">
+<h3>Building and Executing End-To-End PyTorch Example<a class="headerlink" href="index.html#building-and-executing-end-to-end-pytorch-example" title="Permalink to this headline"></a></h3>
+<p>Now that we prepared the files and the manifest, let’s re-generate the manifest
+files, tokens, and signatures:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>clean
+make<span class="w"> </span><span class="nv">SGX</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>It is also important to remove the file <code class="file docutils literal notranslate"><span class="pre">result.txt</span></code> if it exists.
+Otherwise the Encrypted FS will detect the already-existing file and fail. So
+let’s remove it unconditionally:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-f<span class="w"> </span>result.txt
+</pre></div>
+</div>
+<p>We are ready to run the end-to-end PyTorch example. Notice that we didn’t change
+a line of code in the Python script. Moreover, we can run it with exactly the
+same command used in the previous section:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-sgx<span class="w"> </span>./pytorch<span class="w"> </span>pytorchexample.py
+</pre></div>
+</div>
+<p>This should run PyTorch with encrypted input files and generate the encrypted
+<code class="file docutils literal notranslate"><span class="pre">result.txt</span></code> output file. Note that we already launched the secret
+provisioning server on the same machine, so secret provisioning will run
+locally.</p>
+</section>
+<section id="decrypting-output-file">
+<h3>Decrypting Output File<a class="headerlink" href="index.html#decrypting-output-file" title="Permalink to this headline"></a></h3>
+<p>After our PyTorch inference is finished, you’ll see <code class="file docutils literal notranslate"><span class="pre">result.txt</span></code>
+in the directory. This file is encrypted with the same key as was used for
+encryption of input files. In order to decrypt it, use the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-sgx-pf-crypt<span class="w"> </span>decrypt<span class="w"> </span>-w<span class="w"> </span>files/wrap_key<span class="w"> </span>-i<span class="w"> </span>result.txt<span class="w"> </span>-o<span class="w"> </span>plaintext/result.txt
+</pre></div>
+</div>
+<p>You can check the result written in <code class="file docutils literal notranslate"><span class="pre">plaintext/result.txt</span></code>. It must be the
+same as in our previous runs.</p>
+</section>
+<section id="cleaning-up">
+<h3>Cleaning Up<a class="headerlink" href="index.html#cleaning-up" title="Permalink to this headline"></a></h3>
+<p>When done, don’t forget to terminate the secret provisioning server:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>killall<span class="w"> </span>server_dcap
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../tutorials-index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../cczoo/index.html" class="btn btn-neutral float-right" title="Confidential Computing Zoo project" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

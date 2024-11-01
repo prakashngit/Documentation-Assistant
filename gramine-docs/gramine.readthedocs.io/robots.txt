@@ -1,0 +1,7 @@
+User-agent: *
+
+Disallow: /en/woju-docs-202402/ # Hidden version
+
+Disallow: /en/dimakuv-docs-encrypted-files/ # Hidden version
+
+Sitemap: https://gramine.readthedocs.io/sitemap.xml

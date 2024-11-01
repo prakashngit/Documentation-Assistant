@@ -1,0 +1,12 @@
+langchain==0.3.3
+langchain-openai
+langchain-ollama
+langchain-community
+langchain-chroma
+chromadb
+streamlit
+serpapi
+openai
+python-dotenv
+pydantic
+pypdf

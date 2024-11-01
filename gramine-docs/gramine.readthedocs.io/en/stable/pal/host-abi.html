@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAL host ABI &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Manual pages" href="../manpages/index.html" />
+    <link rel="prev" title="LibOS documentation" href="../libos/libos-init.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "pal/host-abi", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/pal/host-abi.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="host-abi.html#">PAL host ABI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="host-abi.html#pal-as-loader">PAL as loader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#manifest-and-executable-loading">Manifest and executable loading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host-abi.html#data-types-and-variables">Data types and variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#data-types">Data types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="host-abi.html#pal-handles">PAL handles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="host-abi.html#basic-types">Basic types</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#pal-public-state">PAL public state</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="host-abi.html#pal-public-state-topology-information">PAL public state - topology information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host-abi.html#pal-apis">PAL APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#memory-allocation">Memory allocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#process-creation">Process creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#stream-creation-connect-open">Stream creation/connect/open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="host-abi.html#flags-used-for-stream-manipulation">Flags used for stream manipulation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#socket-handling">Socket handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#thread-creation">Thread creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#exception-handling">Exception handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#synchronization">Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#objects">Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host-abi.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PAL host ABI</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/pal/host-abi.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="pal-host-abi">
+<h1>PAL host ABI<a class="headerlink" href="host-abi.html#pal-host-abi" title="Permalink to this headline"></a></h1>
+<p>TODO: This document is outdated and needs a proper review.</p>
+<p>PAL Host ABI is the interface used by Gramine to interact with its host. It is
+translated into the host’s native ABI (e.g. system calls for UNIX) by a layer
+called the Platform Adaptation Layer (PAL). A PAL not only exports a set of APIs
+(PAL APIs) that can be called by the library OS, but also acts as the loader
+that bootstraps the library OS. The design of PAL Host ABI strictly follows
+three primary principles, to guarantee functionality, security, and portability:</p>
+<ul class="simple">
+<li><p>The host ABI must be stateless.</p></li>
+<li><p>The host ABI must be a narrowed interface to reduce the attack surface.</p></li>
+<li><p>The host ABI must be generic and independent from the native ABI of any of the
+supported hosts.</p></li>
+</ul>
+<p>Most of the PAL Host ABI is adapted from the Drawbridge library OS.</p>
+<section id="pal-as-loader">
+<h2>PAL as loader<a class="headerlink" href="host-abi.html#pal-as-loader" title="Permalink to this headline"></a></h2>
+<p>Each PAL implementation must support loading and dynamic relocation of
+ELF-format executables and dynamic libraries. PAL needs to look up all
+unresolved symbols in loaded binaries and resolve the ones matching the names of
+PAL APIs. PAL does not and will not resolve other unresolved symbols, so the
+loaded libraries and executables must resolve them afterwards.</p>
+<p>After loading the binaries, PAL needs to load and interpret the manifest files.
+The manifest syntax is described in <a class="reference internal" href="../manifest-syntax.html"><span class="doc">Manifest syntax</span></a>.</p>
+<section id="manifest-and-executable-loading">
+<h3>Manifest and executable loading<a class="headerlink" href="host-abi.html#manifest-and-executable-loading" title="Permalink to this headline"></a></h3>
+<p>To run a program in Gramine the PAL loader needs a manifest, which will describe
+the whole environment inside Gramine namespace. It also describes which
+executable to start first (via <code class="docutils literal notranslate"><span class="pre">libos.entrypoint</span></code>).</p>
+</section>
+</section>
+<section id="data-types-and-variables">
+<h2>Data types and variables<a class="headerlink" href="host-abi.html#data-types-and-variables" title="Permalink to this headline"></a></h2>
+<section id="data-types">
+<h3>Data types<a class="headerlink" href="host-abi.html#data-types" title="Permalink to this headline"></a></h3>
+<section id="pal-handles">
+<h4>PAL handles<a class="headerlink" href="host-abi.html#pal-handles" title="Permalink to this headline"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">PAL_HANDLE</span></code> is the type of identifiers that are returned by PAL when opening
+or creating resources. It is an opaque type, that should not be accessed outside
+of PAL and its details depend on the actual PAL version (host). There is a
+common header (present on all PAL hosts) accessible from PAL code, which allows
+for checking the handle type:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PAL_IDX</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">hdr</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* other host-specific definitions */</span>
+<span class="p">}</span><span class="o">*</span><span class="w"> </span><span class="n">PAL_HANDLE</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Rest of the fields are private to specific PAL hosts, but they usually define
+different handle subtypes that represent different resources such as files,
+directories, pipes or sockets. The actual memory allocated for the PAL handles
+may be variable-sized.</p>
+</section>
+<section id="basic-types">
+<h4>Basic types<a class="headerlink" href="host-abi.html#basic-types" title="Permalink to this headline"></a></h4>
+<dl class="c type">
+<dt id="c.PAL_IDX">
+<span class="target" id="pal_8h_1ab30d226cbcb6f3a2771df9f8e7eee698"></span><em class="property">typedef </em>uint32_t <code class="sig-name descname">PAL_IDX</code><a class="headerlink" href="host-abi.html#c.PAL_IDX" title="Permalink to this definition"></a><br /></dt>
+<dd><p>an index </p>
+</dd></dl>
+
+</section>
+</section>
+<section id="pal-public-state">
+<h3>PAL public state<a class="headerlink" href="host-abi.html#pal-public-state" title="Permalink to this headline"></a></h3>
+<p>All PALs in Gramine expose a structure that provides static immutable
+information about the current process and its host. The address of the structure
+can be retrieved via <a class="reference internal" href="host-abi.html#c.PalGetPalPublicState" title="PalGetPalPublicState"><code class="xref c c-func docutils literal notranslate"><span class="pre">PalGetPalPublicState()</span></code></a> and can be memoized in a
+global variable for ease of use.</p>
+<dl class="c struct">
+<dt id="c.pal_public_state">
+<span class="target" id="structpal__public__state"></span><em class="property">struct </em><code class="sig-name descname">pal_public_state</code><a class="headerlink" href="host-abi.html#c.pal_public_state" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="c var">
+<dt id="c.pal_public_state.manifest_root">
+<span class="target" id="structpal__public__state_1a38442e563b2d0a87c90c6fe14807878a"></span>toml_table_t *<code class="sig-name descname">manifest_root</code><a class="headerlink" href="host-abi.html#c.pal_public_state.manifest_root" title="Permalink to this definition"></a><br /></dt>
+<dd><p>program manifest </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.parent_process">
+<span class="target" id="structpal__public__state_1af6e02fce46bcc355d8aa160af6f5c297"></span>PAL_HANDLE <code class="sig-name descname">parent_process</code><a class="headerlink" href="host-abi.html#c.pal_public_state.parent_process" title="Permalink to this definition"></a><br /></dt>
+<dd><p>handle of parent process </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.first_thread">
+<span class="target" id="structpal__public__state_1adf8858087d168e584da6fbc891b2a731"></span>PAL_HANDLE <code class="sig-name descname">first_thread</code><a class="headerlink" href="host-abi.html#c.pal_public_state.first_thread" title="Permalink to this definition"></a><br /></dt>
+<dd><p>handle of first thread </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.log_level">
+<span class="target" id="structpal__public__state_1a10c49e572beae0698abe6af491d32905"></span>int <code class="sig-name descname">log_level</code><a class="headerlink" href="host-abi.html#c.pal_public_state.log_level" title="Permalink to this definition"></a><br /></dt>
+<dd><p>what log messages to enable </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.disable_aslr">
+<span class="target" id="structpal__public__state_1a6cff3e473558aa35b80357a026425348"></span>bool <code class="sig-name descname">disable_aslr</code><a class="headerlink" href="host-abi.html#c.pal_public_state.disable_aslr" title="Permalink to this definition"></a><br /></dt>
+<dd><p>disable ASLR </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.memory_address_start">
+<span class="target" id="structpal__public__state_1aba08446e05d03da6fb5bbc30ced8fc0c"></span>void *<code class="sig-name descname">memory_address_start</code><a class="headerlink" href="host-abi.html#c.pal_public_state.memory_address_start" title="Permalink to this definition"></a><br /></dt>
+<dd><p>usable memory start address </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.memory_address_end">
+<span class="target" id="structpal__public__state_1a06fc5c6f4789ea9429e448c2e097f0fb"></span>void *<code class="sig-name descname">memory_address_end</code><a class="headerlink" href="host-abi.html#c.pal_public_state.memory_address_end" title="Permalink to this definition"></a><br /></dt>
+<dd><p>usable memory end address </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.early_libos_mem_range_start">
+<span class="target" id="structpal__public__state_1abd863955709f93bd8fd1745dd369acdd"></span>uintptr_t <code class="sig-name descname">early_libos_mem_range_start</code><a class="headerlink" href="host-abi.html#c.pal_public_state.early_libos_mem_range_start" title="Permalink to this definition"></a><br /></dt>
+<dd><p>start of memory usable before checkpoint restore </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.early_libos_mem_range_end">
+<span class="target" id="structpal__public__state_1a1a9f39fecda9f0a8774bca9823df27ac"></span>uintptr_t <code class="sig-name descname">early_libos_mem_range_end</code><a class="headerlink" href="host-abi.html#c.pal_public_state.early_libos_mem_range_end" title="Permalink to this definition"></a><br /></dt>
+<dd><p>end of memory usable before checkpoint restore </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.shared_address_start">
+<span class="target" id="structpal__public__state_1abeb461c5dc8dbb1f0da092e97276618b"></span>void *<code class="sig-name descname">shared_address_start</code><a class="headerlink" href="host-abi.html#c.pal_public_state.shared_address_start" title="Permalink to this definition"></a><br /></dt>
+<dd><p>usable shared memory start address </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.shared_address_end">
+<span class="target" id="structpal__public__state_1a85394dec7aa3f9cda54baeab26819ab6"></span>void *<code class="sig-name descname">shared_address_end</code><a class="headerlink" href="host-abi.html#c.pal_public_state.shared_address_end" title="Permalink to this definition"></a><br /></dt>
+<dd><p>usable shared memory end address </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.initial_mem_ranges">
+<span class="target" id="structpal__public__state_1ad37f90bf935f8b33be298a050d25aa4a"></span><em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_initial_mem_range" title="pal_initial_mem_range">pal_initial_mem_range</a> *<code class="sig-name descname">initial_mem_ranges</code><a class="headerlink" href="host-abi.html#c.pal_public_state.initial_mem_ranges" title="Permalink to this definition"></a><br /></dt>
+<dd><p>array of initial memory ranges, see <code class="docutils literal notranslate"><span class="pre">pal_memory.c</span></code> for more details </p>
+</dd></dl>
+
+<dl class="c var">
+<dt id="c.pal_public_state.alloc_align">
+<span class="target" id="structpal__public__state_1a0942ce4728eb6c5a00fc47940384e0d1"></span>size_t <code class="sig-name descname">alloc_align</code><a class="headerlink" href="host-abi.html#c.pal_public_state.alloc_align" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Host allocation alignment. </p>
+<p>This currently is (and most likely will always be) indistinguishable from the page size, looking from the LibOS perspective. The two values can be different on the PAL level though, see e.g. SYSTEM_INFO::dwAllocationGranularity on Windows. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<section id="pal-public-state-topology-information">
+<h4>PAL public state - topology information<a class="headerlink" href="host-abi.html#pal-public-state-topology-information" title="Permalink to this headline"></a></h4>
+<dl class="c struct">
+<dt id="c.pal_cpu_info">
+<span class="target" id="structpal__cpu__info"></span><em class="property">struct </em><code class="sig-name descname">pal_cpu_info</code><a class="headerlink" href="host-abi.html#c.pal_cpu_info" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c struct">
+<dt id="c.pal_topo_info">
+<span class="target" id="structpal__topo__info"></span><em class="property">struct </em><code class="sig-name descname">pal_topo_info</code><a class="headerlink" href="host-abi.html#c.pal_topo_info" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+<section id="pal-apis">
+<h2>PAL APIs<a class="headerlink" href="host-abi.html#pal-apis" title="Permalink to this headline"></a></h2>
+<p>The PAL APIs contain a number of functions that can be called from the
+library OS.</p>
+<section id="memory-allocation">
+<h3>Memory allocation<a class="headerlink" href="host-abi.html#memory-allocation" title="Permalink to this headline"></a></h3>
+<p>The ABI includes three calls to allocate, free, and modify the permission bits
+on page-base virtual memory. Permissions include read, write, execute, and
+guard. Memory regions can be unallocated, reserved, or backed by committed
+memory.</p>
+<dl class="c function">
+<dt id="c.PalVirtualMemoryAlloc">
+<span class="target" id="pal_8h_1abc3a34dc498c213fc2a73b1fa3c9ad43"></span>int <code class="sig-name descname">PalVirtualMemoryAlloc</code><span class="sig-paren">(</span>void *<em>addr</em>, size_t <em>size</em>, <a class="reference internal" href="host-abi.html#c.pal_prot_flags_t" title="pal_prot_flags_t">pal_prot_flags_t</a> <em>prot</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalVirtualMemoryAlloc" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Allocate virtual memory and zero it out. </p>
+<p><code class="docutils literal notranslate"><span class="pre">addr</span></code> can be any valid address aligned at the allocation alignment, but there must be no memory previously allocated at the same address. This function must not dynamically allocate any internal memory (must not use <code class="docutils literal notranslate"><span class="pre">malloc</span></code>)! <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: Requested address. Must be aligned and non-NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: Must be a positive number, aligned at the allocation alignment. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prot</span></code>: A combination of the <code class="docutils literal notranslate"><span class="pre">PAL_PROT_*</span></code> flags.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalVirtualMemoryFree">
+<span class="target" id="pal_8h_1a1f7644afd2c17aec7253edc58b394b47"></span>int <code class="sig-name descname">PalVirtualMemoryFree</code><span class="sig-paren">(</span>void *<em>addr</em>, size_t <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalVirtualMemoryFree" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Deallocate a previously allocated memory mapping. </p>
+<p><p>Both </p>
+<code class="docutils literal notranslate"><span class="pre">addr</span></code> and <code class="docutils literal notranslate"><span class="pre">size</span></code> must be non-zero and aligned at the allocation alignment. <code class="docutils literal notranslate"><span class="pre">[addr;</span> <span class="pre">addr+size)</span></code> must be a continuous memory range without any holes. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: The address. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: The size.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.pal_prot_flags_t">
+<span class="target" id="pal_8h_1af92c73a7bc2a7f412cd38ee60d4dc595"></span><em class="property">typedef </em>uint32_t <code class="sig-name descname">pal_prot_flags_t</code><a class="headerlink" href="host-abi.html#c.pal_prot_flags_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>memory protection flags </p>
+</dd></dl>
+
+<dl class="c struct">
+<dt id="c.pal_initial_mem_range">
+<span class="target" id="structpal__initial__mem__range"></span><em class="property">struct </em><code class="sig-name descname">pal_initial_mem_range</code><a class="headerlink" href="host-abi.html#c.pal_initial_mem_range" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt id="c.PalVirtualMemoryProtect">
+<span class="target" id="pal_8h_1a200f57a66adc1d575b786390a43cc63f"></span>int <code class="sig-name descname">PalVirtualMemoryProtect</code><span class="sig-paren">(</span>void *<em>addr</em>, size_t <em>size</em>, <a class="reference internal" href="host-abi.html#c.pal_prot_flags_t" title="pal_prot_flags_t">pal_prot_flags_t</a> <em>prot</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalVirtualMemoryProtect" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Modify the permissions of a previously allocated memory mapping. </p>
+<p><p>Both </p>
+<code class="docutils literal notranslate"><span class="pre">addr</span></code> and <code class="docutils literal notranslate"><span class="pre">size</span></code> must be non-zero and aligned at the allocation alignment. <code class="docutils literal notranslate"><span class="pre">[addr;</span> <span class="pre">addr+size)</span></code> must be a continuous memory range without any holes. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: The address. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: The size. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prot</span></code>: See <a class="reference internal" href="host-abi.html#pal_8h_1abc3a34dc498c213fc2a73b1fa3c9ad43"><span class="std std-ref">PalVirtualMemoryAlloc</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</section>
+<section id="process-creation">
+<h3>Process creation<a class="headerlink" href="host-abi.html#process-creation" title="Permalink to this headline"></a></h3>
+<p>The ABI includes one call to create a child process and one call to terminate
+the running process. A child process does not inherit any objects or memory from
+its parent process and the parent process may not modify the execution of its
+children. A parent can wait for a child to exit using its handle. Parent and
+child may communicate through I/O streams provided by the parent to the child at
+creation.</p>
+<dl class="c function">
+<dt id="c.PalProcessCreate">
+<span class="target" id="pal_8h_1a16a5650b740b872b4703fb8f3948c692"></span>int <code class="sig-name descname">PalProcessCreate</code><span class="sig-paren">(</span><em class="property">const</em> char **<em>args</em>, uintptr_t (*<em>reserved_mem_ranges</em>)[2], size_t <em>reserved_mem_ranges_len</em>, PAL_HANDLE *<em>out_handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalProcessCreate" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create a new process. </p>
+<p><p>Loads and executes the same binary as currently executed one (</p>
+<code class="docutils literal notranslate"><span class="pre">loader.entrypoint</span></code>), and passes the new arguments.<dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code>: An array of strings  the arguments to be passed to the new process. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reserved_mem_ranges</span></code>: List of memory ranges that should not be used by the child process until app memory is restored from a checkpoint. Must be sorted in descending order. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reserved_mem_ranges_len</span></code>: Length of <code class="docutils literal notranslate"><span class="pre">reserved_mem_ranges</span></code>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_handle</span></code>: On success contains the process handle.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>TODO: <code class="docutils literal notranslate"><span class="pre">args</span></code> is only used by PAL regression tests, and should be removed at some point. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalProcessExit">
+<span class="target" id="pal_8h_1abd2a229252d72210b1fec4827c4882e1"></span>void <code class="sig-name descname">PalProcessExit</code><span class="sig-paren">(</span>int <em>exit_code</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalProcessExit" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Terminate all threads in the process immediately. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exit_code</span></code>: The exit value returned to the host. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</section>
+<section id="stream-creation-connect-open">
+<h3>Stream creation/connect/open<a class="headerlink" href="host-abi.html#stream-creation-connect-open" title="Permalink to this headline"></a></h3>
+<p>The stream ABI includes nine calls to open, read, write, map, unmap, truncate,
+flush, delete and wait for I/O streams and three calls to access metadata about
+an I/O stream. The ABI purposefully does not provide an ioctl call. Supported
+URI schemes include:
+<code class="docutils literal notranslate"><span class="pre">file:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pipe:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">http:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">https:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tcp:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">udp:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pipe.srv:</span></code>,
+<code class="docutils literal notranslate"><span class="pre">http.srv</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tcp.srv:</span></code> and
+<code class="docutils literal notranslate"><span class="pre">udp.srv:</span></code>.
+The latter four schemes are used to open inbound I/O streams for server
+applications.</p>
+<dl class="c function">
+<dt id="c.PalStreamOpen">
+<span class="target" id="pal_8h_1aeeb9cb3939ccff87c40b8baf22c40ba7"></span>int <code class="sig-name descname">PalStreamOpen</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>typed_uri</em>, <em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_access" title="pal_access">pal_access</a> <em>access</em>, <a class="reference internal" href="host-abi.html#c.pal_share_flags_t" title="pal_share_flags_t">pal_share_flags_t</a> <em>share_flags</em>, <em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_create_mode" title="pal_create_mode">pal_create_mode</a> <em>create</em>, <a class="reference internal" href="host-abi.html#c.pal_stream_options_t" title="pal_stream_options_t">pal_stream_options_t</a> <em>options</em>, PAL_HANDLE *<em>handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamOpen" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Open/create a stream resource specified by <code class="docutils literal notranslate"><span class="pre">uri</span></code>. </p>
+<p><p>Supported URI types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file:...</span></code>, <code class="docutils literal notranslate"><span class="pre">dir:...</span></code>: Files or directories on the host file system. If <a class="reference internal" href="host-abi.html#pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a5cbfec7defe4e3d70f3d9662a8c6f755"><span class="std std-ref">PAL_CREATE_TRY</span></a> or <a class="reference internal" href="host-abi.html#pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a307590d49a445144af96980cb3bb9217"><span class="std std-ref">PAL_CREATE_ALWAYS</span></a> is given in <code class="docutils literal notranslate"><span class="pre">create</span></code> flags, the file/directory will be created.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dev:...</span></code>: Open a device as a stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">console:</span></code>: Open a console (PAL-specific input/output) as a stream. In case of Linux and Linux-SGX PALs, the “input/output” are the stdin and stdout streams of the host process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pipe.srv:&lt;name&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">pipe:&lt;name&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">pipe:</span></code>: Open a byte stream that can be used for RPC between processes. The server side of a pipe can accept any number of connections. If <code class="docutils literal notranslate"><span class="pre">pipe:</span></code> is given as the URI (i.e., without a name), it will open an anonymous bidirectional pipe. </p></li>
+</ul>
+<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">typed_uri</span></code>: The URI of the stream to be opened/created, prefixed with the type. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">access</span></code>: See <a class="reference internal" href="host-abi.html#pal_8h_1a16bf0253dc8701278cdf32c58192d9a1"><span class="std std-ref">pal_access</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">share_flags</span></code>: A combination of the <code class="docutils literal notranslate"><span class="pre">PAL_SHARE_*</span></code> flags. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create</span></code>: See <a class="reference internal" href="host-abi.html#pal_8h_1a70b6a03db2aec5861ac0919994b77ef2"><span class="std std-ref">pal_create_mode</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A combination of the <code class="docutils literal notranslate"><span class="pre">PAL_OPTION_*</span></code> flags. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">handle[out]</span></code>: If the resource is successfully opened or created, a PAL handle is returned in <code class="docutils literal notranslate"><span class="pre">*handle</span></code> for further access such as reading or writing.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamWaitForClient">
+<span class="target" id="pal_8h_1a9b299ff7d885256efde47f6629e78a33"></span>int <code class="sig-name descname">PalStreamWaitForClient</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, PAL_HANDLE *<em>client</em>, <a class="reference internal" href="host-abi.html#c.pal_stream_options_t" title="pal_stream_options_t">pal_stream_options_t</a> <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamWaitForClient" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Block until a new connection is accepted and return the PAL handle for the connection. </p>
+<p><p>This API is only available for handles that are opened with </p>
+<code class="docutils literal notranslate"><span class="pre">pipe.srv:...</span></code>. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to accept a new connection on. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">client</span></code>: On success holds handle for the new connection. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: Flags to set on <code class="docutils literal notranslate"><span class="pre">client</span></code> handle.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamRead">
+<span class="target" id="pal_8h_1aa614349b970b2dcff0452095333a74b1"></span>int <code class="sig-name descname">PalStreamRead</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, uint64_t <em>offset</em>, size_t *<em>count</em>, void *<em>buffer</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamRead" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Read data from an open stream. </p>
+<p><p>If </p>
+<code class="docutils literal notranslate"><span class="pre">handle</span></code> is a directory, PalStreamRead fills the buffer with the null-terminated names of the directory entries. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the stream. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset</span></code>: Offset to read at. If <code class="docutils literal notranslate"><span class="pre">handle</span></code> is a file, <code class="docutils literal notranslate"><span class="pre">offset</span></code> must be specified at each call. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">count</span></code>: Contains size of <code class="docutils literal notranslate"><span class="pre">buffer</span></code>. On success, will be set to the number of bytes read. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: Pointer to the buffer to read into.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamWrite">
+<span class="target" id="pal_8h_1a33ba729cd47540ced3a7cc09c40237f7"></span>int <code class="sig-name descname">PalStreamWrite</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, uint64_t <em>offset</em>, size_t *<em>count</em>, void *<em>buffer</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamWrite" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Write data to an open stream. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the stream. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset</span></code>: Offset to write to. If <code class="docutils literal notranslate"><span class="pre">handle</span></code> is a file, <code class="docutils literal notranslate"><span class="pre">offset</span></code> must be specified at each call. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">count</span></code>: Contains size of <code class="docutils literal notranslate"><span class="pre">buffer</span></code>. On success, will be set to the number of bytes written. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: Pointer to the buffer to write from.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamDelete">
+<span class="target" id="pal_8h_1a9ee1299cf6f316c21bf804c6f8e799e0"></span>int <code class="sig-name descname">PalStreamDelete</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_delete_mode" title="pal_delete_mode">pal_delete_mode</a> <em>delete_mode</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamDelete" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Delete files or directories on the host or shut down the connection of TCP/UDP sockets. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">access</span></code>: Which side to shut down (see <a class="reference internal" href="host-abi.html#pal_8h_1a71ec97e513bc3e6801928076aeba1194"><span class="std std-ref">pal_delete_mode</span></a> values). </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamMap">
+<span class="target" id="pal_8h_1a1fe1e97fcf68a9b08ec1b36a9ee6627e"></span>int <code class="sig-name descname">PalStreamMap</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, void *<em>addr</em>, <a class="reference internal" href="host-abi.html#c.pal_prot_flags_t" title="pal_prot_flags_t">pal_prot_flags_t</a> <em>prot</em>, uint64_t <em>offset</em>, size_t <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamMap" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Map a file to a virtual memory address in the current process. </p>
+<p><p>Use </p>
+<code class="docutils literal notranslate"><span class="pre">PalVirtualMemoryFree</span></code> to unmap the file. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the stream to be mapped. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: See <a class="reference internal" href="host-abi.html#pal_8h_1abc3a34dc498c213fc2a73b1fa3c9ad43"><span class="std std-ref">PalVirtualMemoryAlloc</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prot</span></code>: See <a class="reference internal" href="host-abi.html#pal_8h_1abc3a34dc498c213fc2a73b1fa3c9ad43"><span class="std std-ref">PalVirtualMemoryAlloc</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset</span></code>: Offset in the stream to be mapped. Must be properly aligned. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: Size of the requested mapping. Must be non-zero and properly aligned.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamSetLength">
+<span class="target" id="pal_8h_1a72e69fb72c1d7d385a1710454be9adb3"></span>int <code class="sig-name descname">PalStreamSetLength</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, uint64_t <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamSetLength" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the length of the file referenced by handle to <code class="docutils literal notranslate"><span class="pre">length</span></code>. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamFlush">
+<span class="target" id="pal_8h_1aeed13fa5847b48c93b0339c6fe6bc291"></span>int <code class="sig-name descname">PalStreamFlush</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamFlush" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Flush the buffer of a file stream. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSendHandle">
+<span class="target" id="pal_8h_1a32a00e6f0bafc330b725bf51644976af"></span>int <code class="sig-name descname">PalSendHandle</code><span class="sig-paren">(</span>PAL_HANDLE <em>target_process</em>, PAL_HANDLE <em>cargo</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSendHandle" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Send a PAL handle to a process. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">target_process</span></code>: The handle to the target process where <code class="docutils literal notranslate"><span class="pre">cargo</span></code> will be sent. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cargo</span></code>: The handle to send.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalReceiveHandle">
+<span class="target" id="pal_8h_1a00f0d84db2b9722885eec42c72069e64"></span>int <code class="sig-name descname">PalReceiveHandle</code><span class="sig-paren">(</span>PAL_HANDLE <em>source_process</em>, PAL_HANDLE *<em>out_cargo</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalReceiveHandle" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Receive a handle from another process. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">source_process</span></code>: The handle to the source process from which <code class="docutils literal notranslate"><span class="pre">cargo</span></code> will be received. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_cargo</span></code>: The received handle.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamAttributesQuery">
+<span class="target" id="pal_8h_1a4c81f0f07fb825d1defe690cd2dc5679"></span>int <code class="sig-name descname">PalStreamAttributesQuery</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>typed_uri</em>, <a class="reference internal" href="host-abi.html#c.PAL_STREAM_ATTR" title="PAL_STREAM_ATTR">PAL_STREAM_ATTR</a> *<em>attr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamAttributesQuery" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Query the attributes of a named stream. </p>
+<p>This API only applies for URIs such as <code class="docutils literal notranslate"><span class="pre">file:...</span></code>, <code class="docutils literal notranslate"><span class="pre">dir:...</span></code>, and <code class="docutils literal notranslate"><span class="pre">dev:...</span></code>. </p>
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.PAL_STREAM_ATTR">
+<span class="target" id="pal_8h_1aee5744bb200f43b60ab075138d450593"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="host-abi.html#c._PAL_STREAM_ATTR" title="_PAL_STREAM_ATTR">_PAL_STREAM_ATTR</a> <code class="sig-name descname">PAL_STREAM_ATTR</code><a class="headerlink" href="host-abi.html#c.PAL_STREAM_ATTR" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c struct">
+<dt id="c._PAL_STREAM_ATTR">
+<span class="target" id="struct__PAL__STREAM__ATTR"></span><em class="property">struct </em><code class="sig-name descname">_PAL_STREAM_ATTR</code><a class="headerlink" href="host-abi.html#c._PAL_STREAM_ATTR" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamAttributesQueryByHandle">
+<span class="target" id="pal_8h_1aeafebfe983c8834545e729da4c9eb63d"></span>int <code class="sig-name descname">PalStreamAttributesQueryByHandle</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <a class="reference internal" href="host-abi.html#c.PAL_STREAM_ATTR" title="PAL_STREAM_ATTR">PAL_STREAM_ATTR</a> *<em>attr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamAttributesQueryByHandle" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Query the attributes of an open stream. </p>
+<p>This API applies to any stream handle. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamAttributesSetByHandle">
+<span class="target" id="pal_8h_1a0ec4dab95f8c54a18969de06793432f8"></span>int <code class="sig-name descname">PalStreamAttributesSetByHandle</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <a class="reference internal" href="host-abi.html#c.PAL_STREAM_ATTR" title="PAL_STREAM_ATTR">PAL_STREAM_ATTR</a> *<em>attr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamAttributesSetByHandle" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the attributes of an open stream. </p>
+<p>Calling this function on the same handle concurrently is not allowed (i.e. callers must ensure mutual exclusion). </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalStreamChangeName">
+<span class="target" id="pal_8h_1a8f2544532a1304a6e35f0607fd0cd57f"></span>int <code class="sig-name descname">PalStreamChangeName</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">const</em> char *<em>typed_uri</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamChangeName" title="Permalink to this definition"></a><br /></dt>
+<dd><p>This API changes the name of an open stream. </p>
+</dd></dl>
+
+<section id="flags-used-for-stream-manipulation">
+<h4>Flags used for stream manipulation<a class="headerlink" href="host-abi.html#flags-used-for-stream-manipulation" title="Permalink to this headline"></a></h4>
+<dl class="c enum">
+<dt id="c.pal_access">
+<span class="target" id="pal_8h_1a16bf0253dc8701278cdf32c58192d9a1"></span><em class="property">enum </em><code class="sig-name descname">pal_access</code><a class="headerlink" href="host-abi.html#c.pal_access" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Stream Access Flags </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_access.PAL_ACCESS_RDONLY">
+<span class="target" id="pal_8h_1a16bf0253dc8701278cdf32c58192d9a1aa1c71284ccaefabd1d09a5e6c567c34c"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_ACCESS_RDONLY</code><a class="headerlink" href="host-abi.html#c.pal_access.PAL_ACCESS_RDONLY" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_access.PAL_ACCESS_WRONLY">
+<span class="target" id="pal_8h_1a16bf0253dc8701278cdf32c58192d9a1ac86fd9ad0d2b4994a69e8b13e30a417c"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_ACCESS_WRONLY</code><a class="headerlink" href="host-abi.html#c.pal_access.PAL_ACCESS_WRONLY" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_access.PAL_ACCESS_RDWR">
+<span class="target" id="pal_8h_1a16bf0253dc8701278cdf32c58192d9a1a8eaebf5ebac301a14f3e5ae84316a2f0"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_ACCESS_RDWR</code><a class="headerlink" href="host-abi.html#c.pal_access.PAL_ACCESS_RDWR" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_access.PAL_ACCESS_BOUND">
+<span class="target" id="pal_8h_1a16bf0253dc8701278cdf32c58192d9a1adecc9ebc02df80675062c6b8d6a4c42a"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_ACCESS_BOUND</code><a class="headerlink" href="host-abi.html#c.pal_access.PAL_ACCESS_BOUND" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.pal_share_flags_t">
+<span class="target" id="pal_8h_1a8017dcf43f8c4c2e97bcf77297c36340"></span><em class="property">typedef </em>uint32_t <code class="sig-name descname">pal_share_flags_t</code><a class="headerlink" href="host-abi.html#c.pal_share_flags_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>stream sharing flags </p>
+</dd></dl>
+
+<dl class="c enum">
+<dt id="c.pal_create_mode">
+<span class="target" id="pal_8h_1a70b6a03db2aec5861ac0919994b77ef2"></span><em class="property">enum </em><code class="sig-name descname">pal_create_mode</code><a class="headerlink" href="host-abi.html#c.pal_create_mode" title="Permalink to this definition"></a><br /></dt>
+<dd><p>stream create mode </p>
+<p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_create_mode.PAL_CREATE_NEVER">
+<span class="target" id="pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a8a59fc2e7cbb61118d002dc3ecb92ac7"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_CREATE_NEVER</code><a class="headerlink" href="host-abi.html#c.pal_create_mode.PAL_CREATE_NEVER" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Fail if file does not exist </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_create_mode.PAL_CREATE_TRY">
+<span class="target" id="pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a5cbfec7defe4e3d70f3d9662a8c6f755"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_CREATE_TRY</code><a class="headerlink" href="host-abi.html#c.pal_create_mode.PAL_CREATE_TRY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create file if file does not exist </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_create_mode.PAL_CREATE_ALWAYS">
+<span class="target" id="pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a307590d49a445144af96980cb3bb9217"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_CREATE_ALWAYS</code><a class="headerlink" href="host-abi.html#c.pal_create_mode.PAL_CREATE_ALWAYS" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create file and fail if file already exists </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_create_mode.PAL_CREATE_IGNORED">
+<span class="target" id="pal_8h_1a70b6a03db2aec5861ac0919994b77ef2a955b5e48073e9f7861bcd66d7e78cad7"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_CREATE_IGNORED</code><a class="headerlink" href="host-abi.html#c.pal_create_mode.PAL_CREATE_IGNORED" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Magic value for calls to handle types which ignore creation mode </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.pal_stream_options_t">
+<span class="target" id="pal_8h_1a1aa2567ca4e27776c24144f5ca607759"></span><em class="property">typedef </em>uint32_t <code class="sig-name descname">pal_stream_options_t</code><a class="headerlink" href="host-abi.html#c.pal_stream_options_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>stream misc flags </p>
+</dd></dl>
+
+<dl class="c enum">
+<dt id="c.pal_delete_mode">
+<span class="target" id="pal_8h_1a71ec97e513bc3e6801928076aeba1194"></span><em class="property">enum </em><code class="sig-name descname">pal_delete_mode</code><a class="headerlink" href="host-abi.html#c.pal_delete_mode" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_delete_mode.PAL_DELETE_ALL">
+<span class="target" id="pal_8h_1a71ec97e513bc3e6801928076aeba1194a0ec82f8d85a716a11c1a536ce4501a98"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_DELETE_ALL</code><a class="headerlink" href="host-abi.html#c.pal_delete_mode.PAL_DELETE_ALL" title="Permalink to this definition"></a><br /></dt>
+<dd><p>delete the whole resource / shut down both directions </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_delete_mode.PAL_DELETE_READ">
+<span class="target" id="pal_8h_1a71ec97e513bc3e6801928076aeba1194aabe17a73abd99369c12cfcf0bf6aa2a8"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_DELETE_READ</code><a class="headerlink" href="host-abi.html#c.pal_delete_mode.PAL_DELETE_READ" title="Permalink to this definition"></a><br /></dt>
+<dd><p>shut down the read side only </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_delete_mode.PAL_DELETE_WRITE">
+<span class="target" id="pal_8h_1a71ec97e513bc3e6801928076aeba1194ae793d3803c47ae5a4399c767d792227b"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_DELETE_WRITE</code><a class="headerlink" href="host-abi.html#c.pal_delete_mode.PAL_DELETE_WRITE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>shut down the write side only </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.pal_wait_flags_t">
+<span class="target" id="pal_8h_1abbe2027d792da159f7a9296dc8d7d3fd"></span><em class="property">typedef </em>uint32_t <code class="sig-name descname">pal_wait_flags_t</code><a class="headerlink" href="host-abi.html#c.pal_wait_flags_t" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="socket-handling">
+<h3>Socket handling<a class="headerlink" href="host-abi.html#socket-handling" title="Permalink to this headline"></a></h3>
+<dl class="c enum">
+<dt id="c.pal_socket_domain">
+<span class="target" id="pal_8h_1a299c15c5600cc0f5cb95c9c7169e6ab3"></span><em class="property">enum </em><code class="sig-name descname">pal_socket_domain</code><a class="headerlink" href="host-abi.html#c.pal_socket_domain" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_socket_domain.PAL_DISCONNECT">
+<span class="target" id="pal_8h_1a299c15c5600cc0f5cb95c9c7169e6ab3a1a59389fe63ea1e4d205b372e987ad2b"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_DISCONNECT</code><a class="headerlink" href="host-abi.html#c.pal_socket_domain.PAL_DISCONNECT" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_socket_domain.PAL_IPV4">
+<span class="target" id="pal_8h_1a299c15c5600cc0f5cb95c9c7169e6ab3a82696344766bb622bfec0d1ae08ce20a"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_IPV4</code><a class="headerlink" href="host-abi.html#c.pal_socket_domain.PAL_IPV4" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_socket_domain.PAL_IPV6">
+<span class="target" id="pal_8h_1a299c15c5600cc0f5cb95c9c7169e6ab3aa1d2f4f2cdc49a74f7cb077d1a1fc75b"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_IPV6</code><a class="headerlink" href="host-abi.html#c.pal_socket_domain.PAL_IPV6" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c enum">
+<dt id="c.pal_socket_type">
+<span class="target" id="pal_8h_1ab445ef59e3556549984d968975977ee9"></span><em class="property">enum </em><code class="sig-name descname">pal_socket_type</code><a class="headerlink" href="host-abi.html#c.pal_socket_type" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_socket_type.PAL_SOCKET_TCP">
+<span class="target" id="pal_8h_1ab445ef59e3556549984d968975977ee9a68fecbc8e23bf70686e05c7a073d5c38"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_SOCKET_TCP</code><a class="headerlink" href="host-abi.html#c.pal_socket_type.PAL_SOCKET_TCP" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_socket_type.PAL_SOCKET_UDP">
+<span class="target" id="pal_8h_1ab445ef59e3556549984d968975977ee9a1d19a9aa196f6851ca8a38a3f764d5a8"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_SOCKET_UDP</code><a class="headerlink" href="host-abi.html#c.pal_socket_type.PAL_SOCKET_UDP" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c struct">
+<dt id="c.pal_socket_addr">
+<span class="target" id="structpal__socket__addr"></span><em class="property">struct </em><code class="sig-name descname">pal_socket_addr</code><a class="headerlink" href="host-abi.html#c.pal_socket_addr" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c struct">
+<dt id="c.iovec">
+<span class="target" id="structiovec"></span><em class="property">struct </em><code class="sig-name descname">iovec</code><a class="headerlink" href="host-abi.html#c.iovec" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketCreate">
+<span class="target" id="pal_8h_1ac74bbd60fa01b73dd837d6fc94803bec"></span>int <code class="sig-name descname">PalSocketCreate</code><span class="sig-paren">(</span><em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_socket_domain" title="pal_socket_domain">pal_socket_domain</a> <em>domain</em>, <em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_socket_type" title="pal_socket_type">pal_socket_type</a> <em>type</em>, <a class="reference internal" href="host-abi.html#c.pal_stream_options_t" title="pal_stream_options_t">pal_stream_options_t</a> <em>options</em>, PAL_HANDLE *<em>out_handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketCreate" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create a socket handle. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">domain</span></code>: Domain of the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: Type of the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: Flags to set on the handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_handle</span></code>: On success contains the socket handle.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketBind">
+<span class="target" id="pal_8h_1a73960af512c8924efa0a747cd695cbd1"></span>int <code class="sig-name descname">PalSocketBind</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>addr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketBind" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Bind a socket to a local address. </p>
+<p><p>Can be called only once per socket. </p>
+<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">addr</span></code>: Address to bind to. If the protocol allows for some ephemeral data (e.g. port <code class="docutils literal notranslate"><span class="pre">0</span></code> in IPv4), it will be overwritten to the actual data used.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketListen">
+<span class="target" id="pal_8h_1ad7c9961dbf941ec35881df8a43625dea"></span>int <code class="sig-name descname">PalSocketListen</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, unsigned int <em>backlog</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketListen" title="Permalink to this definition"></a><br /></dt>
+<dd><p>\biref Turn a socket into a listening one.</p>
+<p><p>Can be called multiple times, to change </p>
+<code class="docutils literal notranslate"><span class="pre">backlog</span></code>. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">backlog</span></code>: Size of the pending connections queue.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketAccept">
+<span class="target" id="pal_8h_1a59c0145921992047c3b17b39da16a28d"></span>int <code class="sig-name descname">PalSocketAccept</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <a class="reference internal" href="host-abi.html#c.pal_stream_options_t" title="pal_stream_options_t">pal_stream_options_t</a> <em>options</em>, PAL_HANDLE *<em>out_client</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>out_client_addr</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>out_local_addr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketAccept" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Accept a new connection on a socket. </p>
+<p><p>This function can be safely called concurrently. </p>
+<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. Must be in listening mode. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: Flags to set on the new handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_client</span></code>: On success contains a handle for the new connection. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_client_addr</span></code>: On success contains the remote address of the new connection. Can be NULL, to ignore the result. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_local_addr</span></code>: On success contains the local address of the new connection. Can be NULL, to ignore the result.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketConnect">
+<span class="target" id="pal_8h_1a3793e544bfd197b0f811dc256232bf7b"></span>int <code class="sig-name descname">PalSocketConnect</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>addr</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>out_local_addr</em>, bool *<em>out_inprogress</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketConnect" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Connect a socket to a remote address. </p>
+<p><p>Can also be used to disconnect the socket, if #PAL_DISCONNECT is passed in </p>
+<code class="docutils literal notranslate"><span class="pre">addr</span></code>. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: Address to connect to. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_local_addr</span></code>: On success contains the local address of the socket. Can be NULL, to ignore the result. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_inprogress</span></code>: On success, returns true in special case of an in-progress connection on a non-blocking socket.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketSend">
+<span class="target" id="pal_8h_1a5158099146e2375fa73d667947f89921"></span>int <code class="sig-name descname">PalSocketSend</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.iovec" title="iovec">iovec</a> *<em>iov</em>, size_t <em>iov_len</em>, size_t *<em>out_size</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>addr</em>, bool <em>force_nonblocking</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketSend" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Send data. </p>
+<p><p>Data is sent atomically, i.e. data from two </p>
+<code class="docutils literal notranslate"><span class="pre">PalSocketSend</span></code> calls will not be interleaved.<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iov</span></code>: Array of buffers with data to send. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iov_len</span></code>: Length of <code class="docutils literal notranslate"><span class="pre">iov</span></code> array. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_size</span></code>: On success contains the number of bytes sent. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: Destination address. Can be NULL if the socket was connected. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">force_nonblocking</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code> this request should not block. Otherwise just use whatever mode the handle is in.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>We use Linux <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iovec</span></code> as argument here, because the alternative is to use a custom structure, but it would contain exactly the same fields, which would achieve nothing, but could worsen performance in certain cases. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSocketRecv">
+<span class="target" id="pal_8h_1a8fb6bd35b9b2826c370b5f7fb3fd96fb"></span>int <code class="sig-name descname">PalSocketRecv</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.iovec" title="iovec">iovec</a> *<em>iov</em>, size_t <em>iov_len</em>, size_t *<em>out_total_size</em>, <em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_socket_addr" title="pal_socket_addr">pal_socket_addr</a> *<em>addr</em>, bool <em>force_nonblocking</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSocketRecv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Receive data. </p>
+<p><p>Data is received atomically, i.e. data from two </p>
+<code class="docutils literal notranslate"><span class="pre">PalSocketRecv</span></code> calls will not be interleaved.<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to the socket. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iov</span></code>: Array of buffers for received data. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iov_len</span></code>: Length of <code class="docutils literal notranslate"><span class="pre">iov</span></code> array. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">out_total_size</span></code>: On success contains the number of bytes received (TCP) or the size of the packet (UDP), which might be greater than the total size of buffers in <code class="docutils literal notranslate"><span class="pre">iov</span></code> array. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">addr</span></code>: Source address. Can be NULL to ignore the source address. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">force_nonblocking</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code> this request should not block. Otherwise just use whatever mode the handle is in.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>We use Linux <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iovec</span></code> as argument here, because the alternative is to use a custom structure, but it would contain exactly the same fields, which would achieve nothing, but could worsen performance in certain cases. </p>
+</dd></dl>
+
+</section>
+<section id="thread-creation">
+<h3>Thread creation<a class="headerlink" href="host-abi.html#thread-creation" title="Permalink to this headline"></a></h3>
+<p>The ABI supports multithreading through five calls to create, sleep, yield the
+scheduler quantum for, resume execution of, and terminate threads, as well as
+seven calls to create, signal, and block on synchronization objects.</p>
+<dl class="c function">
+<dt id="c.PalThreadCreate">
+<span class="target" id="pal_8h_1a46d7fd4ee3388353f3df4041a79be958"></span>int <code class="sig-name descname">PalThreadCreate</code><span class="sig-paren">(</span>int (*<em>callback</em>)<span class="sig-paren">(</span>void*<span class="sig-paren">)</span>, void *<em>param</em>, PAL_HANDLE *<em>handle</em>, <span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalThreadCreate" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create a thread in the current process. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: Address of an entry point of execution for the new thread. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">param</span></code>: Pointer argument that is passed to the new thread. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">handle</span></code>: On success contains the thread handle. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalThreadYieldExecution">
+<span class="target" id="pal_8h_1a602c6b449ba3cf70562cd66f73a54155"></span>void <code class="sig-name descname">PalThreadYieldExecution</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalThreadYieldExecution" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Yield the current thread such that the host scheduler can reschedule it. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalThreadExit">
+<span class="target" id="pal_8h_1a1c0823672e12efcd70583a5320d44d74"></span>void <code class="sig-name descname">PalThreadExit</code><span class="sig-paren">(</span>int *<em>clear_child_tid</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalThreadExit" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Terminate the current thread. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">clear_child_tid</span></code>: Pointer to memory that is erased on thread exit to notify LibOS (which in turn notifies the parent thread if any); if <code class="docutils literal notranslate"><span class="pre">clear_child_tid</span></code> is NULL, then PAL doesn’t do the clearing. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalThreadResume">
+<span class="target" id="pal_8h_1afbf53d724073a908e790b1d6e725d8b5"></span>int <code class="sig-name descname">PalThreadResume</code><span class="sig-paren">(</span>PAL_HANDLE <em>thread</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalThreadResume" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Resume a thread. </p>
+</dd></dl>
+
+</section>
+<section id="exception-handling">
+<h3>Exception handling<a class="headerlink" href="host-abi.html#exception-handling" title="Permalink to this headline"></a></h3>
+<dl class="c enum">
+<dt id="c.pal_event">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88b"></span><em class="property">enum </em><code class="sig-name descname">pal_event</code><a class="headerlink" href="host-abi.html#c.pal_event" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_NO_EVENT">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88baaec66e214dc4c045c4b1844021c72132"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_NO_EVENT</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_NO_EVENT" title="Permalink to this definition"></a><br /></dt>
+<dd><p>pseudo event, used in some APIs to denote a lack of event </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_ARITHMETIC_ERROR">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88baa0144493d560295a2a0a230495e92c54"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_ARITHMETIC_ERROR</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_ARITHMETIC_ERROR" title="Permalink to this definition"></a><br /></dt>
+<dd><p>arithmetic error (div-by-zero, floating point exception, etc.) </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_MEMFAULT">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88ba754dfdf736466ddfe3e46c170160ed91"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_MEMFAULT</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_MEMFAULT" title="Permalink to this definition"></a><br /></dt>
+<dd><p>segmentation fault, protection fault, bus fault </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_ILLEGAL">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88baaa1cb428f140a9511624e3dcad7dd468"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_ILLEGAL</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_ILLEGAL" title="Permalink to this definition"></a><br /></dt>
+<dd><p>illegal instructions </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_QUIT">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88ba9015214d894436b5c8744317cd16726b"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_QUIT</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_QUIT" title="Permalink to this definition"></a><br /></dt>
+<dd><p>terminated by external program (see “sys.enable_sigterm_injection” manifest option) </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_INTERRUPTED">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88babfa78be16b5efa656199ca0928c65e10"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_INTERRUPTED</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_INTERRUPTED" title="Permalink to this definition"></a><br /></dt>
+<dd><p>interrupted (usually internally to handle aync event) </p>
+</dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_event.PAL_EVENT_NUM_BOUND">
+<span class="target" id="pal_8h_1a3a0988e46ff62105508083be8ae3b88ba68a08c8694927b9d6e820c619d6159dc"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_EVENT_NUM_BOUND</code><a class="headerlink" href="host-abi.html#c.pal_event.PAL_EVENT_NUM_BOUND" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c type">
+<dt id="c.PAL_CONTEXT">
+<span class="target" id="pal__arch_8h_1aefdf47e58f574beb84dcc97b9dcde3e5"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.PAL_CONTEXT" title="PAL_CONTEXT">PAL_CONTEXT</a> <code class="sig-name descname">PAL_CONTEXT</code><a class="headerlink" href="host-abi.html#c.PAL_CONTEXT" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c struct">
+<dt>
+<span class="target" id="structPAL__CONTEXT"></span><em class="property">struct </em><code class="sig-name descname">PAL_CONTEXT</code><br /></dt>
+<dd></dd></dl>
+
+<dl class="c type">
+<dt id="c.pal_event_handler_t">
+<span class="target" id="pal_8h_1ab269b309adc2e84f1e94f2f14411ece6"></span><em class="property">typedef </em>void (*<code class="sig-name descname">pal_event_handler_t</code>)<span class="sig-paren">(</span>bool is_in_pal, uintptr_t addr, <a class="reference internal" href="host-abi.html#c.PAL_CONTEXT" title="PAL_CONTEXT">PAL_CONTEXT</a> *context<span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.pal_event_handler_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Type of exception handlers (upcalls). </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">is_in_pal</span></code>: <code class="docutils literal notranslate"><span class="pre">true</span></code> if the exception happened inside PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: Address of the exception (meaningful only for sync exceptions). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: CPU context at the moment of exception. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSetExceptionHandler">
+<span class="target" id="pal_8h_1a5d0f11923780a9635b6f946dbd19d3c2"></span>void <code class="sig-name descname">PalSetExceptionHandler</code><span class="sig-paren">(</span><a class="reference internal" href="host-abi.html#c.pal_event_handler_t" title="pal_event_handler_t">pal_event_handler_t</a> <em>handler</em>, <em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_event" title="pal_event">pal_event</a> <em>event</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSetExceptionHandler" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the handler for the specific exception event. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code>: One of <a class="reference internal" href="host-abi.html#pal_8h_1a3a0988e46ff62105508083be8ae3b88b"><span class="std std-ref">pal_event</span></a> values. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</section>
+<section id="synchronization">
+<h3>Synchronization<a class="headerlink" href="host-abi.html#synchronization" title="Permalink to this headline"></a></h3>
+<dl class="c function">
+<dt id="c.PalEventCreate">
+<span class="target" id="pal_8h_1a23aff1cefaa035afea03021e4a766a72"></span>int <code class="sig-name descname">PalEventCreate</code><span class="sig-paren">(</span>PAL_HANDLE *<em>handle</em>, bool <em>init_signaled</em>, bool <em>auto_clear</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalEventCreate" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Create an event handle. </p>
+<p><p>Creates a handle to an event that resembles WinAPI synchronization events. A thread can set (signal) the event using </p>
+<a class="reference internal" href="host-abi.html#pal_8h_1a24026cc3cd3ffaed46ceeb6577d2ac5e"><span class="std std-ref">PalEventSet</span></a>, clear (unset) it using <a class="reference internal" href="host-abi.html#pal_8h_1a21c646ac94dd05f2ad0b1d8b912e71ba"><span class="std std-ref">PalEventClear</span></a> or wait until the event becomes set (signaled) using <a class="reference internal" href="host-abi.html#pal_8h_1a78c4b5ba8bff81afabfbfc1dca3e7d59"><span class="std std-ref">PalEventWait</span></a>. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">handle</span></code>: On success <code class="docutils literal notranslate"><span class="pre">*handle</span></code> contains pointer to the event handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">init_signaled</span></code>: Initial state of the event (<code class="docutils literal notranslate"><span class="pre">true</span></code> - set, <code class="docutils literal notranslate"><span class="pre">false</span></code> - not set). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auto_clear</span></code>: <code class="docutils literal notranslate"><span class="pre">true</span></code> if a successful wait for the event should also reset (consume) it.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalEventSet">
+<span class="target" id="pal_8h_1a24026cc3cd3ffaed46ceeb6577d2ac5e"></span>void <code class="sig-name descname">PalEventSet</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalEventSet" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set (signal) an event. </p>
+<p>If the event is already set, does nothing.</p>
+<p>This function has release semantics and synchronizes with <a class="reference internal" href="host-abi.html#pal_8h_1a78c4b5ba8bff81afabfbfc1dca3e7d59"><span class="std std-ref">PalEventWait</span></a>. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalEventClear">
+<span class="target" id="pal_8h_1a21c646ac94dd05f2ad0b1d8b912e71ba"></span>void <code class="sig-name descname">PalEventClear</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalEventClear" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Clear (unset) an event. </p>
+<p>If the event is not set, does nothing. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalEventWait">
+<span class="target" id="pal_8h_1a78c4b5ba8bff81afabfbfc1dca3e7d59"></span>int <code class="sig-name descname">PalEventWait</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em>, uint64_t *<em>timeout_us</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalEventWait" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Wait for an event handle. </p>
+<p><code class="docutils literal notranslate"><span class="pre">timeout_us</span></code> points to a value that specifies the maximal time (in microseconds) that this function should sleep if this event is not signaled in the meantime. Specifying <code class="docutils literal notranslate"><span class="pre">NULL</span></code> blocks indefinitely. Note that in any case this function can return earlier, e.g. if a signal has arrived, but this will be indicated by the returned error code. After returning (both successful and not), <code class="docutils literal notranslate"><span class="pre">timeout_us</span></code> will contain the remaining time (time that need to pass before we hit original <code class="docutils literal notranslate"><span class="pre">timeout_us</span></code>).<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if the event was triggered, negative error code otherwise (#PAL_ERROR_TRYAGAIN in case of timeout triggering)</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">handle</span></code>: Handle to wait on, must be of “event” type. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">timeout_us</span></code>: Timeout for the wait.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>This function has acquire semantics and synchronizes with <a class="reference internal" href="host-abi.html#pal_8h_1a24026cc3cd3ffaed46ceeb6577d2ac5e"><span class="std std-ref">PalEventSet</span></a>. </p>
+</dd></dl>
+
+</section>
+<section id="objects">
+<h3>Objects<a class="headerlink" href="host-abi.html#objects" title="Permalink to this headline"></a></h3>
+<dl class="c function">
+<dt id="c.PalStreamsWaitEvents">
+<span class="target" id="pal_8h_1aff8f7b47143be8cd2a4a437438ecbbb7"></span>int <code class="sig-name descname">PalStreamsWaitEvents</code><span class="sig-paren">(</span>size_t <em>count</em>, PAL_HANDLE *<em>handle_array</em>, <a class="reference internal" href="host-abi.html#c.pal_wait_flags_t" title="pal_wait_flags_t">pal_wait_flags_t</a> *<em>events</em>, <a class="reference internal" href="host-abi.html#c.pal_wait_flags_t" title="pal_wait_flags_t">pal_wait_flags_t</a> *<em>ret_events</em>, uint64_t *<em>timeout_us</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalStreamsWaitEvents" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Poll - wait for an event to happen on at least one handle. </p>
+<p><code class="docutils literal notranslate"><span class="pre">timeout_us</span></code> contains remaining timeout both on successful and failed calls.<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if there was an event on at least one handle, negative error code otherwise.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code>: The number of items in <code class="docutils literal notranslate"><span class="pre">handle_array</span></code>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">handle_array</span></code>: Array of handles to poll. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">events</span></code>: Requested events for each handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">ret_events</span></code>: Events that were detected on each handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">timeout_us</span></code>: Timeout for the wait (<code class="docutils literal notranslate"><span class="pre">NULL</span></code> to block indefinitely).</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p><code class="docutils literal notranslate"><span class="pre">handle_array</span></code> can contain empty elements (NULL) which are ignored. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalObjectDestroy">
+<span class="target" id="pal_8h_1a1184c58cbbbfcb17bf7913ecf259f7b4"></span>void <code class="sig-name descname">PalObjectDestroy</code><span class="sig-paren">(</span>PAL_HANDLE <em>handle</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalObjectDestroy" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Close and deallocate a PAL handle. </p>
+</dd></dl>
+
+</section>
+<section id="miscellaneous">
+<h3>Miscellaneous<a class="headerlink" href="host-abi.html#miscellaneous" title="Permalink to this headline"></a></h3>
+<p>The ABI includes calls to get wall clock time, generate cryptographically-strong
+random bits, to obtain an attestation report and quote, etc.</p>
+<dl class="c function">
+<dt id="c.PalDebugLog">
+<span class="target" id="pal_8h_1af748d5a8da948ffdf02c4e1713e938d3"></span>int <code class="sig-name descname">PalDebugLog</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>buffer</em>, size_t <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalDebugLog" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Output a message to the debug stream. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: Message to write. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: <code class="docutils literal notranslate"><span class="pre">buffer</span></code> size.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalGetPalPublicState">
+<span class="target" id="pal_8h_1a424075bff266e1c980919d08a2cb3d97"></span><em class="property">struct</em> <a class="reference internal" href="host-abi.html#c.pal_public_state" title="pal_public_state">pal_public_state</a> *<code class="sig-name descname">PalGetPalPublicState</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalGetPalPublicState" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSystemTimeQuery">
+<span class="target" id="pal_8h_1a7d46635f41dde7a4b7baf3ec48f9258b"></span>int <code class="sig-name descname">PalSystemTimeQuery</code><span class="sig-paren">(</span>uint64_t *<em>time</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSystemTimeQuery" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the current time. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">time</span></code>: On success holds the current time in microseconds. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalRandomBitsRead">
+<span class="target" id="pal_8h_1a2cd035fd17cdb85943e56f59d70a0f6a"></span>int <code class="sig-name descname">PalRandomBitsRead</code><span class="sig-paren">(</span>void *<em>buffer</em>, size_t <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalRandomBitsRead" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Cryptographically secure RNG. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">buffer</span></code>: Output buffer. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: <code class="docutils literal notranslate"><span class="pre">buffer</span></code> size.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSegmentBaseGet">
+<span class="target" id="pal_8h_1a3a91b3b5d5aa4c10462bf1e861575b76"></span>int <code class="sig-name descname">PalSegmentBaseGet</code><span class="sig-paren">(</span><em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_segment_reg" title="pal_segment_reg">pal_segment_reg</a> <em>reg</em>, uintptr_t *<em>addr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSegmentBaseGet" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get segment register base. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error value on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code>: The register base to get (#pal_segment_reg). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: The address where result will be stored.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalSegmentBaseSet">
+<span class="target" id="pal_8h_1a7d826cfd4c99e5e8ea057bbd9b3b81db"></span>int <code class="sig-name descname">PalSegmentBaseSet</code><span class="sig-paren">(</span><em class="property">enum</em> <a class="reference internal" href="host-abi.html#c.pal_segment_reg" title="pal_segment_reg">pal_segment_reg</a> <em>reg</em>, uintptr_t <em>addr</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalSegmentBaseSet" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set segment register. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 on success, negative error value on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code>: The register base to be set (#pal_segment_reg). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addr</span></code>: The address to be set.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c enum">
+<dt id="c.pal_segment_reg">
+<span class="target" id="pal_8h_1a47ddbce8dda25c020c1b213b5cdc99af"></span><em class="property">enum </em><code class="sig-name descname">pal_segment_reg</code><a class="headerlink" href="host-abi.html#c.pal_segment_reg" title="Permalink to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="c enumerator">
+<dt id="c.pal_segment_reg.PAL_SEGMENT_FS">
+<span class="target" id="pal_8h_1a47ddbce8dda25c020c1b213b5cdc99afab3e7f62dbe89153e79d013669b963577"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_SEGMENT_FS</code><a class="headerlink" href="host-abi.html#c.pal_segment_reg.PAL_SEGMENT_FS" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c enumerator">
+<dt id="c.pal_segment_reg.PAL_SEGMENT_GS">
+<span class="target" id="pal_8h_1a47ddbce8dda25c020c1b213b5cdc99afa2364d67baddca72aadeb2ecce6fb516c"></span><em class="property">enumerator </em><code class="sig-name descname">PAL_SEGMENT_GS</code><a class="headerlink" href="host-abi.html#c.pal_segment_reg.PAL_SEGMENT_GS" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalCpuIdRetrieve">
+<span class="target" id="pal_8h_1aa1eae32023e7be9f0fc99a30ba39b1a3"></span>int <code class="sig-name descname">PalCpuIdRetrieve</code><span class="sig-paren">(</span>uint32_t <em>leaf</em>, uint32_t <em>subleaf</em>, uint32_t <em>values</em>[<em>CPUID_WORD_NUM</em>]<span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalCpuIdRetrieve" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Return CPUID information, based on the leaf/subleaf. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">values</span></code>: The array of the results. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalAttestationReport">
+<span class="target" id="pal_8h_1a8bc9beb313b47c772c026e82f73a85db"></span>int <code class="sig-name descname">PalAttestationReport</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>user_report_data</em>, size_t *<em>user_report_data_size</em>, void *<em>target_info</em>, size_t *<em>target_info_size</em>, void *<em>report</em>, size_t *<em>report_size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalAttestationReport" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Obtain the attestation report (local) with <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> embedded into it. </p>
+<p><p>Currently works only for Linux-SGX PAL, where </p>
+<code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> is a blob of exactly 64B, <code class="docutils literal notranslate"><span class="pre">target_info</span></code> is an SGX target_info struct of exactly 512B, and <code class="docutils literal notranslate"><span class="pre">report</span></code> is an SGX report obtained via the EREPORT instruction (exactly 432B). If <code class="docutils literal notranslate"><span class="pre">target_info</span></code> contains all zeros, then this function additionally returns this enclave’s target info in <code class="docutils literal notranslate"><span class="pre">target_info</span></code>. Useful for local attestation.<dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_report_data</span></code>: Report data with arbitrary contents (typically uniquely identifies this Gramine instance). Must be a 64B buffer in case of SGX PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">user_report_data_size</span></code>: Caller specifies size of <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code>; on return, contains PAL-enforced size of <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> (64B in case of SGX PAL). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">target_info</span></code>: Target info of target enclave for attestation. If it contains all zeros, it is populated with this enclave’s target info. Must be a 512B buffer in case of SGX PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">target_info_size</span></code>: Caller specifies size of <code class="docutils literal notranslate"><span class="pre">target_info</span></code>; on return, contains PAL-enforced size of <code class="docutils literal notranslate"><span class="pre">target_info</span></code> (512B in case of SGX PAL). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">report</span></code>: Attestation report with <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> embedded, targeted for an enclave with provided <code class="docutils literal notranslate"><span class="pre">target_info</span></code>. Must be a 432B buffer in case of SGX PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">report_size</span></code>: Caller specifies size of <code class="docutils literal notranslate"><span class="pre">report</span></code>; on return, contains PAL-enforced size of <code class="docutils literal notranslate"><span class="pre">report</span></code> (432B in case of SGX PAL).</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>The caller may specify <code class="docutils literal notranslate"><span class="pre">*user_report_data_size</span></code>, <code class="docutils literal notranslate"><span class="pre">*target_info_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">*report_size</span></code> as 0 and other fields as NULL to get PAL-enforced sizes of these three structs. </p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalAttestationQuote">
+<span class="target" id="pal_8h_1ab69174fc0003ba394c6fbe93e37db330"></span>int <code class="sig-name descname">PalAttestationQuote</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>user_report_data</em>, size_t <em>user_report_data_size</em>, void *<em>quote</em>, size_t *<em>quote_size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalAttestationQuote" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Obtain the attestation quote with <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> embedded into it. </p>
+<p><p>Currently works only for Linux-SGX PAL, where </p>
+<code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> is a blob of exactly 64B and <code class="docutils literal notranslate"><span class="pre">quote</span></code> is an SGX quote obtained from Quoting Enclave via AESM service. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_report_data</span></code>: Report data with arbitrary contents (typically uniquely identifies this Gramine instance). Must be a 64B buffer in case of SGX PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_report_data_size</span></code>: Size in bytes of <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code>. Must be exactly 64B in case of SGX PAL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">quote</span></code>: Attestation quote with <code class="docutils literal notranslate"><span class="pre">user_report_data</span></code> embedded. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">quote_size</span></code>: Caller specifies maximum size allocated for <code class="docutils literal notranslate"><span class="pre">quote</span></code>; on return, contains actual size of obtained quote.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="c function">
+<dt id="c.PalGetSpecialKey">
+<span class="target" id="pal_8h_1a37db1412437dde46c1a5a3529c65b3b6"></span>int <code class="sig-name descname">PalGetSpecialKey</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>name</em>, void *<em>key</em>, size_t *<em>key_size</em><span class="sig-paren">)</span><a class="headerlink" href="host-abi.html#c.PalGetSpecialKey" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get special key (specific to PAL host). </p>
+<p><p>Retrieve the value of a special key. Currently implemented for Linux-SGX PAL, which supports two such keys: </p>
+<code class="docutils literal notranslate"><span class="pre">_sgx_mrenclave</span></code> and <code class="docutils literal notranslate"><span class="pre">_sgx_mrsigner</span></code> (see macros below).<dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: Key name. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">key</span></code>: On success, will be set to retrieved key. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">key_size</span></code>: Caller specifies maximum size for <code class="docutils literal notranslate"><span class="pre">key</span></code>. On success, will contain actual size.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>If a given key is not supported by the current PAL host, the function will return -PAL_ERROR_NOTIMPLEMENTED. </p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../libos/libos-init.html" class="btn btn-neutral float-left" title="LibOS documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../manpages/index.html" class="btn btn-neutral float-right" title="Manual pages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

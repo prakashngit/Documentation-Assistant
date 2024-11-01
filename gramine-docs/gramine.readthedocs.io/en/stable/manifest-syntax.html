@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manifest syntax &mdash; Gramine  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Attestation and Secret Provisioning" href="attestation.html" />
+    <link rel="prev" title="Set up the host environment" href="sgx-setup.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "manifest-syntax", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/manifest-syntax.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="manifest-syntax.html#">Manifest syntax</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manifest-syntax.html#common-syntax">Common syntax</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#log-level">Log level</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#loader-entrypoint">Loader entrypoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#libos-entrypoint">LibOS Entrypoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#command-line-arguments">Command-line arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#domain-names-configuration">Domain names configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#environment-variables">Environment variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#user-id-and-group-id">User ID and Group ID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#disabling-aslr">Disabling ASLR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#check-invalid-pointers">Check invalid pointers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#stack-size">Stack size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#program-break-brk-size">Program break (brk) size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#allowing-eventfd">Allowing eventfd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#external-sigterm-injection">External SIGTERM injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#disallowing-subprocesses-fork">Disallowing subprocesses (fork)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#root-fs-mount-point">Root FS mount point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#fs-mount-points">FS mount points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#start-current-working-directory">Start (current working) directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#allowed-ioctls">Allowed IOCTLs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#experimental-flock-bsd-style-locks-support">Experimental flock (BSD-style locks) support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manifest-syntax.html#sgx-syntax-1">SGX syntax</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#debug-production-enclave">Debug/production enclave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#edmm">EDMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#enclave-size">Enclave size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#number-of-threads">Number of threads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#number-of-rpc-threads-exitless-feature">Number of RPC threads (Exitless feature)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#sgx-exinfo">SGX EXINFO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#optional-cpu-features-avx-avx512-amx-mpx-pkru">Optional CPU features (AVX, AVX512, AMX, MPX, PKRU)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#isv-product-id-and-svn">ISV Product ID and SVN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#attribute-masks-for-sgx-sealing-key-derivation">Attribute masks for SGX sealing key derivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#allowed-files-1">Allowed files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#trusted-files">Trusted files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#encrypted-files-1">Encrypted files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#untrusted-shared-memory-1">Untrusted shared memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#file-check-policy">File check policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#attestation-and-quotes">Attestation and quotes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#pre-heating-enclave">Pre-heating enclave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#enabling-per-thread-and-process-wide-sgx-stats">Enabling per-thread and process-wide SGX stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#sgx-profiling">SGX profiling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#sgx-profiling-with-intel-vtune-profiler">SGX profiling with Intel VTune Profiler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manifest-syntax.html#deprecated-options">Deprecated options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#optional-cpu-features-deprecated-syntax">Optional CPU features (deprecated syntax)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest-syntax.html#sgx-exinfo-deprecated-syntax">SGX EXINFO (deprecated syntax)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Manifest syntax</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/manifest-syntax.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="manifest-syntax">
+<h1>Manifest syntax<a class="headerlink" href="manifest-syntax.html#manifest-syntax" title="Permalink to this headline"></a></h1>
+<p>A manifest file is an application-specific configuration text file that
+specifies the environment and resources for running an application inside
+Gramine. A manifest file contains key-value pairs (as well as more
+complicated table and array objects) in the TOML syntax. For the details of the
+TOML syntax, see <a class="reference external" href="https://toml.io">the official documentation</a>.</p>
+<p>A typical string entry looks like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Key][.Key][.Key] = &quot;[Value]&quot;
+</pre></div>
+</div>
+<p>A typical integer entry looks similar to the above but without double quotes:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Key][.Key][.Key] = [Value]
+</pre></div>
+</div>
+<p>Comments can be inlined in a manifest by starting them with a hash sign
+(<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">comment...</span></code>).</p>
+<p>There is also a preprocessor available: <a class="reference internal" href="manpages/gramine-manifest.html#gramine-manifest"><span class="std std-ref">gramine-manifest</span></a>, which renders manifests from Jinja templates.</p>
+<section id="common-syntax">
+<h2>Common syntax<a class="headerlink" href="manifest-syntax.html#common-syntax" title="Permalink to this headline"></a></h2>
+<section id="log-level">
+<h3>Log level<a class="headerlink" href="manifest-syntax.html#log-level" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.log_level = &quot;[none|error|warning|debug|trace|all]&quot;
+(Default: &quot;error&quot;)
+
+loader.log_file = &quot;[PATH]&quot;
+</pre></div>
+</div>
+<p>This configures Gramine’s debug log. The <code class="docutils literal notranslate"><span class="pre">log_level</span></code> option specifies what
+messages to enable (e.g. <code class="docutils literal notranslate"><span class="pre">loader.log_level</span> <span class="pre">=</span> <span class="pre">&quot;debug&quot;</span></code> will enable all messages
+of type <code class="docutils literal notranslate"><span class="pre">error</span></code>, <code class="docutils literal notranslate"><span class="pre">warning</span></code> and <code class="docutils literal notranslate"><span class="pre">debug</span></code>). By default, the messages are printed
+to the standard error. If <code class="docutils literal notranslate"><span class="pre">log_file</span></code> is specified, the messages will be
+appended to that file.</p>
+<p>Gramine outputs log messages of the following types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">error</span></code>: A serious error preventing Gramine from operating properly (for
+example, error initializing one of the components).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warning</span></code>: A non-fatal issue. Might mean that application is requesting
+something unsupported or poorly emulated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">debug</span></code>: Detailed information about Gramine’s operation and internals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trace</span></code>: More detailed information, such as all system calls requested by
+the application. Might contain a lot of noise.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only <code class="docutils literal notranslate"><span class="pre">error</span></code> log level is suitable for production. Other levels may leak
+sensitive data.</p>
+</aside>
+</section>
+<section id="loader-entrypoint">
+<h3>Loader entrypoint<a class="headerlink" href="manifest-syntax.html#loader-entrypoint" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.entrypoint = &quot;[URI]&quot;
+</pre></div>
+</div>
+<p>This specifies the LibOS component that Gramine will load and run before loading
+the first executable of the user application. Currently, there is only one LibOS
+implementation: <code class="docutils literal notranslate"><span class="pre">libsysdb.so</span></code>.</p>
+<p>Note that the loader (the PAL binary) loads the LibOS binary specified in
+<code class="docutils literal notranslate"><span class="pre">loader.entrypoint</span></code> and passes control to this binary. Next, the LibOS binary
+loads the actual executable (the user application) specified in
+<code class="docutils literal notranslate"><span class="pre">libos.entrypoint</span></code>. Also note that, in contrast to <code class="docutils literal notranslate"><span class="pre">libos.entrypoint</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">loader.entrypoint</span></code> option specifies a PAL URI (with the <code class="docutils literal notranslate"><span class="pre">file:</span></code> prefix).</p>
+</section>
+<section id="libos-entrypoint">
+<h3>LibOS Entrypoint<a class="headerlink" href="manifest-syntax.html#libos-entrypoint" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>libos.entrypoint = &quot;[PATH]&quot;
+</pre></div>
+</div>
+<p>This specifies the first executable of the user application which is to be
+started when spawning a Gramine instance from this manifest file. Needs to be a
+path inside Gramine pointing to a mounted file. Relative paths will be
+interpreted as starting from the current working directory (i.e. from <code class="docutils literal notranslate"><span class="pre">/</span></code> by
+default, or <code class="docutils literal notranslate"><span class="pre">fs.start_dir</span></code> if specified).</p>
+<p>The recommended usage is to provide an absolute path of the executable. This
+executable must also be in the Gramine’s filesystem, either directly mounted or
+within a directory that is mounted. For example, if one wishes to execute the
+Python 3.8 interpreter, one would specify it as the entrypoint and mount the
+Python executable at the expected path within the Gramine filesystem:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>libos.entrypoint = &quot;/usr/bin/python3.8&quot;
+
+fs.mounts = [
+  { path = &quot;/usr/bin/python3.8&quot;, uri = &quot;file:/usr/bin/python3.8&quot; },
+  # Or, if using a binary from your local directory:
+  # { path = &quot;/usr/bin/python3.8&quot;, uri = &quot;file:python3.8&quot; },
+]
+</pre></div>
+</div>
+</section>
+<section id="command-line-arguments">
+<h3>Command-line arguments<a class="headerlink" href="manifest-syntax.html#command-line-arguments" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.insecure__use_cmdline_argv = true
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.argv = [&quot;arg0&quot;, &quot;arg1&quot;, &quot;arg2&quot;, ...]
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.argv_src_file = &quot;file:file_with_serialized_argv&quot;
+</pre></div>
+</div>
+<p>If you want your application to use commandline arguments, you must choose one
+of the three mutually exclusive options:</p>
+<ul class="simple">
+<li><p>set <code class="docutils literal notranslate"><span class="pre">loader.insecure__use_cmdline_argv</span></code> (insecure in almost all cases),</p></li>
+<li><p>put commandline arguments into <code class="docutils literal notranslate"><span class="pre">loader.argv</span></code> array (note that the first
+argument is typically the program name and the actual arguments start with
+the second array item; see <a class="reference external" href="https://unix.stackexchange.com/questions/315812">this link</a> for an explanation),</p></li>
+<li><p>point <code class="docutils literal notranslate"><span class="pre">loader.argv_src_file</span></code> to a file
+containing output of <a class="reference internal" href="manpages/gramine-argv-serializer.html#gramine-argv-serializer"><span class="std std-ref">gramine-argv-serializer</span></a>.</p></li>
+</ul>
+<p>If none of the above arguments-handling manifest options is specified in the
+manifest, the application will get <code class="docutils literal notranslate"><span class="pre">argv</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">&lt;libos.entrypoint</span> <span class="pre">value&gt;</span> <span class="pre">]</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">loader.argv_src_file</span></code> is intended to point to either a trusted file or an
+encrypted file. The former allows to securely hardcode arguments, the latter
+allows the arguments to be provided at runtime from an external (trusted)
+source.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pointing to an encrypted file is currently not supported, due to the fact
+that encryption key provisioning currently happens after setting up
+arguments.</p>
+</aside>
+</section>
+<section id="domain-names-configuration">
+<h3>Domain names configuration<a class="headerlink" href="manifest-syntax.html#domain-names-configuration" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.enable_extra_runtime_domain_names_conf = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This option will generate the following extra configuration:</p>
+<ul>
+<li><p>Hostname (obtained by apps via <cite>nodename</cite> field in <cite>uname</cite> syscall),
+set to the host’s hostname at initialization.</p></li>
+<li><p>Pseudo-file <code class="docutils literal notranslate"><span class="pre">/etc/resolv.conf</span></code>, with keywords:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nameserver</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">search</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> [<code class="docutils literal notranslate"><span class="pre">edns0</span></code>] [<code class="docutils literal notranslate"><span class="pre">inet6</span></code>] [<code class="docutils literal notranslate"><span class="pre">rotate</span></code>] [<code class="docutils literal notranslate"><span class="pre">use-vc</span></code>]</p></li>
+</ul>
+</div></blockquote>
+<p>Unsupported keywords and malformed lines from <code class="docutils literal notranslate"><span class="pre">/etc/resolv.conf</span></code> are ignored.</p>
+</li>
+</ul>
+<p>The functionality is achieved by taking the host’s configuration via various
+APIs and reading the host’s configuration files. In the case of Linux PAL,
+most information comes from the host’s <code class="docutils literal notranslate"><span class="pre">/etc</span></code>. The gathered information is
+used to create <code class="docutils literal notranslate"><span class="pre">/etc</span></code> files inside Gramine’s filesystem, or change Gramine
+process configuration. For security-enforcing modes (such as SGX), Gramine
+additionally sanitizes the information gathered from the host. Invalid host’s
+configuration is reported as an error (e.g. invalid hostname, or invalid IPv4
+address in <code class="docutils literal notranslate"><span class="pre">nameserver</span></code> keyword).</p>
+<p>Note that Gramine supports only a subset of the configuration.
+Refer to the list of supported keywords.</p>
+<p>This option takes precedence over <code class="docutils literal notranslate"><span class="pre">fs.mounts</span></code>.
+This means that etc files provided via <code class="docutils literal notranslate"><span class="pre">fs.mounts</span></code> will be overridden with
+the ones added via this option.</p>
+</section>
+<section id="environment-variables">
+<h3>Environment variables<a class="headerlink" href="manifest-syntax.html#environment-variables" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.insecure__use_host_env = [true|false]
+</pre></div>
+</div>
+<p>By default, environment variables from the host will <em>not</em> be passed to the app.
+This can be overridden by the option above, but most applications and runtime
+libraries trust their environment variables and are completely insecure when
+these are attacker-controlled. For example, an attacker can execute an
+additional dynamic library by specifying <code class="docutils literal notranslate"><span class="pre">LD_PRELOAD</span></code> variable.</p>
+<p>To securely set up the execution environment for an app you should use one or
+both of the following options:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.env.[ENVIRON] = &quot;[VALUE]&quot;
+or
+loader.env.[ENVIRON] = { value = &quot;[VALUE]&quot; }
+or
+loader.env.[ENVIRON] = { passthrough = true }
+
+loader.env_src_file = &quot;file:file_with_serialized_envs&quot;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">loader.env.[ENVIRON]</span></code> adds/overwrites/passes a single environment variable
+and can be used multiple times to specify more than one variable. To
+add/overwrite the environment variable, specify a TOML string (<code class="docutils literal notranslate"><span class="pre">&quot;[VALUE]&quot;</span></code>) or
+a TOML table with the key-value pair <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">value</span> <span class="pre">=</span> <span class="pre">&quot;[VALUE]&quot;</span> <span class="pre">}</span></code>. To pass the
+environment variable from the host, specify a TOML table with the key-value pair
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">passthrough</span> <span class="pre">=</span> <span class="pre">true</span> <span class="pre">}</span></code>. If you specify a variable, it needs to either have a
+value or be a passthrough.</p>
+<p><code class="docutils literal notranslate"><span class="pre">loader.env_src_file</span></code> allows to specify a URI to a file containing serialized
+environment, which can be generated using
+<a class="reference internal" href="manpages/gramine-argv-serializer.html#gramine-argv-serializer"><span class="std std-ref">gramine-argv-serializer</span></a>. This option is intended
+to point to either a trusted file or an encrypted file. The former allows to
+securely hardcode environments (in a more flexible way than
+<code class="docutils literal notranslate"><span class="pre">loader.env.[ENVIRON]</span></code> option), the latter allows the environments to be
+provided at runtime from an external (trusted) source.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pointing to an encrypted file is currently not supported, due to the fact
+that encryption key provisioning currently happens after setting up
+environment variables.</p>
+</aside>
+<p>If the same variable is set in both, then <code class="docutils literal notranslate"><span class="pre">loader.env.[ENVIRON]</span></code> takes
+precedence. It is prohibited to specify both <code class="docutils literal notranslate"><span class="pre">value</span></code> and <code class="docutils literal notranslate"><span class="pre">passthrough</span></code> keys
+for the same environment variable. If manifest option <code class="docutils literal notranslate"><span class="pre">insecure__use_host_env</span></code>
+is specified, then <code class="docutils literal notranslate"><span class="pre">passthrough</span> <span class="pre">=</span> <span class="pre">true</span></code> manifest options have no effect (they
+are “consumed” by <code class="docutils literal notranslate"><span class="pre">insecure__use_host_env</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is tempting to try to passthrough all environment variables using
+<code class="docutils literal notranslate"><span class="pre">insecure__use_host_env</span></code> and then disallow some of them using <code class="docutils literal notranslate"><span class="pre">passthrough</span>
+<span class="pre">=</span> <span class="pre">false</span></code>. However, this deny list approach is intentionally prohibited
+because it’s inherently insecure (doesn’t provide any real security).
+Gramine loudly fails if <code class="docutils literal notranslate"><span class="pre">passthrough</span> <span class="pre">=</span> <span class="pre">false</span></code> manifest options are set.</p>
+</aside>
+</section>
+<section id="user-id-and-group-id">
+<h3>User ID and Group ID<a class="headerlink" href="manifest-syntax.html#user-id-and-group-id" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.uid = [NUM]
+loader.gid = [NUM]
+(Default: 0)
+</pre></div>
+</div>
+<p>This specifies the initial, Gramine emulated user/group ID and effective
+user/group ID. It must be non-negative. By default, Gramine emulates the
+user/group ID and effective user/group ID as the root user (uid = gid = 0).</p>
+</section>
+<section id="disabling-aslr">
+<h3>Disabling ASLR<a class="headerlink" href="manifest-syntax.html#disabling-aslr" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>loader.insecure__disable_aslr = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This specifies whether to disable Address Space Layout Randomization (ASLR).
+Since disabling ASLR worsens security of the application, ASLR is enabled by
+default.</p>
+</section>
+<section id="check-invalid-pointers">
+<h3>Check invalid pointers<a class="headerlink" href="manifest-syntax.html#check-invalid-pointers" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>libos.check_invalid_pointers = [true|false]
+(Default: true)
+</pre></div>
+</div>
+<p>This specifies whether to enable checks of invalid pointers on syscall
+invocations. In particular, when this manifest option is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>,
+Gramine’s LibOS will return an EFAULT error code if a user-supplied buffer
+points to an invalid memory region. Setting this manifest option to <code class="docutils literal notranslate"><span class="pre">false</span></code>
+may improve performance for certain workloads but may also generate
+<code class="docutils literal notranslate"><span class="pre">SIGSEGV/SIGBUS</span></code> exceptions for some applications that specifically use
+invalid pointers (though this is not expected for most real-world applications).</p>
+</section>
+<section id="stack-size">
+<h3>Stack size<a class="headerlink" href="manifest-syntax.html#stack-size" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.stack.size = &quot;[SIZE]&quot;
+(default: &quot;256K&quot;)
+</pre></div>
+</div>
+<p>This specifies the stack size of each thread in each Gramine process. The
+default value is determined by the library OS. Units like <code class="docutils literal notranslate"><span class="pre">K</span></code> (KiB),
+<code class="docutils literal notranslate"><span class="pre">M</span></code> (MiB), and <code class="docutils literal notranslate"><span class="pre">G</span></code> (GiB) can be appended to the values for
+convenience. For example, <code class="docutils literal notranslate"><span class="pre">sys.stack.size</span> <span class="pre">=</span> <span class="pre">&quot;1M&quot;</span></code> indicates a 1 MiB stack
+size.</p>
+</section>
+<section id="program-break-brk-size">
+<h3>Program break (brk) size<a class="headerlink" href="manifest-syntax.html#program-break-brk-size" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.brk.max_size = &quot;[SIZE]&quot;
+(default: &quot;256K&quot;)
+</pre></div>
+</div>
+<p>This specifies the maximal program break (brk) size in each Gramine process.
+The default value of the program break size is determined by the library OS.
+Units like <code class="docutils literal notranslate"><span class="pre">K</span></code> (KiB), <code class="docutils literal notranslate"><span class="pre">M</span></code> (MiB), and <code class="docutils literal notranslate"><span class="pre">G</span></code> (GiB) can be appended to the
+values for convenience. For example, <code class="docutils literal notranslate"><span class="pre">sys.brk.max_size</span> <span class="pre">=</span> <span class="pre">&quot;1M&quot;</span></code> indicates
+a 1 MiB brk size.</p>
+</section>
+<section id="allowing-eventfd">
+<h3>Allowing eventfd<a class="headerlink" href="manifest-syntax.html#allowing-eventfd" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.insecure__allow_eventfd = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This specifies whether to allow system calls <cite>eventfd()</cite> and <cite>eventfd2()</cite>. Since
+eventfd emulation currently relies on the host, these system calls are
+disallowed by default due to security concerns.</p>
+</section>
+<section id="external-sigterm-injection">
+<h3>External SIGTERM injection<a class="headerlink" href="manifest-syntax.html#external-sigterm-injection" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.enable_sigterm_injection = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This specifies whether to allow for a one-time injection of <cite>SIGTERM</cite> signal
+into Gramine. Could be useful to handle graceful shutdown.
+Be careful! In SGX environment, the untrusted host could inject that signal in
+an arbitrary moment. Examine what your application’s <cite>SIGTERM</cite> handler does and
+whether it poses any security threat.</p>
+</section>
+<section id="disallowing-subprocesses-fork">
+<h3>Disallowing subprocesses (fork)<a class="headerlink" href="manifest-syntax.html#disallowing-subprocesses-fork" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.disallow_subprocesses = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This specifies whether to block applications from creating child processes (e.g.
+via <code class="docutils literal notranslate"><span class="pre">fork()</span></code> or <code class="docutils literal notranslate"><span class="pre">clone()</span></code> system calls). The intuition is that many
+applications have fallbacks when they fail to spawn a child process (e.g.
+Python). Could be useful in SGX environments: child processes consume
+<a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> memory which is a limited resource.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option is <em>not</em> a security feature - Gramine by-design is only a one-way
+sandbox, which doesn’t protect the host from the enclave. Don’t use this
+option if you want to somehow mitigate running untrusted enclaves. Instead,
+to achieve this, you need to run the whole Gramine inside a proper security
+sandbox.</p>
+</aside>
+</section>
+<section id="root-fs-mount-point">
+<h3>Root FS mount point<a class="headerlink" href="manifest-syntax.html#root-fs-mount-point" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fs.root.type = &quot;[chroot|...]&quot;
+fs.root.uri  = &quot;[URI]&quot;
+</pre></div>
+</div>
+<p>This syntax specifies the root filesystem to be mounted inside the library OS.
+Both parameters are optional. If not specified, then Gramine mounts the current
+working directory as the root.</p>
+</section>
+<section id="fs-mount-points">
+<h3>FS mount points<a class="headerlink" href="manifest-syntax.html#fs-mount-points" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fs.mounts = [
+  { type = &quot;[chroot|...]&quot;, path = &quot;[PATH]&quot;, uri = &quot;[URI]&quot; },
+  { type = &quot;[chroot|...]&quot;, path = &quot;[PATH]&quot;, uri = &quot;[URI]&quot; },
+]
+</pre></div>
+</div>
+<p>Or, as separate sections:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[[fs.mounts]]
+type = &quot;[chroot|...]&quot;
+path = &quot;[PATH]&quot;
+uri  = &quot;[URI]&quot;
+
+[[fs.mounts]]
+type = &quot;[chroot|...]&quot;
+path = &quot;[PATH]&quot;
+uri  = &quot;[URI]&quot;
+</pre></div>
+</div>
+<p>This syntax specifies how filesystems are mounted inside the library OS. For
+dynamically linked binaries, usually at least one <cite>chroot</cite> mount point is
+required in the manifest (the mount point of linked libraries). The filesystems
+will be mounted in the order in which they appear in the manifest.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Keep in mind that TOML does not allow trailing commas in inline tables:
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">path</span> <span class="pre">=</span> <span class="pre">&quot;...&quot;,</span> <span class="pre">uri</span> <span class="pre">=</span> <span class="pre">&quot;...&quot;,</span> <span class="pre">}</span></code> is a syntax error.</p>
+</aside>
+<p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter specifies the mount point type. If omitted, it defaults
+to <code class="docutils literal notranslate"><span class="pre">&quot;chroot&quot;</span></code>. The <code class="docutils literal notranslate"><span class="pre">path</span></code> parameter must be an absolute path (i.e., must
+begin with <code class="docutils literal notranslate"><span class="pre">/</span></code>).</p>
+<p>Gramine currently supports the following types of mount points:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">chroot</span></code> (default): Host-backed files. All host files and sub-directories
+found under <code class="docutils literal notranslate"><span class="pre">[URI]</span></code> are forwarded to the Gramine instance and placed under
+<code class="docutils literal notranslate"><span class="pre">[PATH]</span></code>. For example, with a host-level path specified as <code class="docutils literal notranslate"><span class="pre">uri</span> <span class="pre">=</span>
+<span class="pre">&quot;file:/one/path/&quot;</span></code> and forwarded to Gramine via <code class="docutils literal notranslate"><span class="pre">path</span> <span class="pre">=</span> <span class="pre">&quot;/another/path&quot;</span></code>, a
+host-level file <code class="docutils literal notranslate"><span class="pre">/one/path/file</span></code> is visible to graminized application as
+<code class="docutils literal notranslate"><span class="pre">/another/path/file</span></code>. This concept is similar to FreeBSD’s chroot and to
+Docker’s named volumes. Files under <code class="docutils literal notranslate"><span class="pre">chroot</span></code> mount points support mmap and
+fork/clone.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encrypted</span></code>: Host-backed encrypted files. See <a class="reference internal" href="manifest-syntax.html#encrypted-files"><span class="std std-ref">Encrypted files</span></a> for
+more information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">untrusted_shm</span></code>: Untrusted shared memory files. See
+<a class="reference internal" href="manifest-syntax.html#untrusted-shared-memory"><span class="std std-ref">Untrusted shared memory</span></a> for more information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tmpfs</span></code>: Temporary in-memory-only files. These files are <em>not</em> backed by
+host-level files. The tmpfs files are created under <code class="docutils literal notranslate"><span class="pre">[PATH]</span></code> (this path is
+empty on Gramine instance startup) and are destroyed when a Gramine instance
+terminates. The <code class="docutils literal notranslate"><span class="pre">[URI]</span></code> parameter is always ignored and can be omitted.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tmpfs</span></code> is especially useful in trusted environments (like Intel SGX) for
+securely storing temporary files. This concept is similar to Linux’s tmpfs.
+Currently there is a limitation that each process has its own, non-shared
+tmpfs (i.e., processes don’t see each other’s files).</p>
+</li>
+</ul>
+</section>
+<section id="start-current-working-directory">
+<h3>Start (current working) directory<a class="headerlink" href="manifest-syntax.html#start-current-working-directory" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fs.start_dir = &quot;[URI]&quot;
+</pre></div>
+</div>
+<p>This syntax specifies the start (current working) directory. If not specified,
+then Gramine sets the root directory as the start directory (see <code class="docutils literal notranslate"><span class="pre">fs.root</span></code>).</p>
+</section>
+<section id="allowed-ioctls">
+<h3>Allowed IOCTLs<a class="headerlink" href="manifest-syntax.html#allowed-ioctls" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.ioctl_structs.[identifier] = [memory-layout-format]
+
+sys.allowed_ioctls = [
+  { request_code = [NUM], struct = &quot;[identifier-of-ioctl-struct]&quot; },
+]
+</pre></div>
+</div>
+<p>By default, Gramine disables all device-backed and socket IOCTLs. This syntax
+allows to explicitly allow a set of IOCTLs on devices (devices must be
+explicitly mounted via <code class="docutils literal notranslate"><span class="pre">fs.mounts</span></code> manifest syntax) and sockets (e.g. for
+<code class="docutils literal notranslate"><span class="pre">SIOCGIFCONF</span></code> and <code class="docutils literal notranslate"><span class="pre">SIOCGIFHWADDR</span></code>). Only IOCTLs with the <code class="docutils literal notranslate"><span class="pre">request_code</span></code>
+argument found among the manifest-listed IOCTLs are allowed to pass-through to
+the host. Each IOCTL entry may also contain a reference to an IOCTL struct in
+the <code class="docutils literal notranslate"><span class="pre">struct</span></code> field, in case the third IOCTL argument is intended to be
+translated by Gramine.</p>
+<p>Available IOCTL structs are described via <code class="docutils literal notranslate"><span class="pre">sys.ioctl_structs</span></code>. Each IOCTL
+struct describes the memory layout of the third argument to the <code class="docutils literal notranslate"><span class="pre">ioctl</span></code> system
+call (typically a pointer to a complex nested object passed to the device).
+Description of the memory layout is required for a deep copy of the IOCTL
+struct. Here we use the term <em>memory region</em> to denote a separate contiguous
+region of memory and the term <em>sub-region of a memory region</em> to denote a part
+of the memory region that has properties different from other sub-regions in the
+same memory region (e.g., should it be copied in or out of Gramine memory, is it
+a pointer to another memory region, etc.). For example, a C struct can be
+considered one memory region, and fields of this C struct can be considered
+sub-regions of this memory region.</p>
+<p>We also use the terms <em>Gramine memory</em> and <em>host memory</em>. This distinction is
+currently relevant only for SGX environments: Gramine memory means
+in-SGX-enclave memory and host memory means outside-of-SGX-enclave untrusted
+memory.</p>
+<p>Memory layout of the IOCTL struct is described using the TOML syntax of inline
+arrays (for each new separate memory region) and inline tables (for each
+sub-region in one memory region). Each sub-region is described via the following
+keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> is an optional name for this sub-region; mainly used to find
+length-specifying sub-regions and nested memory regions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alignment</span></code> is an optional alignment of the memory region; may be specified
+only in the first sub-region of a memory region (all other sub-regions are
+contiguous with the first sub-region, so specifying their alignment doesn’t
+make sense). The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code> is the size of this sub-region. The <code class="docutils literal notranslate"><span class="pre">size</span></code> field may be a string
+with the name of another sub-region that contains the size value or an integer
+with the constant size measured in <code class="docutils literal notranslate"><span class="pre">unit</span></code> units (default unit is 1 byte;
+also see below). For example, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">&quot;strlen&quot;</span></code> denotes a size field that
+will be calculated dynamically during IOCTL execution based on the sub-region
+named <code class="docutils literal notranslate"><span class="pre">strlen</span></code>, whereas <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">16</span></code> denotes a sub-region of size 16B. Note
+that <code class="docutils literal notranslate"><span class="pre">ptr</span></code> sub-regions must <em>not</em> specify the <code class="docutils literal notranslate"><span class="pre">size</span></code> field.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unit</span></code> is an optional unit of measurement for <code class="docutils literal notranslate"><span class="pre">size</span></code>. It is 1 byte by
+default. Unit of measurement must be a constant integer. For example,
+<code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">&quot;strlen&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">unit</span> <span class="pre">=</span> <span class="pre">2</span></code> denote a wide-char string (where each
+character is 2B long) of a dynamically specified length.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adjustment</span></code> is an optional integer adjustment for <code class="docutils literal notranslate"><span class="pre">size</span></code> (always
+specified in bytes). It is 0 bytes by default. This field must be a constant
+(possibly negative) integer. For example, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">6</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span> <span class="pre">=</span> <span class="pre">2</span></code> and
+<code class="docutils literal notranslate"><span class="pre">adjustment</span> <span class="pre">=</span> <span class="pre">-8</span></code> results in a total size of 4B.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">direction</span> <span class="pre">=</span> <span class="pre">&quot;none&quot;</span> <span class="pre">|</span> <span class="pre">&quot;out&quot;</span> <span class="pre">|</span> <span class="pre">&quot;in&quot;</span> <span class="pre">|</span> <span class="pre">&quot;inout&quot;</span></code> is an optional direction of
+copy for this sub-region (from the app point of view). For example,
+<code class="docutils literal notranslate"><span class="pre">direction</span> <span class="pre">=</span> <span class="pre">&quot;out&quot;</span></code> denotes a sub-region to be copied out of Gramine memory
+to host memory, i.e., this sub-region is an input to the host device. The
+default value is <code class="docutils literal notranslate"><span class="pre">none</span></code> which is useful for e.g. padding of structs. This
+field must be ommitted if the <code class="docutils literal notranslate"><span class="pre">ptr</span></code> field is specified for this sub-region
+(pointer sub-regions contain the pointer value which will be unconditionally
+rewired to point to host memory).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptr</span> <span class="pre">=</span> <span class="pre">inlined-memory-region</span></code> or <code class="docutils literal notranslate"><span class="pre">ptr</span> <span class="pre">=</span> <span class="pre">&quot;another-ioctl-struct&quot;</span></code>
+specifies a pointer to another, nested memory region. This field is required
+when describing complex IOCTL structs. Such pointer memory region always has
+the implicit size of 8B, and the pointer value is always rewired by Gramine to
+the memory region in host memory (containing a corresponding nested memory
+region). If <code class="docutils literal notranslate"><span class="pre">ptr</span></code> is specified together with <code class="docutils literal notranslate"><span class="pre">array_len</span></code>, it describes an
+array of pointers to these memory regions. (In other words, <code class="docutils literal notranslate"><span class="pre">ptr</span></code> is an
+array of pointers to memory regions with <code class="docutils literal notranslate"><span class="pre">array_len</span> <span class="pre">=</span> <span class="pre">1</span></code> by default.) This
+may be recursive with the <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value being a guard, which allows
+describing linked lists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array_len</span></code> is an optional number of items in the <code class="docutils literal notranslate"><span class="pre">ptr</span></code> array. This field
+cannot be specified with non-<code class="docutils literal notranslate"><span class="pre">ptr</span></code> sub-regions. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">onlyif</span> <span class="pre">=</span> <span class="pre">&quot;simple</span> <span class="pre">boolean</span> <span class="pre">expression&quot;</span></code> allows to condition the sub-region
+based on a boolean expression. The sub-region is taken into account only if
+the expression evaluates to true. The only currently supported formats of
+expressions are <code class="docutils literal notranslate"><span class="pre">token1</span> <span class="pre">==</span> <span class="pre">token2</span></code> and <code class="docutils literal notranslate"><span class="pre">token1</span> <span class="pre">!=</span> <span class="pre">token2</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">token1</span></code> and <code class="docutils literal notranslate"><span class="pre">token2</span></code> may be constant non-negative integers or sub-region
+names (referenced sub-regions must contain a native-endian integer value of
+size 1..8B).</p></li>
+</ul>
+<p>Consider this simple C snippet:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">ioctl_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">buf_size</span><span class="p">;</span><span class="w">                </span><span class="cm">/* copied from Gramine to device */</span>
+<span class="w">    </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span><span class="w">                      </span><span class="cm">/* copied from device to Gramine */</span>
+<span class="p">}</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">aligned</span><span class="p">(</span><span class="mh">0x1000</span><span class="p">)));</span><span class="w"> </span><span class="cm">/* alignment just for illustration */</span>
+</pre></div>
+</div>
+<p>This translates into the following manifest syntax:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.ioctl_structs.ioctl_read = [
+    {
+        name      = &quot;buf_size&quot;,
+        size      = 8,
+        direction = &quot;out&quot;,
+        alignment = 0x1000
+    },
+    {
+        ptr = [
+            {
+                size      = &quot;buf_size&quot;,
+                direction = &quot;in&quot;
+            }
+        ]
+    }
+]
+</pre></div>
+</div>
+<p>The above example specifies a root struct (first memory region) that consists of
+two sub-regions: the first one contains an 8-byte size value, the second one is
+an 8-byte pointer value. This pointer points to another memory region in Gramine
+memory that contains a single sub-region of size <code class="docutils literal notranslate"><span class="pre">buf_size</span></code>. This nested
+sub-region is copied from the device into the Gramine memory.</p>
+<p>IOCTLs that use the above struct in a third argument are defined like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.allowed_ioctls = [
+  { request_code = 0x12345678, struct = &quot;ioctl_read&quot; },
+  { request_code = 0x87654321, struct = &quot;ioctl_read&quot; },
+]
+</pre></div>
+</div>
+<p>If the IOCTL’s third argument should be passed directly as-is (or unused at
+all), then the <code class="docutils literal notranslate"><span class="pre">struct</span></code> key must be an empty string or not exist at all:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.allowed_ioctls = [
+  { request_code = 0x43218765, struct = &quot;&quot; },
+  { request_code = 0x87654321 },
+]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>IOCTLs for device communication are pass-through and thus potentially
+insecure by themselves in e.g. SGX environments:</p>
+<ul class="simple">
+<li><p>IOCTL arguments are passed as-is from the app to the untrusted host,
+which may lead to leaks of enclave data.</p></li>
+<li><p>Untrusted host can change IOCTL arguments as it wishes when passing
+them from Gramine to the device and back.</p></li>
+</ul>
+<p>It is the responsibility of the app developer to correctly use IOCTLs, with
+security implications in mind. In most cases, IOCTL arguments should be
+encrypted or integrity-protected with a key pre-shared between Gramine and
+the device.</p>
+</aside>
+</section>
+<section id="experimental-flock-bsd-style-locks-support">
+<h3>Experimental flock (BSD-style locks) support<a class="headerlink" href="manifest-syntax.html#experimental-flock-bsd-style-locks-support" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sys.experimental__enable_flock = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This syntax enables the <code class="docutils literal notranslate"><span class="pre">flock</span></code> system call in Gramine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This syscall is still under development and may contain security
+vulnerabilities. This is temporary; the syscall will be enabled by default in
+the future after thorough validation and this syntax will be removed then.</p>
+</aside>
+</section>
+</section>
+<section id="sgx-syntax-1">
+<span id="sgx-syntax"></span><h2>SGX syntax<a class="headerlink" href="manifest-syntax.html#sgx-syntax-1" title="Permalink to this headline"></a></h2>
+<p>If Gramine is <em>not</em> running with SGX, the SGX-specific syntax is ignored. All
+keys in the SGX-specific syntax are optional.</p>
+<section id="debug-production-enclave">
+<h3>Debug/production enclave<a class="headerlink" href="manifest-syntax.html#debug-production-enclave" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.debug = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This syntax specifies whether the enclave can be debugged. Set it to <code class="docutils literal notranslate"><span class="pre">true</span></code>
+for a debug enclave and to <code class="docutils literal notranslate"><span class="pre">false</span></code> for a production enclave.</p>
+</section>
+<section id="edmm">
+<h3>EDMM<a class="headerlink" href="manifest-syntax.html#edmm" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.edmm_enable = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This setting enables the <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> feature (after-enclave-creation memory
+management). If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, Gramine will refuse to start on CPUs which do
+not support <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> feature.</p>
+<p>When this feature is enabled, Gramine does not add heap pages (uninitialized
+memory) to the enclave at creation time. Instead, memory is added to the enclave
+on demand. This can greatly reduce startup time for bigger enclaves, reduce
+the <a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> usage (as only actually allocated memory is used) and allow for
+changing memory permissions (without this Gramine allocates all dynamic memory
+as RWX). Unfortunately it can negatively impact performance, as adding a page
+to the enclave at runtime is a more expensive operation than adding the page
+before enclave creation (because it involves more enclave exits and syscalls).</p>
+<p>When this feature is enabled, it is not necessary to specify
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code> (Gramine will automatically set it to 1TB which should be
+enough for any application). However if <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code> is specified, this
+explicit value will take precedence.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Support for EDMM first appeared in Linux 6.0.</p>
+</aside>
+</section>
+<section id="enclave-size">
+<h3>Enclave size<a class="headerlink" href="manifest-syntax.html#enclave-size" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.enclave_size = &quot;[SIZE]&quot;
+(default: &quot;256M&quot; without EDMM, &quot;1024G&quot; with EDMM)
+</pre></div>
+</div>
+<p>This syntax specifies the size of the enclave set during enclave creation time
+if <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> is not enabled (<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span> <span class="pre">=</span> <span class="pre">false</span></code>) or the maximal
+size that the enclave can grow to if <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> is enabled
+(<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span> <span class="pre">=</span> <span class="pre">true</span></code>).</p>
+<p>The PAL and library OS code/data count towards this size value, as well as the
+application memory itself: application’s code, stack, heap, loaded application
+libraries, etc. The application cannot allocate memory that exceeds this limit.</p>
+<p>Be careful when setting the enclave size to large values: when creating enclaves
+which do not have the <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> feature enabled, Gramine not only reserves
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code> bytes of virtual address space but also <em>commits</em> them to
+the backing store (EPC, RAM and/or swap file). For example, if
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;4G&quot;</span></code>, then 4GB of EPC/RAM will be immediately allocated
+to back the enclave memory (recall that <a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> is the SGX-protected part of
+RAM). Thus, if your system has 4GB of backing store or less, then the host Linux
+kernel will fail to start the SGX enclave and will typically print the
+<code class="docutils literal notranslate"><span class="pre">Killed</span></code> message. If you encounter this situation, you can try the following:</p>
+<ul class="simple">
+<li><p>If possible, decrease <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code> to a value less than the amount of
+RAM. For example, if you have 4GB of RAM, set <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;2G&quot;</span></code>.</p></li>
+<li><p>Switch to a system that has more RAM. For example, if you must use
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;4G&quot;</span></code>, move to a system with at least 5GB of RAM.</p></li>
+<li><p>If the above options are ruled out, then increase the swap file size (recall
+that the swap file is a space on hard disk used as a virtual “extension” to
+real RAM). For example, if you have 4GB of RAM and you must use
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;4G&quot;</span></code>, then create the swap file of size 1GB. Note that
+as soon as the SGX application starts using the swap file, its performance
+degrades significantly!</p></li>
+</ul>
+<p>Also, be careful with multi-process SGX applications: each new child process
+runs in its own SGX enclave and thus requires an additional <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code>
+amount of RAM. For example, if you run <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">-c</span> <span class="pre">ls</span></code> and your manifest contains
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;4G&quot;</span></code>, then two SGX enclaves (bash and ls processes) will
+consume 8GB of RAM in total. If there is less than 8GB of RAM (+ swap file) on
+your system, such <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">-c</span> <span class="pre">ls</span></code> SGX workload will fail. Note this does not
+apply to the enclaves with <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> enabled, where memory is not reserved
+upfront and is allocated on demand.</p>
+</section>
+<section id="number-of-threads">
+<h3>Number of threads<a class="headerlink" href="manifest-syntax.html#number-of-threads" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.max_threads = [NUM]
+(Default: 4)
+</pre></div>
+</div>
+<p>If <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> is not enabled (<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span> <span class="pre">=</span> <span class="pre">false</span></code>), then this syntax
+specifies the maximum number of threads that can be created inside the enclave
+(recall that SGX v1 requires a predetermined maximum number of thread
+slots). The application cannot have more threads than this limit <em>at a time</em>
+(however, it is possible to create new threads after old threads are destroyed).</p>
+<p>If <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> is enabled (<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span> <span class="pre">=</span> <span class="pre">true</span></code>), then this syntax
+specifies the number of pre-allocated thread slots (must be at least <code class="docutils literal notranslate"><span class="pre">1</span></code>).
+However, the maximum number of threads can exceed this limit during enclave
+execution, by dynamically allocating new thread slots.</p>
+<p>Note that Gramine uses several helper threads internally:</p>
+<ul class="simple">
+<li><p>The IPC thread to facilitate inter-process communication. This thread is
+always spawned at Gramine startup. Its activity depends on the communication
+patterns among Gramine processes; if there is only one Gramine process, the
+IPC thread always sleeps.</p></li>
+<li><p>The Async thread to implement timers and other asynchronous
+events/notifications. This thread is spawned on demand. It terminates itself
+if there are no pending events/notifications.</p></li>
+<li><p>The TLS-handshake thread on pipes creation. This thread is spawned on demand,
+each time a new pipe is created. It terminates itself immediately after the
+TLS handshake is performed.</p></li>
+</ul>
+<p>Given these internal threads, <code class="docutils literal notranslate"><span class="pre">sgx.max_threads</span></code> should be set to at least
+<code class="docutils literal notranslate"><span class="pre">4</span></code> even for single-threaded applications (to accommodate for the main thread,
+the IPC thread, the Async thread and one TLS-handshake thread).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option will be renamed after non-<a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> platform support is
+dropped.</p>
+</aside>
+</section>
+<section id="number-of-rpc-threads-exitless-feature">
+<h3>Number of RPC threads (Exitless feature)<a class="headerlink" href="manifest-syntax.html#number-of-rpc-threads-exitless-feature" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.insecure__rpc_thread_num = [NUM]
+(Default: 0)
+</pre></div>
+</div>
+<p>This syntax specifies the number of RPC threads that are created outside of
+the enclave. RPC threads are helper threads that run in untrusted mode
+alongside enclave threads. RPC threads issue system calls on behalf of enclave
+threads. This allows “exitless” design when application threads never leave
+the enclave (except for a few syscalls where there is no benefit, e.g.,
+<code class="docutils literal notranslate"><span class="pre">nanosleep()</span></code>).</p>
+<p>If the user specifies <code class="docutils literal notranslate"><span class="pre">0</span></code> or omits this directive, then no RPC threads are
+created, and all system calls perform an enclave exit (“normal” execution).</p>
+<p>Note that the number of created RPC threads should match the maximum number of
+simultaneous enclave threads. If there are more RPC threads, then CPU time is
+wasted. If there are less RPC threads, some enclave threads may starve,
+especially if there are many blocking system calls by other enclave threads.</p>
+<p>The Exitless feature <em>may be detrimental for performance</em>. It trades slow
+OCALLs/ECALLs for fast shared-memory communication at the cost of occupying
+more CPU cores and burning more CPU cycles. For example, a single-threaded
+Redis instance on Linux becomes 5-threaded on Gramine with Exitless. Thus,
+Exitless may negatively impact throughput but may improve latency.</p>
+<p>This feature is currently marked as insecure, because it reads and writes to
+untrusted memory in potentially insecure manner - susceptible to
+CVE-2022-21233 (INTEL-SA-00657) and CVE-2022-21166 (INTEL-SA-00615)
+respectively.</p>
+</section>
+<section id="sgx-exinfo">
+<h3>SGX EXINFO<a class="headerlink" href="manifest-syntax.html#sgx-exinfo" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.use_exinfo = [true|false]
+(Default: false)
+
+sgx.insecure__allow_memfaults_without_exinfo = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">sgx.use_exinfo</span></code> is set, user application can retrieve faulting address in
+signal handler in case of page/general protection faults (#PF and #GP).
+Otherwise (set to <code class="docutils literal notranslate"><span class="pre">false</span></code>), the behavior depends on
+<code class="docutils literal notranslate"><span class="pre">sgx.insecure__allow_memfaults_without_exinfo</span></code>:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">sgx.insecure__allow_memfaults_without_exinfo</span></code> is unset (default), then
+Gramine terminates with an error, to prevent a possible attack.</p></li>
+<li><p>Otherwise the exception is allowed and Gramine forwards it to the application,
+and the faulting address is provided as <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+<p>The default value for <code class="docutils literal notranslate"><span class="pre">sgx.use_exinfo</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> because some
+frameworks/runtimes could otherwise print the callstack and variables/registers
+on exceptions, potentially leaking data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">sgx.insecure__allow_memfaults_without_exinfo</span></code> is provided only
+to allow debugging/testing on old CPUs that do not support the EXINFO
+feature. Without EXINFO support, a malicious host may attack the application
+by injecting a memory fault. This option is thus insecure and must not be
+used in production environments! It will be removed in near future.</p>
+</aside>
+</section>
+<section id="optional-cpu-features-avx-avx512-amx-mpx-pkru">
+<h3>Optional CPU features (AVX, AVX512, AMX, MPX, PKRU)<a class="headerlink" href="manifest-syntax.html#optional-cpu-features-avx-avx512-amx-mpx-pkru" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.cpu_features.avx    = &quot;[unspecified|disabled|required]&quot;
+sgx.cpu_features.avx512 = &quot;[unspecified|disabled|required]&quot;
+sgx.cpu_features.amx    = &quot;[unspecified|disabled|required]&quot;
+(Default: &quot;unspecified&quot;)
+
+sgx.cpu_features.mpx    = &quot;[disabled|required]&quot;
+sgx.cpu_features.pkru   = &quot;[disabled|required]&quot;
+(Default: &quot;disabled&quot;)
+</pre></div>
+</div>
+<p>For the SGX threat model, Gramine divides CPU features in two subsets:
+not-security-hardening features (currently AVX, AVX512 and AMX) and
+security-hardening features (MPX and PKRU).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;unspecified&quot;</span></code> syntax applies only to not-security-hardening features. It
+means that the enclave initialization will succeed regardless of whether the CPU
+feature is available on the platform or not. The CPU features will be enabled in
+the enclave if they are available on the platform. Security-hardening features
+cannot be marked as <code class="docutils literal notranslate"><span class="pre">&quot;unspecified&quot;</span></code> because this would lead to different
+security properties of the application on different platforms.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;disabled&quot;</span></code> syntax disables the CPU feature inside the enclave even if
+this CPU feature is available on the platform. This may improve enclave
+performance because this CPU feature will <em>not</em> be saved and restored during
+enclave entry/exit. This syntax is provided to improve performance of
+applications that are known to <em>not</em> rely on certain CPU features. Be aware that
+if the application relies on some disabled CPU features, the application will
+fail with SIGILL (“illegal instruction”). For example, if the application is
+built with AVX support, and AVX is disabled in the manifest, the application
+will crash.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;required&quot;</span></code> syntax ensures that the CPU feature is available and enabled
+for the enclave. If such option is set in the manifest but the CPU feature is
+unavailable on the platform, enclave initialization will fail.</p>
+<p>When in doubt, it is recommended to keep the default values for these features.
+In this case, Gramine auto-detects the corresponding not-security-hardening CPU
+features on the platform and enables them if available, and disables
+security-hardening CPU features. This allows the SGX enclave to be executed on
+the widest range of platforms.</p>
+<p>At the technical level, the mapping from CPU features to SGX fields is as
+follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;unspecified&quot;</span></code>: <code class="docutils literal notranslate"><span class="pre">SIGSTRUCT.ATTRIBUTEMASK[feature]</span> <span class="pre">=</span> <span class="pre">0</span></code>. The untrusted
+loader of Gramine sets <code class="docutils literal notranslate"><span class="pre">SECS.ATTRIBUTES[feature]</span> <span class="pre">=</span> <span class="pre">0</span></code> if it can’t detect the
+feature on the platform, and <code class="docutils literal notranslate"><span class="pre">SECS.ATTRIBUTES[feature]</span> <span class="pre">=</span> <span class="pre">1</span></code> otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;required&quot;</span></code>: <code class="docutils literal notranslate"><span class="pre">SIGSTRUCT.ATTRIBUTEMASK[feature]</span> <span class="pre">=</span> <span class="pre">1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">SIGSTRUCT.ATTRIBUTES[feature]</span> <span class="pre">=</span> <span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;disabled&quot;</span></code>: <code class="docutils literal notranslate"><span class="pre">SIGSTRUCT.ATTRIBUTEMASK[feature]</span> <span class="pre">=</span> <span class="pre">1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">SIGSTRUCT.ATTRIBUTES[feature]</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+</ul>
+</section>
+<section id="isv-product-id-and-svn">
+<h3>ISV Product ID and SVN<a class="headerlink" href="manifest-syntax.html#isv-product-id-and-svn" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.isvprodid = [NUM]
+sgx.isvsvn    = [NUM]
+(Default: 0)
+</pre></div>
+</div>
+<p>This syntax specifies the ISV Product ID and SVN to be added to the enclave
+signature.</p>
+</section>
+<section id="attribute-masks-for-sgx-sealing-key-derivation">
+<h3>Attribute masks for SGX sealing key derivation<a class="headerlink" href="manifest-syntax.html#attribute-masks-for-sgx-sealing-key-derivation" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.seal_key.flags_mask = &quot;[8-byte hex value]&quot;  (default: &quot;0xffffffffffffffff&quot;)
+sgx.seal_key.xfrm_mask  = &quot;[8-byte hex value]&quot;  (default: &quot;0xfffffffffff9ff1b&quot;)
+sgx.seal_key.misc_mask  = &quot;[4-byte hex value]&quot;  (default: &quot;0xffffffff&quot;)
+</pre></div>
+</div>
+<p>This syntax specifies masks used to generate the SGX sealing key. These masks
+correspond to the following SGX <code class="docutils literal notranslate"><span class="pre">KEYREQUEST</span></code> struct fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">flags_mask</span></code>: <code class="docutils literal notranslate"><span class="pre">KEYREQUEST.ATTRIBUTESMASK.FLAGS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xfrm_mask</span></code>: <code class="docutils literal notranslate"><span class="pre">KEYREQUEST.ATTRIBUTESMASK.XFRM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">misc_mask</span></code>: <code class="docutils literal notranslate"><span class="pre">KEYREQUEST.MISCMASK</span></code></p></li>
+</ul>
+<p>Most users do <em>not</em> need to set these masks. Only advanced users with knowledge
+of SGX sealing should use these masks. In particular, these masks allow to
+specify a subset of enclave/machine attributes to be used in sealing key
+derivation. Moreover, these masks themselves are used in sealing key derivation.</p>
+</section>
+<section id="allowed-files-1">
+<span id="allowed-files"></span><h3>Allowed files<a class="headerlink" href="manifest-syntax.html#allowed-files-1" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.allowed_files = [
+  &quot;[URI]&quot;,
+  &quot;[URI]&quot;,
+]
+</pre></div>
+</div>
+<p>This syntax specifies the files/directories (with the <code class="docutils literal notranslate"><span class="pre">file:</span></code> prefix) and
+devices (with the <code class="docutils literal notranslate"><span class="pre">dev:</span></code> prefix) that are allowed to be created or opened in
+the enclave unconditionally. In other words, allowed files, directories and
+devices can be opened for reading/writing and can be created if they do not
+exist already. Allowed files are not cryptographically hashed and are thus not
+protected.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is insecure to allow files containing code or critical information;
+developers must not allow files blindly! Instead, use trusted or encrypted
+files.</p>
+<p>Similarly, communication with allowed devices is pass-through and thus
+potentially insecure by itself. It is the responsibility of the app developer
+to correctly communicate with devices, with security implications in mind.</p>
+</aside>
+</section>
+<section id="trusted-files">
+<h3>Trusted files<a class="headerlink" href="manifest-syntax.html#trusted-files" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># entries can be strings
+sgx.trusted_files = [
+  &quot;[URI]&quot;,
+  &quot;[URI]&quot;,
+]
+
+# entries can also be tables
+[[sgx.trusted_files]]
+uri = &quot;[URI]&quot;
+sha256 = &quot;[HASH]&quot;
+</pre></div>
+</div>
+<p>This syntax specifies the files to be cryptographically hashed at build time; at
+runtime, these files may only be accessed by the app if the files’ hashes match
+what is stored in the manifest. This implies that trusted files can be only
+opened for reading (not for writing) and cannot be created if they do not exist
+already. The signer tool will automatically generate hashes of these files and
+add them to the SGX-specific manifest (<code class="docutils literal notranslate"><span class="pre">.manifest.sgx</span></code>). The manifest writer
+may also specify the hash for a file using the TOML-table syntax, in the field
+<code class="docutils literal notranslate"><span class="pre">sha256</span></code>; in this case, hashing of the file will be skipped by the signer tool
+and the value in <code class="docutils literal notranslate"><span class="pre">sha256</span></code> field will be used instead.</p>
+<p>Marking files as trusted is especially useful for shared libraries: a trusted library cannot be silently replaced by a malicious host because the hash
+verification will fail.</p>
+</section>
+<section id="encrypted-files-1">
+<span id="encrypted-files"></span><h3>Encrypted files<a class="headerlink" href="manifest-syntax.html#encrypted-files-1" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fs.mounts = [
+  { type = &quot;encrypted&quot;, path = &quot;[PATH]&quot;, uri = &quot;[URI]&quot;, key_name = &quot;[KEY_NAME]&quot; },
+]
+
+fs.insecure__keys.[KEY_NAME] = &quot;[32-character hex value]&quot;
+</pre></div>
+</div>
+<p>This syntax allows mounting files that are encrypted on disk and transparently
+decrypted when accessed by Gramine or by application running inside Gramine.
+Encrypted files guarantee data confidentiality and integrity (tamper
+resistance), as well as file swap protection (an encrypted file can only be
+accessed when in a specific host path).</p>
+<p>Encrypted files were previously known as <em>protected files</em>, and some Gramine
+tools might still use the old name.</p>
+<p>URI can be a file or a directory. If a directory is mounted, all existing
+files/directories within it are recursively treated as encrypted (and are
+expected to be encrypted in the PF format). New files created in an encrypted
+mount are also automatically treated as encrypted.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The current implementation assumes that <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">&quot;encrypted&quot;</span></code> mounts do not
+overlap on host, i.e. there are no host files reachable through more than one
+<code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">&quot;encrypted&quot;</span></code> mount. Otherwise, changes made to such files might not
+be correctly persisted by Gramine.</p>
+</aside>
+<p>Note that path size of an encrypted file is limited to 512 bytes and filename
+size is limited to 260 bytes.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">key_name</span></code> mount parameter specifies the name of the encryption key. If
+omitted, it will default to <code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code>. This feature can be used to mount
+different files or directories with different encryption keys.</p>
+<p><code class="docutils literal notranslate"><span class="pre">fs.insecure__keys.[KEY_NAME]</span></code> can be used to specify the encryption keys
+directly in manifest. This option must be used only for debugging purposes.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">sgx.insecure__keys.[KEY_NAME]</span></code> hard-codes the key in the manifest. This
+option is thus insecure and must not be used in production environments!
+Typically, you want to provision the encryption keys using SGX
+local/remote attestation, thus you should not specify any
+<code class="docutils literal notranslate"><span class="pre">sgx.insecure__keys.[KEY_NAME]</span></code> manifest options at all. Instead, use the
+Secret Provisioning interface (see <a class="reference internal" href="attestation.html"><span class="doc">Attestation and Secret Provisioning</span></a>).</p>
+</aside>
+<p>Key names beginning with underscore (<code class="docutils literal notranslate"><span class="pre">_</span></code>) denote special keys provided by
+Gramine:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;_sgx_mrenclave&quot;</span></code> (SGX only) is the SGX sealing key based on the MRENCLAVE
+identity of the enclave. This is useful to allow only the same enclave (on the
+same platform) to unseal files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;_sgx_mrsigner&quot;</span></code> (SGX only) is the SGX sealing key based on the MRSIGNER
+identity of the enclave. This is useful to allow all enclaves signed with the
+same key (and on the same platform) to unseal files.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The same key must not be used for the encrypted-files mount and for the
+application’s own crypto operations. Such “double” use of the same key may
+lead to compromise of the key. For example, specifying an FS mount via
+<code class="docutils literal notranslate"><span class="pre">{type</span> <span class="pre">=</span> <span class="pre">&quot;encrypted&quot;,</span> <span class="pre">...,</span> <span class="pre">key_name</span> <span class="pre">=</span> <span class="pre">&quot;_sgx_mrenclave&quot;}</span></code> in the manifest
+and using the same key obtained via <code class="docutils literal notranslate"><span class="pre">/dev/attestation/keys/_sgx_mrenclave</span></code>
+in the application is insecure. If you need to derive encryption keys from
+such a “doubly-used” key, you must apply a KDF.</p>
+</aside>
+</section>
+<section id="untrusted-shared-memory-1">
+<span id="untrusted-shared-memory"></span><h3>Untrusted shared memory<a class="headerlink" href="manifest-syntax.html#untrusted-shared-memory-1" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fs.mounts = [
+  { type = &quot;untrusted_shm&quot;, path = &quot;[PATH]&quot;, uri = &quot;[URI]&quot; },
+]
+</pre></div>
+</div>
+<p>This syntax allows mounting shared memory objects that are accessible by both
+the application running inside Gramine and by other host software/hardware (host
+OS, other host processes, devices connected to the host). In Gramine, untrusted
+shared memory applies to files which must be mapped into application address
+space with the <code class="docutils literal notranslate"><span class="pre">MAP_SHARED</span></code> flag.</p>
+<p>URI can be a file or a directory (with a <code class="docutils literal notranslate"><span class="pre">dev:</span></code> prefix). If a directory is
+mounted, all files under this directory are treated as shared memory objects
+(but sub-directories are inaccessible for security reasons). New files created
+in a shared memory mount are also automatically treated as shared memory
+objects. Creating sub-directories in a shared memory mount is not allowed, for
+security reasons. Files in a shared memory mount (or the mounted directory
+itself) need to be explicitly listed as <code class="docutils literal notranslate"><span class="pre">allowed_files</span></code> to be accessed. See
+<a class="reference internal" href="manifest-syntax.html#allowed-files"><span class="std std-ref">Allowed files</span></a> for more information.</p>
+<p>Typically, you should mount the directory <code class="docutils literal notranslate"><span class="pre">/dev/shm/</span></code> (it is used for sharing
+data between processes and devices) and allow specific files in it. When this
+directory is mounted, the Gramine application may create the files – called
+“shared memory objects” in POSIX – under this directory (for example, this is
+how <code class="docutils literal notranslate"><span class="pre">shm_open()</span></code> Glibc function works). It is not recommended to allow a
+directory unless the application creates shared memory objects with
+unpredictable names. Allowing a directory creates a risk of exposing unexpected
+data to the host.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adding shared memory mounts is insecure by itself in SGX environments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>All data put in shared memory reside outside of the SGX enclave.</p></li>
+<li><p>Typically applications do not encrypt the data put in shared memory,
+which may lead to leaks of enclave data.</p></li>
+<li><p>Untrusted host can modify data in shared memory as it wishes, so
+applications could see or operate on maliciously modified data.</p></li>
+</ul>
+</div></blockquote>
+<p>It is the responsibility of the app developer to correctly use shared memory,
+with security implications in mind. In most cases, data in shared memory
+should be preliminarily encrypted or integrity-protected by the user app
+with a key pre-shared between all participating processes (and possibly
+devices that use this shared memory).</p>
+</aside>
+</section>
+<section id="file-check-policy">
+<h3>File check policy<a class="headerlink" href="manifest-syntax.html#file-check-policy" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.file_check_policy = &quot;[strict|allow_all_but_log]&quot;
+(Default: &quot;strict&quot;)
+</pre></div>
+</div>
+<p>This syntax specifies the file check policy, determining the behavior of
+authentication when opening files or devices. By default, only files explicitly
+listed as <code class="docutils literal notranslate"><span class="pre">trusted_files</span></code> and files or devices explicitly listed as
+<code class="docutils literal notranslate"><span class="pre">allowed_files</span></code> are allowed for access.</p>
+<p>If the file check policy is <code class="docutils literal notranslate"><span class="pre">allow_all_but_log</span></code>, all files and devices other
+than trusted and allowed are allowed for access, and Gramine emits a warning
+message for every such file/device. Effectively, this policy operates on all
+unknown files and devices as if they were listed as <code class="docutils literal notranslate"><span class="pre">allowed_files</span></code>. (However,
+this policy still does not allow writing/creating files specified as trusted.)
+This policy is a convenient way to determine the set of files that the ported
+application uses.</p>
+</section>
+<section id="attestation-and-quotes">
+<h3>Attestation and quotes<a class="headerlink" href="manifest-syntax.html#attestation-and-quotes" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.remote_attestation = &quot;[none|epid|dcap]&quot;
+(Default: &quot;none&quot;)
+
+sgx.ra_client_linkable = [true|false]
+sgx.ra_client_spid     = &quot;[HEX]&quot;
+(Only for EPID based attestation)
+</pre></div>
+</div>
+<p>This syntax specifies the parameters for remote attestation. By default, it is
+not enabled.</p>
+<p>For <a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a> based attestation, <code class="docutils literal notranslate"><span class="pre">remote_attestation</span></code> must be set to
+<code class="docutils literal notranslate"><span class="pre">epid</span></code>.  In addition, <code class="docutils literal notranslate"><span class="pre">ra_client_linkable</span></code> and <code class="docutils literal notranslate"><span class="pre">ra_client_spid</span></code> must be
+filled with your registered Intel SGX EPID Attestation Service credentials
+(linkable/unlinkable mode and <a class="reference internal" href="sgx-intro.html#term-SPID"><span class="xref std std-term">SPID</span></a> of the client respectively).</p>
+<p>For <a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a> based attestation, <code class="docutils literal notranslate"><span class="pre">remote_attestation</span></code> must be set to
+<code class="docutils literal notranslate"><span class="pre">dcap</span></code>. <code class="docutils literal notranslate"><span class="pre">ra_client_spid</span></code> and <code class="docutils literal notranslate"><span class="pre">ra_client_linkable</span></code> are ignored.</p>
+</section>
+<section id="pre-heating-enclave">
+<h3>Pre-heating enclave<a class="headerlink" href="manifest-syntax.html#pre-heating-enclave" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.preheat_enclave = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>When enabled, this option instructs Gramine to pre-fault all heap pages during
+initialization. This has a negative impact on the total run time, but shifts the
+<a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> page faults cost to the initialization phase, which can be useful in
+a scenario where a server starts and receives connections / work packages only
+after some time. It also makes the later run time and latency much more
+predictable.</p>
+<p>Please note that using this option makes sense only when the <a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> is
+large enough to hold the whole heap area.</p>
+<p>This option is invalid (i.e. must be <code class="docutils literal notranslate"><span class="pre">false</span></code>) if specified together with
+<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span></code>, as there are no heap pages to pre-fault.</p>
+</section>
+<section id="enabling-per-thread-and-process-wide-sgx-stats">
+<h3>Enabling per-thread and process-wide SGX stats<a class="headerlink" href="manifest-syntax.html#enabling-per-thread-and-process-wide-sgx-stats" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.enable_stats = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This syntax specifies whether to enable SGX enclave-specific statistics:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TCS.FLAGS.DBGOPTIN</span></code> flag. This flag is set in all enclave threads and
+enables certain debug and profiling features with enclaves, including
+breakpoints, performance counters, Intel PT, etc.</p></li>
+<li><p>Printing the stats on SGX-specific events. Currently supported stats are:
+number of EENTERs (corresponds to ECALLs plus returns from OCALLs), number
+of EEXITs (corresponds to OCALLs plus returns from ECALLs) and number of
+AEXs (corresponds to interrupts/exceptions/signals during enclave
+execution). Prints per-thread and per-process stats.</p></li>
+<li><p>Printing the SGX enclave loading time at startup. The enclave loading time
+includes creating the enclave, adding enclave pages, measuring them and
+initializing the enclave.</p></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is insecure and cannot be used with production enclaves
+(<code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">false</span></code>). If a production enclave is started with this option
+set, Gramine will fail initialization of the enclave.</p>
+</aside>
+</section>
+<section id="sgx-profiling">
+<h3>SGX profiling<a class="headerlink" href="manifest-syntax.html#sgx-profiling" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.profile.enable = [&quot;none&quot;|&quot;main&quot;|&quot;all&quot;]
+(Default: &quot;none&quot;)
+</pre></div>
+</div>
+<p>This syntax specifies whether to enable SGX profiling. Gramine must be compiled
+with <code class="docutils literal notranslate"><span class="pre">--buildtype=debug</span></code> or <code class="docutils literal notranslate"><span class="pre">--buildtype=debugoptimized</span></code> for this option to
+work (the latter is advised). In addition, the manifest must contain
+<code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">true</span></code>.</p>
+<p>If this option is set to <code class="docutils literal notranslate"><span class="pre">main</span></code>, the main process will collect IP samples and
+save them as <code class="docutils literal notranslate"><span class="pre">sgx-perf.data</span></code>. If it is set to <code class="docutils literal notranslate"><span class="pre">all</span></code>, all processes will
+collect samples and save them to <code class="docutils literal notranslate"><span class="pre">sgx-perf-&lt;PID&gt;.data</span></code>.</p>
+<p>The saved files can be viewed with the <code class="docutils literal notranslate"><span class="pre">perf</span></code> tool, e.g. <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span> <span class="pre">-i</span>
+<span class="pre">sgx-perf.data</span></code>.</p>
+<p>See <a class="reference internal" href="performance.html#sgx-profile"><span class="std std-ref">SGX profiling</span></a> for more information.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is insecure and cannot be used with production enclaves
+(<code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">false</span></code>). If a production enclave is started with this option
+set, Gramine will fail initialization of the enclave.</p>
+</aside>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.profile.mode = [&quot;aex&quot;|&quot;ocall_inner&quot;|&quot;ocall_outer&quot;]
+(Default: &quot;aex&quot;)
+</pre></div>
+</div>
+<p>Specifies what events to record:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aex</span></code>: Records enclave state during asynchronous enclave exit (AEX). Use
+this to check where the CPU time is spent in the enclave.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocall_inner</span></code>: Records enclave state during OCALL.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocall_outer</span></code>: Records the outer OCALL function, i.e., what OCALL handlers
+are going to be executed. Does not include stack information (cannot be used
+with <code class="docutils literal notranslate"><span class="pre">sgx.profile.with_stack</span> <span class="pre">=</span> <span class="pre">true</span></code>).</p></li>
+</ul>
+<p>See also <a class="reference internal" href="performance.html#sgx-profile-ocall"><span class="std std-ref">OCALL profiling</span></a> for more detailed advice regarding the OCALL
+modes.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.profile.with_stack = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This syntax specifies whether to include stack information with the profiling
+data. This will enable <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span></code> to show call chains. However, it will
+make the output file much bigger, and slow down the process.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.profile.frequency = [INTEGER]
+(Default: 50)
+</pre></div>
+</div>
+<p>This syntax specifies approximate frequency at which profiling samples are taken
+(in samples per second). Lower values will mean less accurate results, but also
+lower overhead.</p>
+<p>Note that the accuracy is limited by how often the process is interrupted by
+Linux scheduler: the effective maximum is 250 samples per second.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option applies only to <code class="docutils literal notranslate"><span class="pre">aex</span></code> mode. In the <code class="docutils literal notranslate"><span class="pre">ocall_*</span></code> modes, currently
+all samples are taken.</p>
+</aside>
+</section>
+<section id="sgx-profiling-with-intel-vtune-profiler">
+<h3>SGX profiling with Intel VTune Profiler<a class="headerlink" href="manifest-syntax.html#sgx-profiling-with-intel-vtune-profiler" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.vtune_profile = [true|false]
+(Default: false)
+</pre></div>
+</div>
+<p>This syntax specifies whether to enable SGX profiling with Intel VTune Profiler.
+Gramine must be compiled with <code class="docutils literal notranslate"><span class="pre">--buildtype=debug</span></code> or
+<code class="docutils literal notranslate"><span class="pre">--buildtype=debugoptimized</span></code> for this option to work (the latter is advised).
+In addition, the application manifest must also contain <code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">true</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The manifest options <code class="docutils literal notranslate"><span class="pre">sgx.vtune_profile</span></code> and <code class="docutils literal notranslate"><span class="pre">sgx.profile.*</span></code> can work
+independently.</p>
+</aside>
+<p>See <a class="reference internal" href="performance.html#vtune-sgx-profiling"><span class="std std-ref">Profiling SGX hotspots with Intel VTune Profiler</span></a> for more information.</p>
+</section>
+</section>
+<section id="deprecated-options">
+<h2>Deprecated options<a class="headerlink" href="manifest-syntax.html#deprecated-options" title="Permalink to this headline"></a></h2>
+<section id="optional-cpu-features-deprecated-syntax">
+<h3>Optional CPU features (deprecated syntax)<a class="headerlink" href="manifest-syntax.html#optional-cpu-features-deprecated-syntax" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.require_avx    = [true|false]
+sgx.require_avx512 = [true|false]
+sgx.require_mpx    = [true|false]
+sgx.require_pkru   = [true|false]
+sgx.require_amx    = [true|false]
+</pre></div>
+</div>
+<p>This syntax specified whether to require certain CPU features to be available on
+the platform where the enclave executes. This syntax has been replaced with
+<code class="docutils literal notranslate"><span class="pre">sgx.cpu_features.[avx|avx512|mpx|pkru|amx]</span></code>.</p>
+<p>Previously, the default value for these features was <code class="docutils literal notranslate"><span class="pre">false</span></code>. This was
+ambiguous because e.g. <code class="docutils literal notranslate"><span class="pre">sgx.require_avx</span> <span class="pre">=</span> <span class="pre">false</span></code> meant that the AVX feature
+was auto-detected on the platform, whereas <code class="docutils literal notranslate"><span class="pre">sgx.require_mpx</span> <span class="pre">=</span> <span class="pre">false</span></code> meant
+that the MPX feature was always disabled inside the enclave.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Previously, security-hardening features (MPX and PKRU) were underspecified.
+For example, <code class="docutils literal notranslate"><span class="pre">sgx.require_mpx</span> <span class="pre">=</span> <span class="pre">false</span></code> meant that the MPX feature was
+always disabled inside the enclave (regardless of whether the CPU supported
+it or not), and <code class="docutils literal notranslate"><span class="pre">sgx.require_mpx</span> <span class="pre">=</span> <span class="pre">true</span></code> meant that the MPX feature was
+always enabled inside the enclave (even if the CPU did not support it, which
+would result in enclave failures). This is in contrast to
+non-security-hardening features (AVX, AVX512, AMX) which could be
+“unspecified”. The new manifest syntax fixes this ambiguity.</p>
+</aside>
+</section>
+<section id="sgx-exinfo-deprecated-syntax">
+<h3>SGX EXINFO (deprecated syntax)<a class="headerlink" href="manifest-syntax.html#sgx-exinfo-deprecated-syntax" title="Permalink to this headline"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sgx.require_exinfo = [true|false]
+</pre></div>
+</div>
+<p>This syntax specified whether a user application can retrieve faulting address
+in signal handler in case of a page fault. This syntax was renamed to
+<code class="docutils literal notranslate"><span class="pre">sgx.use_exinfo</span></code>. The default value was <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sgx-setup.html" class="btn btn-neutral float-left" title="Set up the host environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="attestation.html" class="btn btn-neutral float-right" title="Attestation and Secret Provisioning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

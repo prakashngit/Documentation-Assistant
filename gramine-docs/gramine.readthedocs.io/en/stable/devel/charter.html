@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical Charter &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Certificate of Origin" href="DCO/index.html" />
+    <link rel="prev" title="How to write documentation" href="howto-doc.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/charter", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/charter.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="charter.html#">Technical Charter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#mission-and-scope-of-the-project">1. Mission and Scope of the Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#technical-steering-committee">2. Technical Steering Committee</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#tsc-voting">3. TSC Voting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#compliance-with-policies">4. Compliance with Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#community-assets">5. Community Assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#general-rules-and-operations">6. General Rules and Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#intellectual-property-policy">7. Intellectual Property Policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="charter.html#amendments">8. Amendments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Technical Charter</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/charter.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="technical-charter">
+<h1>Technical Charter<a class="headerlink" href="charter.html#technical-charter" title="Permalink to this headline"></a></h1>
+<p>This is the Technical Charter (the “Charter”) for Gramine Project, a Series of
+LF Projects LLC. Adopted on 14 September 2020.</p>
+<p>This Charter sets forth the responsibilities and procedures for technical
+contribution to, and oversight of, the Gramine open source project, which has
+been established as Gramine Project a Series of LF Projects, LLC (the
+“Project”). LF Projects, LLC (“LF Projects”) is a Delaware series limited
+liability company. All contributors (including committers, maintainers, and
+other technical positions) and other participants in the Project (collectively,
+“Collaborators”) must comply with the terms of this Charter.</p>
+<section id="mission-and-scope-of-the-project">
+<h2>1. Mission and Scope of the Project<a class="headerlink" href="charter.html#mission-and-scope-of-the-project" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>The mission of the Project is to develop a lightweight guest OS, designed to
+run a single application with minimal host requirements.</p></li>
+<li><p>The scope of the Project includes collaborative development under the Project
+License (as defined herein) supporting the mission, including documentation,
+testing, integration and the creation of other artifacts that aid the
+development, deployment, operation or adoption of the open source project.</p></li>
+</ol>
+</section>
+<section id="technical-steering-committee">
+<h2>2. Technical Steering Committee<a class="headerlink" href="charter.html#technical-steering-committee" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>The Technical Steering Committee (the “TSC”) will be responsible for all
+technical oversight of the open source Project.</p></li>
+<li><p>The TSC voting members are initially the Project’s Committers. At the
+inception of the project, the Committers of the Project will be as set forth
+within the “CONTRIBUTING” file within the Project’s code repository. The TSC
+may choose an alternative approach for determining the voting members of the
+TSC, and any such alternative approach will be documented in the CONTRIBUTING
+file. Any meetings of the Technical Steering Committee are intended to be
+open to the public, and can be conducted electronically, via teleconference,
+or in person.</p></li>
+<li><p>TSC projects generally will involve Contributors and Committers. The TSC may
+adopt or modify roles so long as the roles are documented in the CONTRIBUTING
+file. Unless otherwise documented:</p>
+<ol class="lowerroman simple">
+<li><p>Contributors include anyone in the technical community that contributes
+code, documentation, or other technical artifacts to the Project;</p></li>
+<li><p>Committers are Contributors who have earned the ability to modify
+(“commit”) source code, documentation or other technical artifacts in a
+project’s repository; and</p></li>
+<li><p>A Contributor may become a Committer by a majority approval of the
+existing Committers. A Committer may be removed by a majority approval
+of the other existing Committers.</p></li>
+</ol>
+</li>
+<li><p>Participation in the Project through becoming a Contributor and Committer is
+open to anyone so long as they abide by the terms of this Charter.</p></li>
+<li><p>The TSC may (1) establish work flow procedures for the submission, approval,
+and closure/archiving of projects, (2) set requirements for the promotion of
+Contributors to Committer status, as applicable, and (3) amend, adjust,
+refine and/or eliminate the roles of Contributors, and Committers, and create
+new roles, and publicly document any TSC roles, as it sees fit.</p></li>
+<li><p>The TSC may elect a TSC Chair, who will preside over meetings of the TSC and
+will serve until their resignation or replacement by the TSC. The TSC Chair,
+or any other TSC member so designated by the TSC, will serve as the primary
+communication contact between the Project and the Confidential Computing
+Consortium Fund of The Linux Foundation.</p></li>
+<li><p>Responsibilities: The TSC will be responsible for all aspects of oversight
+relating to the Project, which may include:</p>
+<ol class="lowerroman simple">
+<li><p>coordinating the technical direction of the Project;</p></li>
+<li><p>approving project or system proposals (including, but not limited to,
+incubation, deprecation, and changes to a sub-project’s scope);</p></li>
+<li><p>organizing sub-projects and removing sub-projects;</p></li>
+<li><p>creating sub-committees or working groups to focus on cross-project
+technical issues and requirements;</p></li>
+<li><p>appointing representatives to work with other open source or open
+standards communities;</p></li>
+<li><p>establishing community norms, workflows, issuing releases, and security
+issue reporting policies;</p></li>
+<li><p>approving and implementing policies and processes for contributing (to
+be published in the CONTRIBUTING file) and coordinating with the series
+manager of the Project (as provided for in the Series Agreement, the
+“Series Manager”) to resolve matters or concerns that may arise as set
+forth in Section 7 of this Charter;</p></li>
+<li><p>discussions, seeking consensus, and where necessary, voting on
+technical matters relating to the code base that affect multiple
+projects; and</p></li>
+<li><p>coordinating any marketing, events, or communications regarding the
+Project.</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="tsc-voting">
+<h2>3. TSC Voting<a class="headerlink" href="charter.html#tsc-voting" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>While the Project aims to operate as a consensus-based community, if any TSC
+decision requires a vote to move the Project forward, the voting members of
+the TSC will vote on a one vote per voting member basis.</p></li>
+<li><p>Quorum for TSC meetings requires at least fifty percent of all voting members
+of the TSC to be present. The TSC may continue to meet if quorum is not met
+but will be prevented from making any decisions at the meeting.</p></li>
+<li><p>Except as provided in Section 7.3. and 8.1, decisions by vote require a
+majority vote of all voting members of the TSC.</p></li>
+<li><p>In the event a vote cannot be resolved by the TSC, any voting member of the
+TSC may refer the matter to the Series Manager for assistance in reaching a
+resolution.</p></li>
+</ol>
+</section>
+<section id="compliance-with-policies">
+<h2>4. Compliance with Policies<a class="headerlink" href="charter.html#compliance-with-policies" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>This Charter is subject to the Series Agreement for the Project and the
+Operating Agreement of LF Projects. Contributors will comply with the
+policies of LF Projects as may be adopted and amended by LF Projects,
+including, without limitation the policies listed at
+<a class="reference external" href="https://lfprojects.org/policies/">https://lfprojects.org/policies/</a>.</p></li>
+<li><p>The TSC may adopt a code of conduct (“CoC”) for the Project, which is subject
+to approval by the Series Manager. In the event that a Project-specific CoC
+has not been approved, the LF Projects Code of Conduct listed at
+<a class="reference external" href="https://lfprojects.org/policies">https://lfprojects.org/policies</a> will apply for all Collaborators in the
+Project.</p></li>
+<li><p>When amending or adopting any policy applicable to the Project, LF Projects
+will publish such policy, as to be amended or adopted, on its web site at
+least 30 days prior to such policy taking effect; provided, however, that in
+the case of any amendment of the Trademark Policy or Terms of Use of LF
+Projects, any such amendment is effective upon publication on LF Project’s
+web site.</p></li>
+<li><p>All Collaborators must allow open participation from any individual or
+organization meeting the requirements for contributing under this Charter and
+any policies adopted for all Collaborators by the TSC, regardless of
+competitive interests. Put another way, the Project community must not seek
+to exclude any participant based on any criteria, requirement, or reason
+other than those that are reasonable and applied on a non-discriminatory
+basis to all Collaborators in the Project community.</p></li>
+<li><p>The Project will operate in a transparent, open, collaborative, and ethical
+manner at all times. The output of all Project discussions, proposals,
+timelines, decisions, and status should be made open and easily visible to
+all. Any potential violations of this requirement should be reported
+immediately to the Series Manager.</p></li>
+</ol>
+</section>
+<section id="community-assets">
+<h2>5. Community Assets<a class="headerlink" href="charter.html#community-assets" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>LF Projects will hold title to all trade or service marks used by the Project
+(“Project Trademarks”), whether based on common law or registered rights.
+Project Trademarks will be transferred and assigned to LF Projects to hold on
+behalf of the Project. Any use of any Project Trademarks by Collaborators in
+the Project will be in accordance with the license from LF Projects and inure
+to the benefit of LF Projects.</p></li>
+<li><p>The Project will, as permitted and in accordance with such license from LF
+Projects, develop and own all Project GitHub and social media accounts, and
+domain name registrations created by the Project community.</p></li>
+<li><p>Under no circumstances will LF Projects be expected or required to undertake
+any action on behalf of the Project that is inconsistent with the tax-exempt
+status or purpose, as applicable, of the Joint Development Foundation or LF
+Projects, LLC.</p></li>
+</ol>
+</section>
+<section id="general-rules-and-operations">
+<h2>6. General Rules and Operations<a class="headerlink" href="charter.html#general-rules-and-operations" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>The Project will:</p>
+<ol class="lowerroman simple">
+<li><p>engage in the work of the Project in a professional manner consistent with
+maintaining a cohesive community, while also maintaining the goodwill and
+esteem of LF Projects, Joint Development Foundation and other partner
+organizations in the open source community; and</p></li>
+<li><p>respect the rights of all trademark owners, including any branding and
+trademark usage guidelines.</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="intellectual-property-policy">
+<h2>7. Intellectual Property Policy<a class="headerlink" href="charter.html#intellectual-property-policy" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>Collaborators acknowledge that the copyright in all new contributions will be
+retained by the copyright holder as independent works of authorship and that
+no contributor or copyright holder will be required to assign copyrights to
+the Project.</p></li>
+<li><p>Except as described in Section 7.3., all contributions to the Project are
+subject to the following:</p>
+<ol class="lowerroman simple">
+<li><p>All new inbound code contributions to the Project must be made using the
+GNU Lesser General Public License version 3, available at
+<a class="reference external" href="https://www.gnu.org/licenses/lgpl-3.0.en.html">https://www.gnu.org/licenses/lgpl-3.0.en.html</a> (the “Project License”).</p></li>
+<li><p>All new inbound code contributions must also be accompanied by a
+Developer Certificate of Origin (<a class="reference external" href="http://developercertificate.org">http://developercertificate.org</a>)
+sign-off in the source code system that is submitted through a
+TSC-approved contribution process which will bind the authorized
+contributor and, if not self-employed, their employer to the applicable
+license.</p></li>
+<li><p>All outbound code will be made available under the Project License.</p></li>
+<li><p>Documentation will be received and made available by the Project under
+the Creative Commons Attribution 4.0 International License (available at
+<a class="reference external" href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>).</p></li>
+<li><p>The Project may seek to integrate and contribute back to other open source
+projects (“Upstream Projects”). In such cases, the Project will conform to
+all license requirements of the Upstream Projects, including dependencies,
+leveraged by the Project. Upstream Project code contributions not stored
+within the Project’s main code repository will comply with the
+contribution process and license terms for the applicable Upstream
+Project.</p></li>
+</ol>
+</li>
+<li><p>The TSC may approve the use of an alternative license or licenses for inbound
+or outbound contributions on an exception basis. To request an exception,
+please describe the contribution, the alternative open source license(s), and
+the justification for using an alternative open source license for the
+Project. License exceptions must be approved by a two-thirds vote of the
+entire TSC.</p></li>
+<li><p>Contributed files should contain license information, such as SPDX short form
+identifiers, indicating the open source license or licenses pertaining to the
+file.</p></li>
+</ol>
+</section>
+<section id="amendments">
+<h2>8. Amendments<a class="headerlink" href="charter.html#amendments" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>This charter may be amended by a two-thirds vote of the entire TSC and is
+subject to approval by LF Projects.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="howto-doc.html" class="btn btn-neutral float-left" title="How to write documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DCO/index.html" class="btn btn-neutral float-right" title="Developer Certificate of Origin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

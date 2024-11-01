@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to write documentation &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Technical Charter" href="charter.html" />
+    <link rel="prev" title="Coding style guidelines" href="coding-style.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/howto-doc", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/howto-doc.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="howto-doc.html#">How to write documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto-doc.html#installing-prerequisites">Installing prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto-doc.html#building-documentation">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto-doc.html#preferred-rest-style">Preferred reST style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto-doc.html#preferred-doxygen-style">Preferred Doxygen style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto-doc.html#further-reading">Further reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to write documentation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/howto-doc.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="how-to-write-documentation">
+<span id="howto-doc"></span><h1>How to write documentation<a class="headerlink" href="howto-doc.html#how-to-write-documentation" title="Permalink to this headline"></a></h1>
+<p>Gramine uses <a class="reference external" href="https://www.sphinx-doc.org/">Sphinx</a> to generate the documentation in HTML form. The
+documentation is hosted on Read The Docs at <a class="reference external" href="https://gramine.readthedocs.io/">https://gramine.readthedocs.io/</a>.
+Documentation is generally written as <a class="reference external" href="https://en.wikipedia.org/wiki/ReStructuredText">reStructuredText</a> files which are placed
+in <code class="docutils literal notranslate"><span class="pre">Documentation/</span></code> directory. See <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html">Sphinx’ reST primer</a> for short
+introduction into syntax.</p>
+<p>For code written in C, we use <a class="reference external" href="http://www.doxygen.nl/">Doxygen</a> and <a class="reference external" href="https://breathe.readthedocs.io/en/latest/">Breathe</a>, which is
+a Sphinx’ plugin for including Doxygen documentation. Documentation of
+C language API should be written as Doxygen comments (see <a class="reference external" href="http://www.doxygen.nl/manual/docblocks.html">Doxygen manual</a>)
+and then included in one of the <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files (with appropriate description)
+using one of the <a class="reference external" href="https://breathe.readthedocs.io/en/latest/directives.html">Breathe directives</a>, like <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">doxygenfunction::</span></code> or <code class="docutils literal notranslate"><span class="pre">..</span>
+<span class="pre">doxygenstruct::</span></code>.</p>
+<p>The documentation should be written with <code class="docutils literal notranslate"><span class="pre">html</span></code> builder of Sphinx in mind. The
+<code class="file docutils literal notranslate"><span class="pre">manpages/</span></code> subdirectory also targets <code class="docutils literal notranslate"><span class="pre">manpage</span></code> builder. Other builders
+(like <code class="docutils literal notranslate"><span class="pre">latex</span></code>) may be considered in the future, but for now their output is
+not published.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A note about terminology:</p>
+<p><code class="docutils literal notranslate"><span class="pre">html</span></code>, <code class="docutils literal notranslate"><span class="pre">latex</span></code> and <code class="docutils literal notranslate"><span class="pre">manpage</span></code>, and also others, are Sphinx “builders”:
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-b">https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-b</a>.
+Sphinx can output many different formats, some of them have overlapping usage
+(both <code class="docutils literal notranslate"><span class="pre">html</span></code> and <code class="docutils literal notranslate"><span class="pre">latex</span></code> usually output full handbook, the difference is
+screen vs print), some are specialized (<code class="docutils literal notranslate"><span class="pre">manpage</span></code> processes only selected
+documents for man; those documents may or may not be also used by other
+builders).</p>
+<p>When launched through <code class="docutils literal notranslate"><span class="pre">make</span></code> (like <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">Documentation</span> <span class="pre">html</span></code>), this
+becomes “target” in Make terminology.</p>
+</aside>
+<section id="installing-prerequisites">
+<h2>Installing prerequisites<a class="headerlink" href="howto-doc.html#installing-prerequisites" title="Permalink to this headline"></a></h2>
+<p>Change directory to <code class="docutils literal notranslate"><span class="pre">Documentation</span></code>, install prerequisites including Doxygen,
+Breathe and Sphinx. Gramine documentation requires version 3.4 of Sphinx.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># change directory to Documentation</span>
+<span class="nb">cd</span><span class="w"> </span>Documentation
+
+<span class="c1"># install prerequisites</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>doxygen
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="building-documentation">
+<h2>Building documentation<a class="headerlink" href="howto-doc.html#building-documentation" title="Permalink to this headline"></a></h2>
+<p>Execute <code class="docutils literal notranslate"><span class="pre">make</span></code> command in <code class="docutils literal notranslate"><span class="pre">Documentation</span></code> directory, specifying the
+appropriate target. The output is in the <code class="docutils literal notranslate"><span class="pre">_build</span></code> directory.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># build targets &quot;html&quot; and &quot;man&quot;</span>
+make<span class="w"> </span>html<span class="w"> </span>man
+
+<span class="c1"># example: view html output</span>
+firefox<span class="w"> </span>_build/html/index.html
+
+<span class="c1"># example: view man output</span>
+man<span class="w"> </span>_build/man/gramine-manifest.1
+</pre></div>
+</div>
+</section>
+<section id="preferred-rest-style">
+<h2>Preferred reST style<a class="headerlink" href="howto-doc.html#preferred-rest-style" title="Permalink to this headline"></a></h2>
+<p>(This is adapted from <a class="reference external" href="https://devguide.python.org/documenting/#style-guide">Python’s style guide</a>).</p>
+<ul>
+<li><p>Use 3-space tab in <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files to align the indentation with reST explicit
+markup, which begins with two dots and a space.</p></li>
+<li><p>Wrap the paragraphs at 80th character. But don’t wrap verbatim text like logs
+and use applicable style when wrapping code examples (see
+<a class="reference internal" href="coding-style.html"><span class="doc">Coding style guidelines</span></a>).</p></li>
+<li><p>For headers, use Python convention for header hierarchy:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span></code> with overline,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code> with overline,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">=</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">^</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;</span></code>.</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">###################################</span>
+<span class="gh">Very top level header (in TOC etc.)</span>
+<span class="gh">###################################</span>
+
+<span class="gh">*******************</span>
+<span class="gh">Less than top level</span>
+<span class="gh">*******************</span>
+
+<span class="gh">Per-file header</span>
+<span class="gh">===============</span>
+
+<span class="gh">Section header</span>
+<span class="gh">--------------</span>
+
+<span class="gh">Subsection header</span>
+<span class="gh">^^^^^^^^^^^^^^^^^</span>
+
+<span class="gh">Subsubsection header</span>
+<span class="gh">&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>This means most documents use only <code class="docutils literal notranslate"><span class="pre">=</span></code> and <code class="docutils literal notranslate"><span class="pre">-</span></code> adornments.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<dl class="simple">
+<dt>For vim users:</dt><dd><p>you can enter the <code class="docutils literal notranslate"><span class="pre">-</span></code> underlines using the key combination
+<code class="docutils literal notranslate"><span class="pre">yypVr-</span></code> and the other adornments with similar combinations.</p>
+</dd>
+<dt>For Emacs users:</dt><dd><p>Read more at <a class="reference external" href="https://docutils.sourceforge.io/docs/user/emacs.html">https://docutils.sourceforge.io/docs/user/emacs.html</a>.</p>
+</dd>
+</dl>
+</aside>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">|~|</span></code> to insert non-breaking space. This should be added after
+one-letter words and where otherwise appropriate:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>This is a |~| function.
+</pre></div>
+</div>
+<p>This substitution is added to all documents processed by Sphinx. For files
+processed also by other software (like <code class="docutils literal notranslate"><span class="pre">README.rst</span></code>, which is both rendered
+by GitHub and included in <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>), use <code class="docutils literal notranslate"><span class="pre">|nbsp|</span></code> after adding this
+substitution yourself:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">|nbsp|</span> <span class="ow">unicode</span><span class="p">::</span> 0xa0
+   <span class="nc">:trim:</span>
+
+This is a |nbsp| README.
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Documentation of the code should be organized into files by logical concepts,
+as they fit into programmer’s mind. Ideally, this should match the source files,
+if those files were organized correctly in the first place, but the reality may
+be different. In case of doubt, place them as they fit the narrative of the
+document, not as they are placed in the source files.</p>
+<p>Documents should be grouped by general areas and presented using
+<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">toctree::</span></code> directive in <code class="file docutils literal notranslate"><span class="pre">index.rst</span></code> file. This causes them to be
+included in TOC in the main document and also in sidebar on RTD.</p>
+</section>
+<section id="preferred-doxygen-style">
+<h2>Preferred Doxygen style<a class="headerlink" href="howto-doc.html#preferred-doxygen-style" title="Permalink to this headline"></a></h2>
+<ol class="arabic">
+<li><p>Prefer Qt-style <code class="docutils literal notranslate"><span class="pre">/*!</span></code> and <code class="docutils literal notranslate"><span class="pre">\param</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*!</span>
+<span class="cm"> * \brief Sum two integers.</span>
+<span class="cm"> *</span>
+<span class="cm"> * \param first   First addend.</span>
+<span class="cm"> * \param second  Second addend.</span>
+<span class="cm"> *</span>
+<span class="cm"> * \returns Sum of the arguments. Sometimes a longer description is needed, then it should be</span>
+<span class="cm"> *          wrapped and aligned like this.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Longer description goes here (only for functions complex enough to deserve it).</span>
+<span class="cm"> */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">first</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">second</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>There is a |~| very special function <span class="na">:c:func:</span><span class="nv">`foo`</span>:
+
+<span class="p">..</span> <span class="ow">doxygenfunction</span><span class="p">::</span> foo
+
+It&#39;s an example function, but is documented!
+</pre></div>
+</div>
+</li>
+<li><p>In reST, do not use <code class="docutils literal notranslate"><span class="pre">autodoxygen</span></code> directives, and especially do not use
+<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">doxygenfile::</span></code>, because documentation should be written as prose, not
+a coredump. Write an explanation, how the things go together and place
+the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">doxygenfunction::</span></code> directives where aproppriate.</p></li>
+<li><p>You can use <code class="docutils literal notranslate"><span class="pre">\rst</span></code> and <code class="docutils literal notranslate"><span class="pre">\endrst</span></code> to write reST in Doxygen comments:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*!</span>
+<span class="cm"> * \brief An example function</span>
+<span class="cm"> *</span>
+<span class="cm"> * \rst</span>
+<span class="cm"> * .. note::</span>
+<span class="cm"> *</span>
+<span class="cm"> *    This works!</span>
+<span class="cm"> * \endrst</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="howto-doc.html#further-reading" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.divio.com/blog/documentation/">Four kinds of documentation</a>
+(<a class="reference external" href="https://news.ycombinator.com/item?id=21289832">HN thread</a>)</p></li>
+<li><p><a class="reference external" href="https://docs-guide.readthedocs.io/en/latest/&gt;">The Hitchhiker’s Guide to Documentation</a> divided by audience (role in the
+project), with references to good real-world examples</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="coding-style.html" class="btn btn-neutral float-left" title="Coding style guidelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="charter.html" class="btn btn-neutral float-right" title="Technical Charter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gramine installation options &mdash; Gramine  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Run a sample application" href="run-sample-application.html" />
+    <link rel="prev" title="Ready-made SGX images" href="curated-installation.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "installation", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/installation.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="installation.html#">Gramine installation options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-gramine-packages-1">Install Gramine packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#debian-12">Debian 12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#debian-11">Debian 11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#ubuntu-22-04-lts-or-20-04-lts">Ubuntu 22.04 LTS or 20.04 LTS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#almalinux-and-compatible-distributions-versions-9-and-8">AlmaLinux and compatible distributions, versions 9 and 8</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#use-gramine-docker-image-1">Use Gramine Docker image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Gramine installation options</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/installation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="gramine-installation-options">
+<h1>Gramine installation options<a class="headerlink" href="installation.html#gramine-installation-options" title="Permalink to this headline"></a></h1>
+<p>There are three options to choose from when using Gramine to protect your
+application. The option you choose depends on how you are running your
+application. The first two options are explained on this page and the third
+option on a dedicated page.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="installation.html#install-gramine-packages"><span class="std std-ref">Install Gramine packages</span></a> - This option installs the official Gramine
+packages from the repository of your operating system.</p></li>
+<li><p><a class="reference internal" href="installation.html#use-gramine-docker-image"><span class="std std-ref">Use Gramine Docker image</span></a> - With this option, you protect your
+application using a Docker image that provides a minimal distribution of
+Gramine.</p></li>
+<li><p><a class="reference internal" href="devel/building.html"><span class="doc">Build and install Gramine from source</span></a> - This option is mainly used for assisting in Gramine
+development. This option is recommended for advanced users who want to get all
+current bugfixes and improvements without waiting for a next release. This
+option is much more involved than the other two options.</p></li>
+</ul>
+<section id="install-gramine-packages-1">
+<span id="install-gramine-packages"></span><h2>Install Gramine packages<a class="headerlink" href="installation.html#install-gramine-packages-1" title="Permalink to this headline"></a></h2>
+<section id="debian-12">
+<h3>Debian 12<a class="headerlink" href="installation.html#debian-12" title="Permalink to this headline"></a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/gramine-keyring.gpg<span class="w"> </span>https://packages.gramineproject.io/gramine-keyring.gpg
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/gramine.list
+
+sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/intel-sgx-deb.asc<span class="w"> </span>https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/intel-sgx-deb.asc] https://download.01.org/intel-sgx/sgx_repo/ubuntu jammy main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/intel-sgx.list
+
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>gramine
+</pre></div>
+</div>
+</section>
+<section id="debian-11">
+<h3>Debian 11<a class="headerlink" href="installation.html#debian-11" title="Permalink to this headline"></a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># if you don&#39;t already have backports repo enabled:</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb http://deb.debian.org/debian </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2">-backports main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/backports.list
+
+sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/gramine-keyring.gpg<span class="w"> </span>https://packages.gramineproject.io/gramine-keyring.gpg
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/gramine.list
+
+sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/intel-sgx-deb.asc<span class="w"> </span>https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/intel-sgx-deb.asc] https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/intel-sgx.list
+
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>gramine
+</pre></div>
+</div>
+</section>
+<section id="ubuntu-22-04-lts-or-20-04-lts">
+<h3>Ubuntu 22.04 LTS or 20.04 LTS<a class="headerlink" href="installation.html#ubuntu-22-04-lts-or-20-04-lts" title="Permalink to this headline"></a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/gramine-keyring.gpg<span class="w"> </span>https://packages.gramineproject.io/gramine-keyring.gpg
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/gramine.list
+
+sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/intel-sgx-deb.asc<span class="w"> </span>https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/intel-sgx-deb.asc] https://download.01.org/intel-sgx/sgx_repo/ubuntu </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/intel-sgx.list
+
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>gramine
+</pre></div>
+</div>
+</section>
+<section id="almalinux-and-compatible-distributions-versions-9-and-8">
+<h3>AlmaLinux and compatible distributions, versions 9 and 8<a class="headerlink" href="installation.html#almalinux-and-compatible-distributions-versions-9-and-8" title="Permalink to this headline"></a></h3>
+<p>These are distributions like AlmaLinux, Rocky Linux, etc.</p>
+<ol class="arabic">
+<li><p>Install EPEL repository as described here:
+<a class="reference external" href="https://docs.fedoraproject.org/en-US/epel/">https://docs.fedoraproject.org/en-US/epel/</a></p></li>
+<li><p>Install Gramine:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/etc/yum.repos.d/gramine.repo<span class="w"> </span>https://packages.gramineproject.io/rpm/gramine.repo
+sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>gramine
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="use-gramine-docker-image-1">
+<span id="use-gramine-docker-image"></span><h2>Use Gramine Docker image<a class="headerlink" href="installation.html#use-gramine-docker-image-1" title="Permalink to this headline"></a></h2>
+<p>The Gramine team publishes a base Gramine Docker image at
+<a class="reference external" href="https://hub.docker.com/r/gramineproject/gramine">https://hub.docker.com/r/gramineproject/gramine</a>.</p>
+<p>This Gramine image is a minimal distribution of Gramine: it contains only
+Gramine binaries and tools, as well as the pre-requisite packages to run
+applications under Gramine. The only currently available Gramine image is based
+on Ubuntu 20.04. The only requirement on the host system is a Linux kernel with
+in-kernel SGX driver (available from version 5.11 onward).</p>
+<p>This Gramine image can be used as a disposable playground environment, to
+quickly test Gramine with your applications and workloads. This image can also
+be used as a base for your workflows to produce production-ready Docker images
+for your SGX applications.</p>
+<p>To run the Gramine image via Docker, the recommended command is:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--device<span class="w"> </span>/dev/sgx_enclave<span class="w"> </span>-it<span class="w"> </span>gramineproject/gramine
+</pre></div>
+</div>
+<p>If you want to run <strong class="program">gramine-direct</strong> in addition to
+<strong class="program">gramine-sgx</strong>, then you should run Docker with our custom seccomp
+profile using:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>&lt;profile_file&gt;
+</pre></div>
+</div>
+<p>You can download the profile file from
+<a class="reference external" href="https://github.com/gramineproject/gramine/blob/master/scripts">https://github.com/gramineproject/gramine/blob/master/scripts</a>. Two profile files
+are available: <code class="docutils literal notranslate"><span class="pre">docker_seccomp_mar_2021.json</span></code> (for older Docker versions) and
+<code class="docutils literal notranslate"><span class="pre">docker_seccomp_aug_2022.json</span></code> (for newer Docker versions).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="curated-installation.html" class="btn btn-neutral float-left" title="Ready-made SGX images" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run-sample-application.html" class="btn btn-neutral float-right" title="Run a sample application" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

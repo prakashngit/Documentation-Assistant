@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development setup" href="setup.html" />
+    <link rel="prev" title="Contributing to Gramine" href="contributing.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/onboarding", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/onboarding.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="onboarding.html#">Onboarding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="onboarding.html#pre-requisite-knowledge">Pre-requisite knowledge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onboarding.html#debugging-with-gdb">Debugging with GDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onboarding.html#typical-gramine-development-flows">Typical Gramine development flows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="onboarding.html#fixing-a-bug">Fixing a bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="onboarding.html#implementing-a-new-system-call">Implementing a new system call</a></li>
+<li class="toctree-l3"><a class="reference internal" href="onboarding.html#adding-new-features">Adding new features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="onboarding.html#writing-documentation">Writing documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="onboarding.html#adding-a-new-app-example">Adding a new app example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Onboarding</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/onboarding.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="onboarding">
+<h1>Onboarding<a class="headerlink" href="onboarding.html#onboarding" title="Permalink to this headline"></a></h1>
+<p>This page describes the knowledge needed to efficiently contribute high-quality
+PRs to the Gramine project. This page also describes typical flows that Gramine
+developers should follow to make the process of PR review pleasant to everyone
+involved.</p>
+<p>The Gramine community values code correctness and quality over development
+speed. Therefore, the authors should take their time to create a good PR, even
+if this means contributing less patches. Bear in mind that Gramine is a
+security-related project and needs a very careful development process.</p>
+<p>This page is intended to be a Getting Started guide for new Gramine developers,
+<em>not</em> a reference manual on exact rules for contributing to Gramine. For the
+latter, please refer to <a class="reference internal" href="contributing.html"><span class="doc">Contributing to Gramine</span></a>.</p>
+<section id="pre-requisite-knowledge">
+<h2>Pre-requisite knowledge<a class="headerlink" href="onboarding.html#pre-requisite-knowledge" title="Permalink to this headline"></a></h2>
+<p>Gramine is a Library OS that emulates the Linux kernel. Think of Gramine as a
+tiny Linux re-implementation in userspace. As one example, Gramine has its own
+implementations of Linux system calls. As another example, Gramine implements
+its own <code class="docutils literal notranslate"><span class="pre">/proc/</span></code> filesystem.</p>
+<p>Moreover, Gramine with the Intel SGX backend also emulates/validates some CPU
+features. For example, Gramine with SGX verifies the return values of the CPUID
+instruction. As another example, Gramine with SGX verifies the consistency of
+the CPU/NUMA topology.</p>
+<p>Finally, Gramine is a standalone, “nostdlib” software. This means that Gramine
+itself doesn’t link against any standard libraries and cannot rely on common
+functionality like <code class="docutils literal notranslate"><span class="pre">malloc</span></code>, <code class="docutils literal notranslate"><span class="pre">memcmp</span></code>, etc. (in fact, Gramine re-implements
+these common functions from scratch). For example, upon startup Gramine must
+relocate and resolve its own symbols because there is no external dynamic
+linker/loader (<code class="docutils literal notranslate"><span class="pre">ld</span></code>) to which this work could be offloaded.</p>
+<p>Therefore, a new Gramine developer should be well-versed in low-level
+programming. We recommend the following books and resources:</p>
+<ul class="simple">
+<li><p>Operating systems concepts</p>
+<ul>
+<li><p>“Operating Systems: Three Easy Pieces” by R. Arpaci-Dusseau and A.
+Arpaci-Dusseau, available online at <a class="reference external" href="https://pages.cs.wisc.edu/~remzi/OSTEP/">https://pages.cs.wisc.edu/~remzi/OSTEP/</a></p></li>
+<li><p>“Operating System Concepts” by Silberschatz, Galvin and Gagne, see
+<a class="reference external" href="https://www.os-book.com/OS10/index.html">https://www.os-book.com/OS10/index.html</a></p></li>
+<li><p>“Modern Operating Systems” by A. Tanenbaum</p></li>
+</ul>
+</li>
+<li><p>Programming for the Linux kernel</p>
+<ul>
+<li><p>“The Linux Programming Interface” by M. Kerrisk</p></li>
+<li><p>“Linux Kernel Development” by R. Love</p></li>
+<li><p>“Linux System Programming” by R. Love</p></li>
+<li><p>The Linux Kernel documentation itself, see
+<a class="reference external" href="https://www.kernel.org/doc/html/latest/">https://www.kernel.org/doc/html/latest/</a> and especially
+<a class="reference external" href="https://www.kernel.org/doc/html/latest/process/howto.html">https://www.kernel.org/doc/html/latest/process/howto.html</a></p></li>
+<li><p>The Linux source code itself, you can use <a class="reference external" href="https://elixir.bootlin.com/">https://elixir.bootlin.com/</a> or
+<a class="reference external" href="https://code.woboq.org/linux/linux/">https://code.woboq.org/linux/linux/</a> to browse it</p></li>
+<li><p>Man pages, type <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">man</span></code> in your Linux terminal for reference or visit
+<a class="reference external" href="https://man7.org/linux/man-pages/">https://man7.org/linux/man-pages/</a>. Disclaimer: most man pages describe the
+semantics of the libc wrappers around syscalls, not the syscalls themselves
+(sometimes man pages have brief notes on semantics of the Linux syscalls
+under NOTES and BUGS).</p></li>
+</ul>
+</li>
+<li><p>Hardware architecture</p>
+<ul>
+<li><p>“Computer Architecture: A Quantitative Approach” by D. Patterson and J.
+Hennessy</p></li>
+<li><p>“Structured Computer Organization” by A. Tanenbaum</p></li>
+<li><p>The latest revision of “Intel 64 and IA-32 Architectures Software
+Developer’s Manual”, you can download it from
+<a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a></p></li>
+</ul>
+</li>
+</ul>
+<p>To meaningfully contribute to Gramine, the developer is expected to have a
+decent level of understanding of the concepts involved in any given subsystem of
+Gramine. For example, to contribute a patch/feature to Gramine’s filesystem
+implementation, the developer is expected to have the Linux/Unix specific
+knowledge of dentries, inodes, mount points.</p>
+<p>The Gramine subsystems (modelled after the Linux kernel) include:</p>
+<ul class="simple">
+<li><p>Virtual memory management (with the concept of Virtual Memory Areas, or VMAs)</p></li>
+<li><p>File systems (with concepts of Virtual File Systems, dentries, inodes, mount
+points, chroot, tmpfs, sysfs, devfs, mandatory locks, advisory locks)</p></li>
+<li><p>Thread management (futexes and events)</p></li>
+<li><p>Process management (fork, execve, copy-on-write semantics)</p></li>
+<li><p>Signal handling (synchronous and asynchronous signals)</p></li>
+<li><p>Communication primitives (Inter-Process Communication, pipes, named pipes,
+sockets, IO multiplexing, eventfd)</p></li>
+<li><p>ELF binary loading (symbol relocation &amp; resolution)</p></li>
+</ul>
+<p>The Gramine developer is expected to be skilled in concurrent programming
+(synchronization primitives, data races, locking, lockless algorithms). Gramine
+codebase mostly uses fine-grained locks and (rarely) atomic variables.</p>
+<p>Finally, a Gramine developer is also expected to be proficient in the software
+development tools and flows adopted by the Gramine community:</p>
+<ul class="simple">
+<li><p>Git – all Gramine development is done using Git distributed VCS</p>
+<ul>
+<li><p>Official Git documentation, see <a class="reference external" href="https://git-scm.com/doc">https://git-scm.com/doc</a></p></li>
+<li><p>Atlassian documentation and tutorials, see <a class="reference external" href="https://www.atlassian.com/git">https://www.atlassian.com/git</a></p></li>
+<li><p>GitLab documentation, see <a class="reference external" href="https://docs.gitlab.com/ee/topics/git/">https://docs.gitlab.com/ee/topics/git/</a></p></li>
+</ul>
+</li>
+<li><p>Git rebase flow – all Gramine development is done using this flow, <strong>not</strong>
+merge flow</p>
+<ul>
+<li><p><a class="reference external" href="https://medium.com/singlestone/a-git-workflow-using-rebase-1b1210de83e5">https://medium.com/singlestone/a-git-workflow-using-rebase-1b1210de83e5</a></p></li>
+<li><p><a class="reference external" href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing">https://www.atlassian.com/git/tutorials/merging-vs-rebasing</a></p></li>
+<li><p><a class="reference external" href="https://www.atlassian.com/git/articles/git-team-workflows-merge-or-rebase">https://www.atlassian.com/git/articles/git-team-workflows-merge-or-rebase</a>
+(Gramine uses what is called “rebase team policy”)</p></li>
+</ul>
+</li>
+<li><p>Developer Certificate of Origin (DCO) – all Git commits in all Gramine
+repositories must contain the author’s signoff</p>
+<ul>
+<li><p><a class="reference external" href="https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff">https://git-scm.com/docs/git-commit#Documentation/git-commit.txt—signoff</a></p></li>
+<li><p><a class="reference external" href="https://developercertificate.org/">https://developercertificate.org/</a></p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/1962094/what-is-the-sign-off-feature-in-git-for">https://stackoverflow.com/questions/1962094/what-is-the-sign-off-feature-in-git-for</a></p></li>
+</ul>
+</li>
+<li><p>GitHub – all Gramine repositories are hosted on the GitHub web-site</p>
+<ul>
+<li><p>Using GitHub is simple, but here is the official documentation:
+<a class="reference external" href="https://docs.github.com/en">https://docs.github.com/en</a></p></li>
+</ul>
+</li>
+<li><p>Reviewable – all Gramine repositories use the Reviewable plugin to GitHub
+instead of the default GitHub “Review changes” flow</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.reviewable.io/">https://docs.reviewable.io/</a></p></li>
+</ul>
+</li>
+<li><p>GDB debugger – Gramine has full GDB support, see the next section</p></li>
+</ul>
+<p>The above list with pre-requisite knowledge may be overwhelming at first.
+Indeed, Gramine developers are expected to have solid systems programming
+background and good Linux/Unix systems knowledge. We highly encourage to read
+several books on Linux kernel development and OS concepts, as well as to get
+comfortable with git and GDB.</p>
+</section>
+<section id="debugging-with-gdb">
+<h2>Debugging with GDB<a class="headerlink" href="onboarding.html#debugging-with-gdb" title="Permalink to this headline"></a></h2>
+<p>We highly recommend to debug your applications and Gramine with classic GDB
+debugger. Gramine has comprehensive support for GDB, both in direct mode and in
+SGX mode. Please see <a class="reference internal" href="debugging.html"><span class="doc">Debugging Gramine with GDB</span></a> for information on how to build Gramine
+with debugging support and how to start Gramine under GDB.</p>
+<p>GDB is a powerful tool, but it comes with its own quirks. Mastering GDB may take
+time, but it pays off handsomely. Below we give some general advices for using
+GDB to debug Gramine:</p>
+<ul>
+<li><p>Some developers prefer GDB’s TUI (Text User Interface) over the classic CUI
+(Command User Interface). Both are not perfect, but here are some hints if you
+want to switch to TUI:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>layout<span class="w"> </span>split
+...<span class="w"> </span>now<span class="w"> </span>there<span class="w"> </span>are<span class="w"> </span>three<span class="w"> </span>panes:<span class="w"> </span><span class="nb">source</span><span class="w"> </span>code,<span class="w"> </span>asm<span class="w"> </span>and<span class="w"> </span>cmds
+</pre></div>
+</div>
+<p>You can return to normal command line by hitting <code class="docutils literal notranslate"><span class="pre">Ctrl-x</span> <span class="pre">+</span> <span class="pre">a</span></code>. You can also
+switch between different layouts: <code class="docutils literal notranslate"><span class="pre">layout</span> <span class="pre">src</span></code>, <code class="docutils literal notranslate"><span class="pre">layout</span> <span class="pre">asm</span></code>, <code class="docutils literal notranslate"><span class="pre">layout</span>
+<span class="pre">regs</span></code>. At any time, you can change focus to any of the panes: <code class="docutils literal notranslate"><span class="pre">focus</span> <span class="pre">cmd</span></code>,
+<code class="docutils literal notranslate"><span class="pre">focus</span> <span class="pre">src</span></code>, <code class="docutils literal notranslate"><span class="pre">focus</span> <span class="pre">asm</span></code>, <code class="docutils literal notranslate"><span class="pre">focus</span> <span class="pre">regs</span></code> – this is useful when you want
+to scroll up/down or look at the history of GDB commands. Alternatively, to
+switch to a next pane, hit <code class="docutils literal notranslate"><span class="pre">Ctrl-x</span> <span class="pre">+</span> <span class="pre">o</span></code>. Also, whenever GDB’s TUI output
+gets “mangled”, type <code class="docutils literal notranslate"><span class="pre">refresh</span></code> or hit <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">L</span></code>.</p>
+</li>
+<li><p>For better debugging experience of multi-threaded applications, use <code class="docutils literal notranslate"><span class="pre">set</span>
+<span class="pre">scheduler-locking</span> <span class="pre">on</span></code> whenever you want to step through a single thread (GDB
+will not execute other threads in the background). To check the state of other
+threads, switch between threads via <code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">2</span></code> and so on.</p></li>
+<li><p>For better debugging experience of multi-process applications, use <code class="docutils literal notranslate"><span class="pre">set</span>
+<span class="pre">follow-fork-mode</span> <span class="pre">parent</span></code> or <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">follow-fork-mode</span> <span class="pre">child</span></code> to instruct GDB to
+stay in the parent process or switch to the child process during fork.
+Another useful GDB command is <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">detach-on-fork</span> <span class="pre">on</span></code> to instruct GDB to
+“forget about” (detach from) the parent/child process. To check the state of
+other processes (inferiors in GDB parlance), switch between them via
+<code class="docutils literal notranslate"><span class="pre">inferior</span> <span class="pre">1</span></code> or (between processes + threads) <code class="docutils literal notranslate"><span class="pre">thread</span> <span class="pre">1.1</span></code>.</p></li>
+<li><p>When started under GDB, Gramine defaults to the following options:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="w"> </span>detach-on-fork<span class="w"> </span>off<span class="w">              </span><span class="c1"># follow both parent and child</span>
+<span class="nb">set</span><span class="w"> </span>schedule-multiple<span class="w"> </span>on<span class="w">            </span><span class="c1"># resume all processes after stop</span>
+handle<span class="w"> </span>SIGCONT<span class="w"> </span>pass<span class="w"> </span>noprint<span class="w"> </span>nostop<span class="w">  </span><span class="c1"># silence SIGCONT signals</span>
+</pre></div>
+</div>
+<p>Note that we silence <code class="docutils literal notranslate"><span class="pre">SIGCONT</span></code> signals: this is because Gramine uses
+<code class="docutils literal notranslate"><span class="pre">SIGCONT</span></code> internally, so these signals are expected during normal Gramine
+execution.</p>
+</li>
+<li><p>We highly recommend to get acquainted with different ways of stepping through
+code in GDB. Apart from the classic <code class="docutils literal notranslate"><span class="pre">continue</span></code>, <code class="docutils literal notranslate"><span class="pre">step</span></code> and <code class="docutils literal notranslate"><span class="pre">next</span></code>, we
+recommend using <code class="docutils literal notranslate"><span class="pre">finish</span></code> and <code class="docutils literal notranslate"><span class="pre">until</span></code>, as well as stepping through assembly
+code: <code class="docutils literal notranslate"><span class="pre">stepi</span></code> and <code class="docutils literal notranslate"><span class="pre">nexti</span></code>. Stepping through assembly is especially useful
+when debugging tricky bugs in SGX.</p></li>
+</ul>
+<p>Also, pay attention to the unexpected (but benign) behavior of Gramine with the
+SGX backend when debugged under GDB:</p>
+<ul class="simple">
+<li><p>Periodically, when stepping through the code, GDB may unexpectedly jump to
+<code class="docutils literal notranslate"><span class="pre">sgx_entry.S:</span> <span class="pre">async_exit_pointer</span></code>. This is the “landing pad” of the AEX flow
+of Intel SGX, and can happen at any moment in SGX enclave execution. Simply
+step through this <code class="docutils literal notranslate"><span class="pre">async_exit_pointer</span></code> function until the <code class="docutils literal notranslate"><span class="pre">enclu</span></code>
+instruction (which performs ERESUME), and GDB will continue at the correct
+in-enclave code. These unexpected jumps are a known bug in Gramine’s
+integration with GDB; unfortunately we don’t have a fix for this bug yet.</p></li>
+</ul>
+</section>
+<section id="typical-gramine-development-flows">
+<h2>Typical Gramine development flows<a class="headerlink" href="onboarding.html#typical-gramine-development-flows" title="Permalink to this headline"></a></h2>
+<p>Below we briefly discuss three typical Gramine flows, with snippets from Bash
+terminal sessions and GDB debugging sessions.</p>
+<section id="fixing-a-bug">
+<h3>Fixing a bug<a class="headerlink" href="onboarding.html#fixing-a-bug" title="Permalink to this headline"></a></h3>
+<p>(This section describes a hypothetical bug that happens in Gramine <em>with SGX</em>.
+Of course, bugs can happen in Gramine with other backends, but we concentrate on
+the SGX scenario as it is the most common and complicated one.)</p>
+<p>You may have encountered a genuine bug in Gramine, when your application runs
+fine on native Linux but fails under Gramine:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./myapp
+&lt;expected<span class="w"> </span>output,<span class="w"> </span>terminates<span class="w"> </span>normally&gt;
+
+$<span class="w"> </span>gramine-sgx<span class="w"> </span>./myapp
+&lt;unexpected<span class="w"> </span>output,<span class="w"> </span>terminates<span class="w"> </span>abnormally&gt;
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Gather more information on the possible bug:</p>
+<ul>
+<li><p>If you are not familiar with the application internal logic, try to gather
+as much information on the original app as possible. In particular, read
+its documentation, read its source code, read its GitHub/GitLab/mailing
+list discussions (if available), ask app developers.</p></li>
+<li><p>If you experience the bug in Gramine with SGX, try Gramine in non-SGX
+mode:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gramine-direct<span class="w"> </span>./myapp
+</pre></div>
+</div>
+<p>If the bug is exposed with <code class="docutils literal notranslate"><span class="pre">gramine-direct</span></code>, we recommend to debug it
+there first (it is simpler to debug <code class="docutils literal notranslate"><span class="pre">gramine-direct</span></code> rather than
+<code class="docutils literal notranslate"><span class="pre">gramine-sgx</span></code>).</p>
+</li>
+<li><p>Run Gramine with debug information: use <code class="docutils literal notranslate"><span class="pre">loader.log_level</span> <span class="pre">=</span> <span class="pre">&quot;all&quot;</span></code> in
+your Gramine manifest file, rebuild and restart the app under Gramine. You
+can save the log, either by specifying <code class="docutils literal notranslate"><span class="pre">loader.log_file</span> <span class="pre">=</span> <span class="pre">&quot;gramine.log&quot;</span></code>
+or simply by redirecting the output of Gramine, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># if you want to have app output and Gramine log mixed together</span>
+$<span class="w"> </span>gramine-sgx<span class="w"> </span>./myapp<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>gramine.log
+<span class="c1"># if you want to have app output and Gramine log separated</span>
+$<span class="w"> </span>gramine-sgx<span class="w"> </span>./myapp<span class="w"> </span><span class="m">2</span>&gt;gramine.log
+</pre></div>
+</div>
+<p>Try to identify the system call in Gramine that goes wrong (e.g., returns
+an error code whereas it was supposed to finish successfully).</p>
+</li>
+<li><p>Analyze the manifest file carefully. If you suspect problems with
+environment variables, see if it works with <code class="docutils literal notranslate"><span class="pre">loader.insecure__use_host_env</span>
+<span class="pre">=</span> <span class="pre">true</span></code>. If you observe that memory addresses change constantly and hinder
+your debugging, set <code class="docutils literal notranslate"><span class="pre">loader.insecure__disable_aslr</span> <span class="pre">=</span> <span class="pre">true</span></code>. But don’t use
+these two options in production; use them only for debugging and analysis!</p></li>
+<li><p>Analyze FS mount points (<code class="docutils literal notranslate"><span class="pre">fs.mounts</span></code>) in the manifest file carefully.
+Check for duplicate mount points – remember that a duplicate mount point’s
+path <em>shadows</em> the previous mount point’s path (i.e., if you have two
+mounts with <code class="docutils literal notranslate"><span class="pre">path</span> <span class="pre">=</span> <span class="pre">&quot;/lib&quot;</span></code>, then files from the former mount will
+disappear inside Gramine).</p></li>
+<li><p>Collect the strace (system call trace) log on the original (native)
+application, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>strace<span class="w"> </span>-ff<span class="w"> </span>./myapp<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>native.log
+</pre></div>
+</div>
+<p>The strace log and the Gramine debug log are somewhat similar. You can
+compare two logs – the good native one and the failing Gramine one –
+side-by-side in your favorite text editor. Hopefully this comparison will
+point you to the root cause of the Gramine failure.</p>
+</li>
+</ul>
+</li>
+<li><p>Debug Gramine with GDB:</p>
+<ul>
+<li><p>You probably already know which system call in Gramine derails the
+application. So you can put a breakpoint on its emulation function. For
+example, if Gramine’s <code class="docutils literal notranslate"><span class="pre">read</span></code> emulation fails, then do:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nv">GDB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>gramine-sgx<span class="w"> </span>./myapp
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span><span class="k">break</span><span class="w"> </span>libos_syscall_read
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>run
+...<span class="w"> </span>breakpoint<span class="w"> </span>hit,<span class="w"> </span>now<span class="w"> </span>look<span class="w"> </span>at<span class="w"> </span>regs,<span class="w"> </span>look<span class="w"> </span>at<span class="w"> </span>the<span class="w"> </span>backtrace,<span class="w"> </span>etc.<span class="w"> </span>...
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>When debugging Gramine with GDB, use advices from the previous section.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Run your application with Gramine on several machines:</p>
+<ul class="simple">
+<li><p>If possible, run your application with Gramine on machines with different
+configurations: different OS distros, different host Linux kernels,
+different SGX environments. Make notes of the exact configurations and how
+the application behaves on each of them.</p></li>
+<li><p>Remember to add this information in the GitHub issue or PR description.
+This is very helpful in triaging the bug.</p></li>
+</ul>
+</li>
+<li><p>Fix the bug itself:</p>
+<ul class="simple">
+<li><p>Now that you analyzed the bug and understood its root cause, you can change
+Gramine source code to fix the bug. Follow our <a class="reference internal" href="coding-style.html"><span class="doc">Coding style guidelines</span></a> when
+modifying the code. Also, write your code in a “similar” way to how it is
+done in the files that you modify. Finally, try to find similar places in
+Gramine code and follow their style (disclaimer: some parts of the Gramine
+codebase are very old and do not follow our current style).</p></li>
+<li><p>Ask yourself: is your bug fix generic enough, or does it only fix this
+particular instantiation of the bug? It is possible that your fix actually
+introduced another bug in the code or broke some previous functionality.
+Try to make the bug fix “generic” and not “ad-hoc”.</p></li>
+<li><p>Ask yourself: is this the only place where this bug could happen? Try to
+find similar places where the same or a similar bug could manifest itself
+and fix all such places. For example, if you found a bug in the TCP stack
+of Gramine, check the UDP stack – it may contain exactly the same bug.</p></li>
+<li><p>Ask yourself: what do the man pages say about this scenario? For example,
+if you’re fixing a bug in the <code class="docutils literal notranslate"><span class="pre">read</span></code> syscall emulation, check <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">2</span>
+<span class="pre">read</span></code> page in your Linux terminal (or read
+<a class="reference external" href="https://man7.org/linux/man-pages/man2/read.2.html">https://man7.org/linux/man-pages/man2/read.2.html</a> if you prefer web pages).
+Pay attention to <code class="docutils literal notranslate"><span class="pre">ERRORS</span></code>, <code class="docutils literal notranslate"><span class="pre">NOTES</span></code> and <code class="docutils literal notranslate"><span class="pre">BUGS</span></code> sections: they contain
+information on Linux pecularities and subtle details. The <code class="docutils literal notranslate"><span class="pre">C</span>
+<span class="pre">library/kernel</span> <span class="pre">differences</span></code> section (part of <code class="docutils literal notranslate"><span class="pre">NOTES</span></code>) is also very
+important to read. Disclaimer: man pages may contain errors and
+understatements or skip some important details. Keep in mind that man pages
+often describe generic Unix semantics and actual Linux behavior might
+differ; the Linux kernel codebase is the ultimate source of truth.</p></li>
+<li><p>Ask yourself: what does the Linux kernel do in this scenario? It may take
+some effort to find a relevant code snippet in the Linux sources, but
+<a class="reference external" href="https://elixir.bootlin.com/">https://elixir.bootlin.com/</a> and <a class="reference external" href="https://code.woboq.org/linux/linux/">https://code.woboq.org/linux/linux/</a> are
+great resources to analyze Linux internals.  For example, the <code class="docutils literal notranslate"><span class="pre">read</span></code>
+syscall implementation starts here:
+<a class="reference external" href="https://elixir.bootlin.com/linux/v5.14.14/source/fs/read_write.c#L642">https://elixir.bootlin.com/linux/v5.14.14/source/fs/read_write.c#L642</a>.
+Remember that in the end, the Linux kernel is the ultimate source of truth.</p></li>
+</ul>
+</li>
+<li><p>Add tests for this bug fix:</p>
+<ul class="simple">
+<li><p>The first option is to find an already existing PAL/LibOS regression test
+that works with the buggy Gramine subsystem. For example, if you found a
+bug in the UDP stack, look at the <code class="docutils literal notranslate"><span class="pre">libos/test/regression/udp.c</span></code> test.
+Find a place in this test where you can add the code that triggers the bug.
+Also add the corresponding check (if needed) in the Python test script
+(<code class="docutils literal notranslate"><span class="pre">libos/test/regression/test_libos.py</span></code> in case of LibOS regression
+tests).</p></li>
+<li><p>The second option is to add a completely new test. Sometimes the bug
+reproduction code is too big or too specific to go into one of the already
+existing tests. In this case, just create a new test: the C source file,
+the corresponding manifest file (if the default <code class="docutils literal notranslate"><span class="pre">manifest.template</span></code> is
+not sufficient), and add a new test method in the Python test script.</p></li>
+<li><p>The third option is to enable previously-disabled LTP tests. In Gramine,
+some LTP tests are currently disabled because they are known to trigger
+some bugs or unimplemented functionality. When you fix a bug, try to find
+LTP tests that were affected by this bug and re-enable them (see
+<code class="docutils literal notranslate"><span class="pre">gramine/libos/test/ltp/ltp.cfg</span></code> file for the list of LTP tests).</p></li>
+<li><p>The last option is to <em>not</em> add any new tests. This option is quite rare,
+but can be used in case of hard-to-reproduce bugs. For example, some bugs
+only manifest themselves after hours of execution or only in very specific
+environments.</p></li>
+<li><p>When adding a test (options 1-3 above), the author must ensure that the
+test is failing before the fix and succeeding afterwards. Also, the author
+must ensure that the test succeeds on normal Linux (without Gramine).</p></li>
+</ul>
+</li>
+<li><p>Verify that your bug fix didn’t break anything:</p>
+<ul>
+<li><p>It is quite possible that your bug fix introduced another bug in Gramine,
+or it disabled some functionality, or it didn’t take into account some
+corner case. You need to <strong>run the whole test suite</strong> of Gramine before
+publishing your bug fix:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># build and run PAL regression tests</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pal/regression
+$<span class="w"> </span>gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v
+$<span class="w"> </span>gramine-test<span class="w"> </span>--sgx<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># build and run LibOS regression tests</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libos/test/regression
+$<span class="w"> </span>gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v
+$<span class="w"> </span>gramine-test<span class="w"> </span>--sgx<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># build and run LibOS ABI tests (currently only for x86_64)</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libos/test/abi/<span class="si">${</span><span class="nv">arch</span><span class="si">}</span>
+$<span class="w"> </span>gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v
+$<span class="w"> </span>gramine-test<span class="w"> </span>--sgx<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># build and run LibOS FS tests</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libos/test/fs
+$<span class="w"> </span>gramine-test<span class="w"> </span>pytest<span class="w"> </span>-v
+$<span class="w"> </span>gramine-test<span class="w"> </span>--sgx<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># build and run LTP tests (only in non-SGX mode)</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>libos/test/ltp
+$<span class="w"> </span>make<span class="w"> </span>-j
+$<span class="w"> </span>make<span class="w"> </span>regression
+</pre></div>
+</div>
+<p>Verify that <strong>all tests</strong> succeed. If at least one test fails, analyze and
+debug this test. A failing test might be a indicator of a faulty solution
+and the author should think carefully whether it is just “a missing corner
+case” or the fix needs to be redesigned/reworked.</p>
+<p>Modify your bug fix based on this analysis and <strong>run the whole test suite</strong>
+again. Repeat this process until all tests succeed. If the bug was
+non-deterministic or the fix involved changes in the “concurrent parts” of
+Gramine, we recommend to run the test suite multiple times (e.g., 10 times
+in a row).</p>
+<p>The author should test the bug fix under both debug and release builds of
+Gramine. Some issues expose themselves only under one or the other build.</p>
+<p>For more information on running tests, please check
+<a class="reference internal" href="contributing.html#running-regression-tests"><span class="std std-ref">Running Regression Tests by Hand</span></a>.</p>
+</li>
+<li><p>In addition to running the test suite, try several example applications in
+Gramine (at least two apps that seem relevant to your bug fix):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># your bug fix pertains to TCP/UDP network stack, so try Redis</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>CI-Examples/redis
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">SGX</span><span class="o">=</span><span class="m">1</span>
+$<span class="w"> </span>gramine-sgx<span class="w"> </span>redis-server<span class="w"> </span>--save<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span>--protected-mode<span class="w"> </span>no<span class="w"> </span><span class="p">&amp;</span>
+$<span class="w"> </span>src/src/redis-benchmark
+...<span class="w"> </span>make<span class="w"> </span>sure<span class="w"> </span>the<span class="w"> </span>benchmark<span class="w"> </span>succeeds
+</pre></div>
+</div>
+<p>If example apps fail, analyze and debug them. Modify your bug fix. Repeat
+this process until all tests and applications succeed.</p>
+</li>
+</ul>
+</li>
+<li><p>Publish your bug fix on <a class="reference external" href="https://github.com/gramineproject/gramine">https://github.com/gramineproject/gramine</a>:</p>
+<ul>
+<li><p>Git-commit your bug fix locally:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>&lt;your-nick&gt;/&lt;your-branch-name&gt;
+$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>&lt;Gramine<span class="w"> </span>files<span class="w"> </span>that<span class="w"> </span>you<span class="w"> </span>modified&gt;
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>--signoff
+...<span class="w"> </span><span class="nb">type</span><span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>title<span class="w"> </span>and<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>body<span class="w"> </span>message<span class="w"> </span>...
+$<span class="w"> </span>git<span class="w"> </span>show<span class="w">   </span><span class="c1"># double-check your commit!</span>
+$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>--set-upstream<span class="w"> </span>origin<span class="w"> </span>&lt;your-nick&gt;/&lt;your-branch-name&gt;
+</pre></div>
+</div>
+<p>You should write a good git commit message. Please follow advice from
+<a class="reference external" href="https://cbea.ms/git-commit/">https://cbea.ms/git-commit/</a>. You can also check existing commit messages in
+Gramine. Note that the message title must be prepended with the sub-system
+of Gramine this commit pertains to, e.g., <code class="docutils literal notranslate"><span class="pre">[LibOS]</span></code> if the commit changes
+the LibOS code.</p>
+<p>The commit body message must not include GitHub issue numbers or links: we
+strive to make the Gramine repo self-contained and free of references to
+GitHub. The commit body message may include previous-commit one-liners
+(e.g. <code class="docutils literal notranslate"><span class="pre">fixes</span> <span class="pre">a</span> <span class="pre">bug</span> <span class="pre">introduced</span> <span class="pre">in</span> <span class="pre">commit</span> <span class="pre">&quot;Add</span> <span class="pre">interrupt</span> <span class="pre">handling&quot;</span></code>).</p>
+</li>
+<li><p>Create the corresponding PR on <a class="reference external" href="https://github.com/gramineproject/gramine">https://github.com/gramineproject/gramine</a>.
+GitHub interface will notice that you pushed a new branch to the repository
+and will automatically suggest to create a new PR. Follow the PR creation
+flow. Use a good PR title (typically the same as your git commit title).
+Add as much information to the PR description as possible.</p>
+<p>If there are open GitHub issues that will be fixed once your PR is merged,
+add <code class="docutils literal notranslate"><span class="pre">Fixes</span> <span class="pre">#123</span></code> (where “123” is the GitHub issue number) to the PR
+description. Add this line for every issue that will be fixed if there are
+several of them. Also, if there are open GitHub PRs that will be closed
+once your PR is merged (e.g., alternative fixes to the same bug), add
+<code class="docutils literal notranslate"><span class="pre">Closes</span> <span class="pre">#321</span></code> (where “321” is the GitHub PR number).</p>
+</li>
+<li><p>After you created the PR, open this PR’s web page and go into Reviewable.
+Verify again that all the changes look correct, that you didn’t
+accidentally add or delete some files, and that your code changes do not
+contain remnants from your debugging sessions. If you find some issues, use
+git fixup commits (see below) to fix them and then check the PR again.</p></li>
+</ul>
+</li>
+<li><p>Wait for reviews from Gramine maintainers. <strong>Always use Reviewable</strong> to read
+review comments and to reply. <strong>Do not use GitHub review interface</strong>.</p>
+<ul class="simple">
+<li><p>Depending on the complexity of your bug fix and the current load of
+maintainers, the first reviews may come in 1 to 14 days. Please keep in mind
+that the review process is long and tedious (as a relevant example, some
+patches to Linux may take several years to be merged). The Gramine
+community focuses on quality and security rather than speed of development,
+and thorough reviews are an important part of this.</p></li>
+<li><p>Be prepared to see quick reviews with “Please read the contributing guide”
+comments if you didn’t do your due diligence. Reviewers are busy with other
+tasks, and unplanned/external PRs cannot take priority over the reviewers’
+current work. Check the guides carefully and fix the identified problems in
+your submission.</p></li>
+<li><p>Remember that many typos and obvious mistakes in your PR lead to bad first
+impression. Prepare your first submission carefully and verify it a couple
+times before publishing.</p></li>
+</ul>
+</li>
+<li><p>Work on PR issues identified by reviewers:</p>
+<ul>
+<li><p>If you don’t understand some comment, ask the reviewer to explain what they
+mean. If you disagree with some comment, explain your position. But be
+mindful – reviewers typically know the project and the particular
+subsystem better than you, so take a moment to analyze their comment.</p></li>
+<li><p>Fix/augment your code according to comments:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>&lt;your-nick&gt;/&lt;your-branch-name&gt;
+...<span class="w"> </span>modify<span class="w"> </span>your<span class="w"> </span>code<span class="w"> </span>...
+</pre></div>
+</div>
+<p>After you finished all your fixups, <strong>run the whole test suite</strong> and
+<strong>several application examples</strong> again, to make sure your fixups didn’t
+introduce new problems.</p>
+</li>
+<li><p>Follow the git fixup commit flow to publish the new revision:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>&lt;fixed/augmented<span class="w"> </span>files&gt;
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>--signoff<span class="w"> </span>--fixup<span class="o">=</span>&lt;<span class="nb">hash</span><span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>main<span class="w"> </span>commit&gt;
+$<span class="w"> </span>git<span class="w"> </span>show<span class="w">   </span><span class="c1"># double-check your fixup commit</span>
+$<span class="w"> </span>git<span class="w"> </span>push
+</pre></div>
+</div>
+</li>
+<li><p>After you git-pushed the changes, open your PR’s web page and go into
+Reviewable. Verify that all changes look correct. Don’t forget to reply
+with “Done” (or mark the reviewer’s comment as Resolved) in Reviewable.
+Take into account that reviewers only track changes in Reviewable comments;
+reviewers do not track new git commits in PRs!</p></li>
+</ul>
+</li>
+<li><p>If some reviewers do not reply for a long time (5-7 days), ping them
+explicitly, either on GitHub or via our
+<a class="reference external" href="https://gitter.im/gramineproject/community">Gitter chat</a>.</p></li>
+<li><p>Continue resolving reviewers’ comments until all reviewers explicitly approve
+the PR. Remember that at least two reviewers from two different organizations
+must approve the PR. After your got approvals from all reviewers, there is
+nothing for you to do – reviewers will rebase and merge your PR themselves.</p></li>
+<li><p>After the PR is merged by reviewers/maintainers, notify all сoncerned parties
+about this fact, so they can test Gramine with your bug fix.</p></li>
+</ol>
+<p>The best way to learn about these flows and requirements on the bug fix PRs is
+to look at already-merged PR examples. Here are a few good examples:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/295">https://github.com/gramineproject/gramine/pull/295</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/165">https://github.com/gramineproject/gramine/pull/165</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/35">https://github.com/gramineproject/gramine/pull/35</a></p></li>
+</ul>
+<p>Please examine the history of discussions in this PRs, code revisions, and the
+final code that was approved and merged. You can use Reviewable for this and
+unfold all “resolved discussions” to read the comments.</p>
+</section>
+<section id="implementing-a-new-system-call">
+<h3>Implementing a new system call<a class="headerlink" href="onboarding.html#implementing-a-new-system-call" title="Permalink to this headline"></a></h3>
+<p>You may have encountered a situation where your application depends on some
+system call that is not implemented in Gramine (recall that <code class="docutils literal notranslate"><span class="pre">-38</span></code> is the
+<code class="docutils literal notranslate"><span class="pre">-ENOSYS</span></code> error code, which means “syscall not implemented”):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gramine-sgx<span class="w"> </span>./myapp
+..<span class="w"> </span><span class="o">[</span>P1:T1:app<span class="o">]</span><span class="w"> </span>trace:<span class="w"> </span>----<span class="w"> </span>some_syscall<span class="o">(</span>...<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-38<span class="w"> </span>..
+&lt;unexpected<span class="w"> </span>output,<span class="w"> </span>terminates<span class="w"> </span>abnormally&gt;
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Make sure this system call is required:</p>
+<ul>
+<li><p>It is normal that some system calls are not implemented by the OS kernel.
+In this case, the application detects <code class="docutils literal notranslate"><span class="pre">-ENOSYS</span></code> and either falls back to
+another implementation (e.g., app first tries <code class="docutils literal notranslate"><span class="pre">flock()</span></code> and then falls
+back to <code class="docutils literal notranslate"><span class="pre">fcntl()</span></code>) or simply ignores the result of this syscall (e.g.,
+<code class="docutils literal notranslate"><span class="pre">ioctl(1,</span> <span class="pre">TCGETS,</span> <span class="pre">..)</span></code> can be safely ignored).</p>
+<p>Make sure that <code class="docutils literal notranslate"><span class="pre">some_syscall</span></code> returning <code class="docutils literal notranslate"><span class="pre">-ENOSYS</span></code> in the log is
+actually the root cause of the application failure. Sometimes such syscalls
+may be a “red herring”, and the real root cause lies somewhere else.</p>
+</li>
+<li><p>Ask yourself: does it make sense to implement this system call in Gramine?
+Remember that Gramine is not a general-purpose OS: Gramine is not supposed
+to run e.g. admin tools or tools to inspect other applications. For
+example, it makes no sense to implement <code class="docutils literal notranslate"><span class="pre">ptrace()</span></code> or <code class="docutils literal notranslate"><span class="pre">syslog()</span></code> in
+Gramine. In case of doubt, ask maintainers of Gramine whether a specific
+system call makes sense for the project.</p></li>
+</ul>
+</li>
+<li><p>Analyze the implementation of the system call:</p>
+<ul class="simple">
+<li><p>Understand the purpose, side effects and implications of the system call in
+detail. Read through its man pages (via <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">2</span> <span class="pre">some_syscall</span></code>), google it,
+read relevant blog posts and StackOverflow answers. A particularly useful
+resource for Linux system calls is <a class="reference external" href="https://lwn.net/Articles">https://lwn.net/Articles</a>.</p></li>
+<li><p>Read through the Linux sources: how does Linux implement this system call?
+<a class="reference external" href="https://elixir.bootlin.com/">https://elixir.bootlin.com/</a> is a great place to analyze Linux internals.
+For example, the <code class="docutils literal notranslate"><span class="pre">read</span></code> syscall implementation starts here:
+<a class="reference external" href="https://elixir.bootlin.com/linux/v5.14.14/source/fs/read_write.c#L642">https://elixir.bootlin.com/linux/v5.14.14/source/fs/read_write.c#L642</a>.
+Remember that in the end, the Linux kernel is the ultimate source of truth.</p></li>
+<li><p>Analyze the relevant subsystems of Gramine: which features, tools,
+functions, components of Gramine are required to implement the system call?
+For example, the <code class="docutils literal notranslate"><span class="pre">read</span></code> syscall is very generic: it applies to regular
+files, pipes, sockets, eventfd, etc. So the <code class="docutils literal notranslate"><span class="pre">read</span></code> syscall touches almost
+all components and filesystems of Gramine.</p></li>
+</ul>
+</li>
+<li><p>Discuss the system call and your proposed implementation with Gramine
+maintainers. Do <strong>not</strong> try to implement the system call immediately. You
+will need explicit approvals from Gramine maintainers that it is indeed
+desirable to implement the system call, and that your proposed implementation
+is correct.</p></li>
+<li><p>Implement the system call in Gramine. If it is a family of related system
+calls, try to implement all of them (but PRs with only partial support may be
+also fine).</p>
+<ul>
+<li><p>Implement the main emulation function <code class="docutils literal notranslate"><span class="pre">libos_syscall_some_syscall()</span></code>. If
+the system call belongs to some family of already-implemented system calls,
+add this function to the already-existing Gramine C file. Otherwise, create
+a new C file under <code class="docutils literal notranslate"><span class="pre">libos/src/sys/</span></code>.</p></li>
+<li><p>Implement the required sub-systems or components in general code of
+Gramine. For example, if you need to add new fields to the thread object,
+modify <code class="docutils literal notranslate"><span class="pre">libos/include/libos_thread.h</span></code> and
+<code class="docutils literal notranslate"><span class="pre">libos/src/bookkeep/libos_thread.c</span></code>.</p></li>
+<li><p>If the system call cannot be resolved entirely inside the LibOS component
+of Gramine, and the current set of PAL API functions (<code class="docutils literal notranslate"><span class="pre">Pal..()</span></code>
+functions) is not enough to service this system call, you must add a new
+PAL API function (e.g., <code class="docutils literal notranslate"><span class="pre">PalSomeNewFunction</span></code>). You will need to implement
+the entry-point function (<code class="docutils literal notranslate"><span class="pre">PalSomeNewFunction</span></code>) in the common PAL code,
+as well as each host-specific function (<code class="docutils literal notranslate"><span class="pre">_PalSomeNewFunction</span></code>) in each
+supported host in PAL.</p>
+<p>Note that Gramine strives to keep the PAL API as small as possible. It is
+highly discouraged to create new PAL functions without real need. Do
+<strong>not</strong> try to implement this immediately, instead discuss with Gramine
+maintainers first.</p>
+</li>
+<li><p>You may find more information on syscall implementation in
+<a class="reference internal" href="new-syscall.html"><span class="doc">Implementing new system call</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Add tests for this system call. See comments in “Fixing a bug” for more
+details.</p></li>
+</ol>
+<p>The rest steps are the same as in “Fixing a bug” section above. You need to
+verify your modifications by running all tests and several relevant
+applications. Then you publish your code on GitHub and wait for reviews. You
+continuously work with reviewers to refine your PR until all reviewers
+explicitly approve the PR. After that, you wait for the PR to be merged and then
+you notify all concerned parties about this fact.</p>
+<p>Below are several examples of adding a new system call:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/309">https://github.com/gramineproject/gramine/pull/309</a> (<code class="docutils literal notranslate"><span class="pre">mlock()</span></code> and related
+syscalls: the implementation is a no-op apart from error checking, but that’s
+enough for some applications)</p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/146">https://github.com/gramineproject/gramine/pull/146</a> (<code class="docutils literal notranslate"><span class="pre">sysinfo()</span></code>: a minimal
+implementation that reports available memory)</p></li>
+</ul>
+</section>
+<section id="adding-new-features">
+<h3>Adding new features<a class="headerlink" href="onboarding.html#adding-new-features" title="Permalink to this headline"></a></h3>
+<p>Sometimes you want to add not a new system call, but rather a new feature to
+Gramine. the process of submitting a new feature is the same as in all other
+sections – you add the necessary code locally, then git-commit and git-push
+them, then create a PR on GitHub and go through the review process.</p>
+<p>One difference is that if the feature is user-visible, then you need to add
+documentation about this feature (typically in the “Manifest syntax” page).</p>
+<p>Below are several good examples of adding a new feature in Gramine:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/37">https://github.com/gramineproject/gramine/pull/37</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/56">https://github.com/gramineproject/gramine/pull/56</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/99">https://github.com/gramineproject/gramine/pull/99</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/101">https://github.com/gramineproject/gramine/pull/101</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/169">https://github.com/gramineproject/gramine/pull/169</a></p></li>
+</ul>
+</section>
+<section id="writing-documentation">
+<h3>Writing documentation<a class="headerlink" href="onboarding.html#writing-documentation" title="Permalink to this headline"></a></h3>
+<p>Sources for Gramine documentation are located in the same Gramine repository as
+the core Gramine codebase itself: <a class="reference external" href="https://github.com/gramineproject/gramine">https://github.com/gramineproject/gramine</a>.
+The documentation is written in the reStructuredText file format. For more
+details, refer to <a class="reference internal" href="howto-doc.html"><span class="doc">How to write documentation</span></a>.</p>
+<p>The documentation sources are located under <code class="docutils literal notranslate"><span class="pre">Documentation/</span></code>. For example, to
+add documentation on the new manifest option, you open
+<code class="docutils literal notranslate"><span class="pre">Documentation/manifest-syntax.rst</span></code> and write the new text.</p>
+<p>Since the documentation sources are placed in the same git repository, the
+process of submitting new documentation is the same as in all other sections –
+you modify the documentation files locally, then git-commit and git-push them,
+then create a PR on GitHub and go through the review process.</p>
+<p>Below are several good examples of adding documentation in Gramine:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/114">https://github.com/gramineproject/gramine/pull/114</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/148">https://github.com/gramineproject/gramine/pull/148</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/gramine/pull/160">https://github.com/gramineproject/gramine/pull/160</a></p></li>
+</ul>
+</section>
+<section id="adding-a-new-app-example">
+<h3>Adding a new app example<a class="headerlink" href="onboarding.html#adding-a-new-app-example" title="Permalink to this headline"></a></h3>
+<p>If you successfully ran some new application in Gramine and believe it may be of
+use to others, you are encouraged to submit a PR with this app.</p>
+<p>You need to be aware of several peculiarities:</p>
+<ul class="simple">
+<li><p>Not all applications deserve to be in the list of curated examples in Gramine.
+For example, if the application is just another Python script, and running it
+in Gramine is trivial (by taking the already-existing Python example and
+slightly modifying its manifest file), then there is no sense in adding such
+an example.</p></li>
+<li><p>All PRs for new applications must be submitted <strong>not</strong> to the core Gramine
+repository, but into the accompanying repo
+<a class="reference external" href="https://github.com/gramineproject/examples">https://github.com/gramineproject/examples</a>.</p></li>
+<li><p>A new application must contain all the necessary information to be quickly
+installed and tested with Gramine. A new application is also expected to
+follow the standard used in other Gramine example apps. See
+<a class="reference external" href="https://github.com/gramineproject/examples/blob/master/README.rst">https://github.com/gramineproject/examples/blob/master/README.rst</a> for more
+details.</p></li>
+</ul>
+<p>The process of submitting a new application example is the same as in all other
+sections – you add the Makefile to download and/or build the application
+together with its manifest file locally, then git-commit and git-push them, then
+create a PR on GitHub and go through the review process. The obvious difference
+from other sections is that you do <em>not</em> need to run Gramine tests or other
+applications for verification – adding a new application example cannot affect
+other tests/apps.</p>
+<p>Below are several good examples of adding new applications in Gramine (but note
+that these examples are slightly outdated and were modified in subsequent PRs):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gramineproject/graphene/pull/2493">https://github.com/gramineproject/graphene/pull/2493</a></p></li>
+<li><p><a class="reference external" href="https://github.com/gramineproject/graphene/pull/2465">https://github.com/gramineproject/graphene/pull/2465</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contributing.html" class="btn btn-neutral float-left" title="Contributing to Gramine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="setup.html" class="btn btn-neutral float-right" title="Development setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

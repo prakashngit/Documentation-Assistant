@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing plugins for signing SGX enclaves &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implementing new system call" href="../devel/new-syscall.html" />
+    <link rel="prev" title="Python API" href="api.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "python/writing-sgx-sign-plugins", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/python/writing-sgx-sign-plugins.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="writing-sgx-sign-plugins.html#">Writing plugins for signing SGX enclaves</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="writing-sgx-sign-plugins.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Writing plugins for signing SGX enclaves</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/python/writing-sgx-sign-plugins.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="writing-plugins-for-signing-sgx-enclaves">
+<h1>Writing plugins for signing SGX enclaves<a class="headerlink" href="writing-sgx-sign-plugins.html#writing-plugins-for-signing-sgx-enclaves" title="Permalink to this headline"></a></h1>
+<p>SGX cryptosystem uses RSA-3072 with modulus 3 for signing a SIGSTRUCT. However,
+there are different arrangements where suitable keys are kept and used for
+operations. A keyfile is not always available (e.g., HSMs explicitly prevent
+users from extracting keys), so we need adaptable ways of signing enclaves. This
+document describes how to implement a plugin that allows Gramine to access
+different APIs for signing SGX enclaves.</p>
+<p>You need to provide a click subcommand, which is a Python function
+wrapped in <a class="reference external" href="https://click.palletsprojects.com/en/latest/api/#click.command" title="(in Click v8.2.x)"><code class="xref py py-func docutils literal notranslate"><span class="pre">click.command()</span></code></a> decorator. This command can accept any
+command-line arguments you need to complete the signing (like path to keyfile,
+URL to some external API, PIN to smartcard). It is strongly recommended that you
+provide <code class="docutils literal notranslate"><span class="pre">--help-PLUGIN</span></code> option (with your plugin name substituted for
+<code class="docutils literal notranslate"><span class="pre">PLUGIN</span></code>). Also, consider prefixing your options with <code class="docutils literal notranslate"><span class="pre">--PLUGIN-</span></code> to avoid
+conflicting with generic options.</p>
+<p>Furthermore, your subcommand needs to be packaged into Python distribution,
+which will include an entry point from <code class="docutils literal notranslate"><span class="pre">gramine.sgx_sign</span></code> group. The entry
+point needs to be named as your plugin and the callable it points to needs to be
+the click command.</p>
+<p>The click command will be called with <code class="docutils literal notranslate"><span class="pre">standalone_mode=False</span></code>. It needs to
+return signing function that will be passed to <code class="docutils literal notranslate"><span class="pre">Sigstruct.sign</span></code>. The signing
+function should return a 3-tuple:</p>
+<ul class="simple">
+<li><p>exponent (always <code class="docutils literal notranslate"><span class="pre">3</span></code>)</p></li>
+<li><p>modulus (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
+<li><p>signature (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)</p></li>
+</ul>
+<p>The signing function accepts a single argument, the data to be signed. If
+your signing function needs to accept additional arguments, use
+<a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.partial()</span></code></a>.</p>
+<p>Alternatively, the click command can return a 2-tuple of:</p>
+<ul class="simple">
+<li><p>the signing function, as described above;</p></li>
+<li><p>iterable of local files that were accessed during signature generation, for
+the purpose of tracking dependencies</p></li>
+</ul>
+<p>If you return just the function, it’s equivalent to returning 2-tuple with empty
+iterable, i.e. no dependent files.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://setuptools.pypa.io/en/latest/userguide/entry_point.html#advertising-behavior">https://setuptools.pypa.io/en/latest/userguide/entry_point.html#advertising-behavior</a></dt><dd><p>Introduction to entrypoints</p>
+</dd>
+<dt><a class="reference external" href="https://packaging.python.org/en/latest/specifications/entry-points/">https://packaging.python.org/en/latest/specifications/entry-points/</a></dt><dd><p>Entrypoints specification</p>
+</dd>
+</dl>
+</aside>
+<section id="example">
+<h2>Example<a class="headerlink" href="writing-sgx-sign-plugins.html#example" title="Permalink to this headline"></a></h2>
+<p>For full example, please see <code class="docutils literal notranslate"><span class="pre">sgx_sign.py</span></code> file (note that <code class="docutils literal notranslate"><span class="pre">graminelibos</span></code>
+package is not packaged with <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, so metadata is provided manually).</p>
+<p>The relevant parts are:</p>
+<div class="literal-block-wrapper docutils container" id="container-1">
+<div class="code-block-caption"><span class="caption-text">sgx_sign.py</span><a class="headerlink" href="writing-sgx-sign-plugins.html#container-1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">add_help_option</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">help_option</span><span class="p">(</span><span class="s1">&#39;--help-file&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--key&#39;</span><span class="p">,</span> <span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;FILE&#39;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">SGX_RSA_KEY_PATH</span><span class="p">),</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;specify signing key (.pem) file&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sign_with_file</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">),</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># sign data with key</span>
+    <span class="k">return</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">modulus</span><span class="p">,</span> <span class="n">signature</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="container-2">
+<div class="code-block-caption"><span class="caption-text">setup.py</span><a class="headerlink" href="writing-sgx-sign-plugins.html#container-2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setuptools</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;gramine.sgx_sign&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s1">&#39;file = graminelibos.sgx_sign:sign_with_file&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="Python API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../devel/new-syscall.html" class="btn btn-neutral float-right" title="Implementing new system call" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

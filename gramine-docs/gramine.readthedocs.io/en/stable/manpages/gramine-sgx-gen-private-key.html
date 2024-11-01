@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gramine-sgx-gen-private-key – Gramine SGX key generator &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gramine-sgx-get-token – Gramine SGX token generator" href="gramine-sgx-get-token.html" />
+    <link rel="prev" title="gramine-ratls – RA-TLS wrapper" href="gramine-ratls.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "manpages/gramine-sgx-gen-private-key", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/manpages/gramine-sgx-gen-private-key.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Manual pages</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gramine.html"><strong class="program">gramine-direct</strong>, <strong class="command">gramine-sgx</strong> – Run an application with Gramine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-argv-serializer.html"><strong class="program">gramine-argv-serializer</strong> – Serialize command line arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-manifest.html"><strong class="program">gramine-manifest</strong> – Gramine manifest preprocessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-ratls.html"><strong class="program">gramine-ratls</strong> – RA-TLS wrapper</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="gramine-sgx-gen-private-key.html#"><strong class="program">gramine-sgx-gen-private-key</strong> – Gramine SGX key generator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gramine-sgx-gen-private-key.html#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gramine-sgx-gen-private-key.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gramine-sgx-gen-private-key.html#command-line-arguments">Command line arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-get-token.html"><strong class="program">gramine-sgx-get-token</strong> – Gramine SGX token generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-ias-request.html"><strong class="program">gramine-sgx-ias-request</strong> – Submit Intel Attestation Service request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-ias-verify-report.html"><strong class="program">gramine-sgx-ias-verify-report</strong> – Verify Intel Attestation Service report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-quote-view.html"><strong class="program">gramine-sgx-quote-view</strong> – Display SGX quote structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-sign.html"><strong class="program">gramine-sgx-sign</strong> – Gramine <code class="docutils literal notranslate"><span class="pre">SIGSTRUCT</span></code> generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gramine-sgx-sigstruct-view.html"><strong class="program">gramine-sgx-sigstruct-view</strong> – Display SGX SIGSTRUCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="is-sgx-available.html"><strong class="program">is-sgx-available</strong> – Check environment for SGX compatibility</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Manual pages</a></li>
+      <li class="breadcrumb-item active"><strong class="program">gramine-sgx-gen-private-key</strong> – Gramine SGX key generator</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/manpages/gramine-sgx-gen-private-key.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="gramine-sgx-gen-private-key-gramine-sgx-key-generator">
+<span id="gramine-sgx-gen-private-key"></span><h1><strong class="program">gramine-sgx-gen-private-key</strong> – Gramine SGX key generator<a class="headerlink" href="gramine-sgx-gen-private-key.html#gramine-sgx-gen-private-key-gramine-sgx-key-generator" title="Permalink to this headline"></a></h1>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="gramine-sgx-gen-private-key.html#synopsis" title="Permalink to this headline"></a></h2>
+<p><strong class="command">gramine-sgx-gen-private-key</strong> [<em>OPTION</em>]… [<em>FILE</em>]</p>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="gramine-sgx-gen-private-key.html#description" title="Permalink to this headline"></a></h2>
+<p><strong class="program">gramine-sgx-gen-private-key</strong> is used to generate the private key
+suitable for signing SGX enclaves. SGX requires RSA 3072 keys with public
+exponent equal to 3.</p>
+<p>The default path is <code class="docutils literal notranslate"><span class="pre">$XDG_CONFIG_HOME/gramine/enclave-key.pem</span></code> (which is
+usually <code class="docutils literal notranslate"><span class="pre">$HOME/.config/gramine/enclave-key.pem</span></code> — see <a class="reference external" href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html">XDG Base Directory
+Specification</a>
+for details). You can specify an alternative path as an argument.</p>
+</section>
+<section id="command-line-arguments">
+<h2>Command line arguments<a class="headerlink" href="gramine-sgx-gen-private-key.html#command-line-arguments" title="Permalink to this headline"></a></h2>
+<dl class="std option">
+<dt id="cmdoption-gramine-sgx-gen-private-key-force">
+<span id="cmdoption-gramine-sgx-gen-private-key-f"></span><code class="sig-name descname">--force</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><a class="headerlink" href="gramine-sgx-gen-private-key.html#cmdoption-gramine-sgx-gen-private-key-force" title="Permalink to this definition"></a></dt>
+<dd><p>By default <strong class="program">gramine-sgx-gen-private-key</strong> will refuse to overwrite an
+existing file. Use this switch to force clobbering.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gramine-sgx-gen-private-key-no-force">
+<code class="sig-name descname">--no-force</code><code class="sig-prename descclassname"></code><a class="headerlink" href="gramine-sgx-gen-private-key.html#cmdoption-gramine-sgx-gen-private-key-no-force" title="Permalink to this definition"></a></dt>
+<dd><p>Refuse to overwrite an existing file, which is the default. Use this switch
+to undo <a class="reference internal" href="gramine-sgx-gen-private-key.html#cmdoption-gramine-sgx-gen-private-key-force"><code class="xref std std-option docutils literal notranslate"><span class="pre">--force</span></code></a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gramine-sgx-gen-private-key-verbose">
+<span id="cmdoption-gramine-sgx-gen-private-key-v"></span><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="gramine-sgx-gen-private-key.html#cmdoption-gramine-sgx-gen-private-key-verbose" title="Permalink to this definition"></a></dt>
+<dd><p>Print details to standard output. This is the default.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gramine-sgx-gen-private-key-quiet">
+<span id="cmdoption-gramine-sgx-gen-private-key-q"></span><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><a class="headerlink" href="gramine-sgx-gen-private-key.html#cmdoption-gramine-sgx-gen-private-key-quiet" title="Permalink to this definition"></a></dt>
+<dd><p>Don’t print details to standard output.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gramine-ratls.html" class="btn btn-neutral float-left" title="gramine-ratls – RA-TLS wrapper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gramine-sgx-get-token.html" class="btn btn-neutral float-right" title="gramine-sgx-get-token – Gramine SGX token generator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

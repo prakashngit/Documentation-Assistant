@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to SGX &mdash; Gramine  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="Users of Gramine" href="gramine-users.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "sgx-intro", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/sgx-intro.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="sgx-intro.html#">Introduction to SGX</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sgx-intro.html#introductory-reading">Introductory reading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx-intro.html#official-documentation">Official Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx-intro.html#academic-research">Academic Research</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx-intro.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sgx-intro.html#linux-kernel-drivers">Linux kernel drivers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sgx-intro.html#sgx-terminology">SGX terminology</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction to SGX</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/sgx-intro.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-sgx">
+<h1>Introduction to SGX<a class="headerlink" href="sgx-intro.html#introduction-to-sgx" title="Permalink to this headline"></a></h1>
+<p>The Gramine project uses the <a class="reference internal" href="glossary.html#term-SGX"><span class="xref std std-term">Intel SGX</span></a> (Software Guard Extensions)
+technology to protect software running on untrusted hosts. SGX is a complicated topic, which may be hard to learn, because the documentation is
+scattered through official/reference documentation, blogposts and academic
+papers. This page is an attempt to curate a dossier of available reading
+material.</p>
+<p>SGX is an umbrella name of <em>technology</em> that comprises several parts:</p>
+<ul class="simple">
+<li><p>CPU/platform <em>hardware features</em>: the new instruction set, new
+microarchitecture with the <a class="reference internal" href="sgx-intro.html#term-PRM"><span class="xref std std-term">PRM</span></a> (<a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a>) memory region and some
+new MSRs and some new logic in the MMU and so on;</p></li>
+<li><p>the SGX <a class="reference internal" href="sgx-intro.html#term-Remote-Attestation"><span class="xref std std-term">Remote Attestation</span></a> <em>infrastructure</em>, online services provided
+by Intel and/or third parties (see <a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a>);</p></li>
+<li><p><a class="reference internal" href="sgx-intro.html#term-SDK"><span class="xref std std-term">SDK</span></a> and assorted <em>software</em>.</p></li>
+</ul>
+<p>SGX is still being developed. The current (March 2020) version of CPU features
+is referred to as “SGX1” or simply “SGX” and is more or less finalized. All
+new/changed instructions from original SGX are informally referred to as
+“<a class="reference internal" href="sgx-intro.html#term-SGX2"><span class="xref std std-term">SGX2</span></a>”.</p>
+<p>Features which might be considered part of SGX2:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> (Enclave Dynamic Memory Management) is part of SGX2</p></li>
+<li><p><a class="reference internal" href="sgx-intro.html#term-FLC"><span class="xref std std-term">FLC</span></a> (Flexible Launch Control), not strictly part of SGX2, but was not
+part of original SGX hardware either</p></li>
+<li><p><a class="reference internal" href="sgx-intro.html#term-KSS"><span class="xref std std-term">KSS</span></a> (Key Separation and Sharing), also not part of SGX2, but was not
+part of original SGX hardware either</p></li>
+</ul>
+<p>As of now there is hardware support (on a limited set of CPUs) for FLC and
+(on an even more limited set of CPUs) SGX2/EDMM. Most of the literature
+available (especially introduction-level) concerns original SGX1 only.</p>
+<section id="introductory-reading">
+<h2>Introductory reading<a class="headerlink" href="sgx-intro.html#introductory-reading" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Quarkslab’s two-part “Overview of Intel SGX”:</p>
+<ul>
+<li><p><a class="reference external" href="https://blog.quarkslab.com/overview-of-intel-sgx-part-1-sgx-internals.html">Part 1, SGX Internals (Quarkslab)</a></p></li>
+<li><p><a class="reference external" href="https://blog.quarkslab.com/overview-of-intel-sgx-part-2-sgx-externals.html">Part 2, SGX Externals (Quarkslab)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2016/086">MIT’s deep dive in SGX architecture</a>.</p></li>
+<li><p>Intel’s whitepapers:</p>
+<ul>
+<li><p><a class="reference external" href="https://software.intel.com/en-us/articles/innovative-technology-for-cpu-based-attestation-and-sealing">Innovative Technology for CPU Based Attestation and Sealing</a></p></li>
+<li><p><a class="reference external" href="https://software.intel.com/en-us/articles/innovative-instructions-and-software-model-for-isolated-execution">Innovative Instructions and Software Model for Isolated Execution</a></p></li>
+<li><p><a class="reference external" href="https://software.intel.com/sites/default/files/article/413938/hasp-2013-innovative-instructions-for-trusted-solutions.pdf">Using Innovative Instructions to Create Trustworthy Software Solutions [PDF]</a></p></li>
+<li><p><a class="reference external" href="https://sgxisca.weebly.com/">Slides from ISCA 2015</a>
+(<a class="reference external" href="https://software.intel.com/sites/default/files/332680-002.pdf">actual slides [PDF]</a>)</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://github.com/ayeks/SGX-hardware">Hardware compatibility list (unofficial)</a></p></li>
+</ul>
+</section>
+<section id="official-documentation">
+<h2>Official Documentation<a class="headerlink" href="sgx-intro.html#official-documentation" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3d-part-4-manual.pdf">Intel® 64 and IA-32 Architectures Software Developer’s Manual Volume 3D:
+System Programming Guide, Part 4</a></p></li>
+<li><p><a class="reference external" href="https://01.org/intel-software-guard-extensions/downloads">SDK for Linux</a>
+(download of both the binaries and the documentation)</p></li>
+</ul>
+</section>
+<section id="academic-research">
+<h2>Academic Research<a class="headerlink" href="sgx-intro.html#academic-research" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://software.intel.com/en-us/sgx/documentation/academic-research">Intel’s collection of academic papers</a>,
+likely the most comprehensive list of references</p></li>
+</ul>
+</section>
+<section id="installation-instructions">
+<h2>Installation Instructions<a class="headerlink" href="sgx-intro.html#installation-instructions" title="Permalink to this headline"></a></h2>
+<div class="admonition-todo admonition" id="todo-node-1">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+<section id="linux-kernel-drivers">
+<h3>Linux kernel drivers<a class="headerlink" href="sgx-intro.html#linux-kernel-drivers" title="Permalink to this headline"></a></h3>
+<p>For historical reasons, there are three SGX drivers currently (January 2021):</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/intel/linux-sgx-driver">https://github.com/intel/linux-sgx-driver</a> – old one, does not support DCAP,
+deprecated</p></li>
+<li><p><a class="reference external" href="https://github.com/intel/SGXDataCenterAttestationPrimitives/tree/master/driver">https://github.com/intel/SGXDataCenterAttestationPrimitives/tree/master/driver</a>
+– out-of-tree, supports both non-DCAP software infrastructure (with old EPID
+remote-attestation technique) and the new DCAP (with new ECDSA and
+more “normal” PKI infrastructure). Deprecated in favor of the upstreamed
+driver (see below).</p></li>
+<li><p>SGX support was upstreamed to the Linux mainline starting from 5.11.
+It currently supports only DCAP attestation. The driver is accessible through
+/dev/sgx_enclave and /dev/sgx_provision.</p>
+<p>The following udev rules are recommended for users to access the SGX node:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>groupadd<span class="w"> </span>-r<span class="w"> </span>sgx
+gpasswd<span class="w"> </span>-a<span class="w"> </span>USERNAME<span class="w"> </span>sgx
+groupadd<span class="w"> </span>-r<span class="w"> </span>sgx_prv
+gpasswd<span class="w"> </span>-a<span class="w"> </span>USERNAME<span class="w"> </span>sgx_prv
+cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/udev/rules.d/65-gramine-sgx.rules<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">  SUBSYSTEM==&quot;misc&quot;,KERNEL==&quot;sgx_enclave&quot;,MODE=&quot;0660&quot;,GROUP=&quot;sgx&quot;</span>
+<span class="s">  SUBSYSTEM==&quot;misc&quot;,KERNEL==&quot;sgx_provision&quot;,MODE=&quot;0660&quot;,GROUP=&quot;sgx_prv&quot;</span>
+<span class="s">  EOF</span>
+udevadm<span class="w"> </span>trigger
+</pre></div>
+</div>
+<p>Also it will not require <a class="reference internal" href="sgx-intro.html#term-IAS"><span class="xref std std-term">IAS</span></a> and kernel maintainers consider
+non-writable <a class="reference internal" href="sgx-intro.html#term-FLC"><span class="xref std std-term">FLC</span></a> MSRs as non-functional SGX:
+<a class="reference external" href="https://lore.kernel.org/lkml/20191223094614.GB16710&#64;zn.tnic/">https://lore.kernel.org/lkml/20191223094614.GB16710&#64;zn.tnic/</a></p>
+</li>
+</ul>
+<p>The chronicle of kernel patchset:</p>
+<dl class="simple">
+<dt>v1 (2016-04-25)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/1461605698-12385-1-git-send-email-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/1461605698-12385-1-git-send-email-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v2</dt><dd><p>?</p>
+</dd>
+<dt>v3</dt><dd><p>?</p>
+</dd>
+<dt>v4 (2017-10-16)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171016191855.16964-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171016191855.16964-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v5 (2017-11-13)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171113194528.28557-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171113194528.28557-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v6 (2017-11-25)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171125193132.24321-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171125193132.24321-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v7 (2017-12-07)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171207015614.7914-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171207015614.7914-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v8 (2017-12-15)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171215202936.28226-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171215202936.28226-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v9 (2017-12-16)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171216162200.20243-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171216162200.20243-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v10 (2017-12-24)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20171224195854.2291-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20171224195854.2291-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v11 (2018-06-08)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20180608171216.26521-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20180608171216.26521-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v12 (2018-07-03)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20180703182118.15024-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20180703182118.15024-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v13 (2018-08-27)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20180827185507.17087-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20180827185507.17087-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v14 (2018-09-25)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20180925130845.9962-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20180925130845.9962-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v15 (2018-11-03)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20181102231320.29164-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20181102231320.29164-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v16 (2018-11-06)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20181106134758.10572-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20181106134758.10572-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v17 (2018-11-16)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20181116010412.23967-2-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20181116010412.23967-2-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v18 (2018-12-22)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/linux-sgx/20181221231134.6011-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/linux-sgx/20181221231134.6011-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v19 (2019-03-20)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20190320162119.4469-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20190320162119.4469-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v20 (2019-04-17)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20190417103938.7762-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20190417103938.7762-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v21 (2019-07-13)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20190713170804.2340-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20190713170804.2340-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v22 (2019-09-03)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20190903142655.21943-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20190903142655.21943-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v23 (2019-10-28)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20191028210324.12475-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20191028210324.12475-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v24 (2019-11-30)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20191129231326.18076-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20191129231326.18076-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v25 (2020-02-04)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200204060545.31729-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200204060545.31729-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v26 (2020-02-09)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200209212609.7928-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200209212609.7928-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v27 (2020-02-23)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200223172559.6912-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200223172559.6912-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v28 (2020-04-04)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200303233609.713348-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200303233609.713348-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v29 (2020-04-22)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200421215316.56503-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200421215316.56503-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+<dt>v30 (2020-05-15)</dt><dd><p><a class="reference external" href="https://lore.kernel.org/lkml/20200515004410.723949-1-jarkko.sakkinen&#64;linux.intel.com/">https://lore.kernel.org/lkml/20200515004410.723949-1-jarkko.sakkinen&#64;linux.intel.com/</a></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="sgx-terminology">
+<h2>SGX terminology<a class="headerlink" href="sgx-intro.html#sgx-terminology" title="Permalink to this headline"></a></h2>
+<dl class="glossary">
+<dt id="term-Architectural-Enclaves">Architectural Enclaves</dt><dt id="term-AE">AE</dt><dd><p>Architectural Enclaves (AEs) are a set of “system” enclaves concerned
+with starting and attesting other enclaves. Intel provides reference
+implementations of these enclaves, though other companies may write their
+own implementations.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="sgx-intro.html#term-Provisioning-Enclave"><span class="xref std std-term">Provisioning Enclave</span></a></p>
+<p><a class="reference internal" href="sgx-intro.html#term-Launch-Enclave"><span class="xref std std-term">Launch Enclave</span></a></p>
+<p><a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a></p>
+</aside>
+</dd>
+<dt id="term-AEP">AEP</dt><dd><div class="admonition-todo admonition" id="todo-node-2">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Architectural-Enclave-Service-Manager">Architectural Enclave Service Manager</dt><dt id="term-AESM">AESM</dt><dd><p>The Architectural Enclave Service Manager is responsible for providing SGX
+applications with access to the <a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a>. It consists
+of the Architectural Enclave Service Manager Daemon, which hosts the enclaves,
+and a component of the SGX SDK, which communicates with the daemon over a Unix
+socket with the fixed path <code class="file docutils literal notranslate"><span class="pre">/var/run/aesmd/aesm.sock</span></code>.</p>
+</dd>
+<dt id="term-AEX">AEX</dt><dd><div class="admonition-todo admonition" id="todo-node-3">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Attestation">Attestation</dt><dd><p>Attestation is a mechanism to prove the trustworthiness of the SGX enclave
+to a local or remote party. More specifically, SGX attestation proves that
+the enclave runs on a real hardware in an up-to-date TEE with the expected
+initial state. There are two types of the attestation:
+<a class="reference internal" href="sgx-intro.html#term-Local-Attestation"><span class="xref std std-term">Local Attestation</span></a> and <a class="reference internal" href="sgx-intro.html#term-Remote-Attestation"><span class="xref std std-term">Remote Attestation</span></a>. For local
+attestation, the attesting SGX enclave collects attestation evidence in
+the form of an <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a> using the EREPORT hardware instruction.
+For remote attestation, the attesting SGX enclave collects attestation
+evidence in the form of an <a class="reference internal" href="sgx-intro.html#term-SGX-Quote"><span class="xref std std-term">SGX Quote</span></a> using the <a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting
+Enclave</span></a> (and the <a class="reference internal" href="sgx-intro.html#term-Provisioning-Enclave"><span class="xref std std-term">Provisioning Enclave</span></a> if required). The enclave
+then may send the collected attestation evidence to the local or remote
+party, which will verify the evidence and confirm the correctness of the
+attesting enclave. After this, the local or remote party trusts the
+enclave and may establish a secure channel with the enclave and send
+secrets to it.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="attestation.html"><span class="doc">Attestation and Secret Provisioning</span></a></p>
+<p><a class="reference internal" href="sgx-intro.html#term-Local-Attestation"><span class="xref std std-term">Local Attestation</span></a></p>
+<p><a class="reference internal" href="sgx-intro.html#term-Remote-Attestation"><span class="xref std std-term">Remote Attestation</span></a></p>
+</aside>
+</dd>
+<dt id="term-Data-Center-Attestation-Primitives">Data Center Attestation Primitives</dt><dt id="term-DCAP">DCAP</dt><dd><p>A software infrastructure provided by Intel as a reference
+implementation for the new ECDSA/<a class="reference internal" href="sgx-intro.html#term-PCS"><span class="xref std std-term">PCS</span></a>-based remote attestation.
+Relies on the <a class="reference internal" href="sgx-intro.html#term-Flexible-Launch-Control"><span class="xref std std-term">Flexible Launch Control</span></a> hardware feature. In
+principle this is a special version of <a class="reference internal" href="sgx-intro.html#term-SDK"><span class="xref std std-term">SDK</span></a>/<a class="reference internal" href="sgx-intro.html#term-PSW"><span class="xref std std-term">PSW</span></a> that
+has a reference launch enclave and is backed by the DCAP-enabled SGX
+driver.</p>
+<p>This allows for launching enclaves with Intel’s remote infrastructure
+only involved in the initial setup. Naturally however, this requires
+deployment of own infrastructure, so is operationally more complicated.
+Therefore it is intended for server environments (where you control all
+the machines).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt>Orientation Guide</dt><dd><p><a class="reference external" href="https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/DCAP_ECDSA_Orientation.pdf">https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/DCAP_ECDSA_Orientation.pdf</a></p>
+</dd>
+<dt><a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a></dt><dd><p>A way to launch enclaves with Intel’s infrastructure, intended
+for client machines.</p>
+</dd>
+</dl>
+</aside>
+</dd>
+<dt id="term-Enclave">Enclave</dt><dd><div class="admonition-todo admonition" id="todo-node-4">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Enclave-Dynamic-Memory-Management">Enclave Dynamic Memory Management</dt><dt id="term-EDMM">EDMM</dt><dd><p>A hardware feature of <a class="reference internal" href="sgx-intro.html#term-SGX2"><span class="xref std std-term">SGX2</span></a>, allows for dynamic (in enclave
+runtime) addition and removal of enclave memory, as well as changing
+memory permissions and type. This in turn allows dynamic thread creation.</p>
+</dd>
+<dt id="term-Enclave-Page-Cache">Enclave Page Cache</dt><dt id="term-EPC">EPC</dt><dd><div class="admonition-todo admonition" id="todo-node-5">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Enclave-Page-Cache-Map">Enclave Page Cache Map</dt><dt id="term-EPCM">EPCM</dt><dd><div class="admonition-todo admonition" id="todo-node-6">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Enhanced-Privacy-Identification">Enhanced Privacy Identification</dt><dt id="term-Enhanced-Privacy-Identifier">Enhanced Privacy Identifier</dt><dt id="term-EPID">EPID</dt><dd><p>EPID is the attestation protocol originally shipped with SGX. Unlike
+<a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a>, a remote verifier making use of the EPID protocol needs
+to contact the <a class="reference internal" href="sgx-intro.html#term-Intel-Attestation-Service"><span class="xref std std-term">Intel Attestation Service</span></a> each time it wishes
+to attest an enclave.</p>
+<p>Contrary to DCAP, EPID may be understood as “opinionated”, with most
+moving parts fixed and tied to services provided by Intel. This is
+intended for client enclaves and deprecated for server environments.</p>
+<p>EPID attestation can operate in two modes: <em>fully-anonymous (unlinkable)
+quotes</em> and <em>pseudonymous (linkable) quotes</em>.  Unlike fully-anonymous
+quotes, pseudonymous quotes include an identifier dependent on the
+identity of the CPU and the developer of the enclave being quoted, which
+allows determining whether two instances of your enclave are running on
+the same hardware or not.</p>
+<p>If your security model depends on enforcing that the identifiers are
+different (e.g. because you want to prevent sybil attacks), keep in mind
+that the enclave host can generate a new identity by performing an
+epoch reset. The previous identity will then become inaccessible, though.</p>
+<p>The attestation mode being used can be chosen by the application enclave,
+but it must match what was chosen when generating the <a class="reference internal" href="sgx-intro.html#term-SPID"><span class="xref std std-term">SPID</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a></dt><dd><p>A way to launch enclaves without relying on the Intel’s
+infrastructure.</p>
+</dd>
+<dt><a class="reference internal" href="sgx-intro.html#term-SPID"><span class="xref std std-term">SPID</span></a></dt><dd><p>An identifier one can obtain from Intel, required to make use of EPID
+attestation.</p>
+</dd>
+</dl>
+</aside>
+</dd>
+<dt id="term-Flexible-Launch-Control">Flexible Launch Control</dt><dt id="term-FLC">FLC</dt><dd><p>Hardware (CPU) feature that allows substituting <a class="reference internal" href="sgx-intro.html#term-Launch-Enclave"><span class="xref std std-term">Launch Enclave</span></a> for
+one not signed by Intel. A change in SGX’s EINIT logic to not require
+the EINITTOKEN from the Intel-based Launch Enclave. An MSR, which can
+be locked at boot time, keeps the hash of the public key of the
+“launching” entity.</p>
+<p>With FLC, <a class="reference internal" href="sgx-intro.html#term-Launch-Enclave"><span class="xref std std-term">Launch Enclave</span></a> can be written by other companies (other
+than Intel) and must be signed with the key corresponding to the one
+locked in the MSR (a reference Launch Enclave simply allows all
+enclaves to run). The MSR can also stay unlocked and then it can be
+modified at run-time by the VMM or the OS kernel.</p>
+<p>Support for FLC can be detected using <code class="docutils literal notranslate"><span class="pre">CPUID</span></code> instruction, as
+<code class="docutils literal notranslate"><span class="pre">CPUID.07H:ECX.SGX_LC[bit</span> <span class="pre">30]</span> <span class="pre">==</span> <span class="pre">1</span></code> (SDM vol. 2A calls this “SGX Launch
+Control”).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://software.intel.com/en-us/blogs/2018/12/09/an-update-on-3rd-party-attestation">https://software.intel.com/en-us/blogs/2018/12/09/an-update-on-3rd-party-attestation</a></dt><dd><p>Announcement</p>
+</dd>
+</dl>
+<p><a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a></p>
+</aside>
+</dd>
+<dt id="term-Key-Separation-and-Sharing">Key Separation and Sharing</dt><dt id="term-KSS">KSS</dt><dd><p>A feature that lets developer define additional enclave identity
+attributes and configuration identifier. Extended enclave identity
+is defined by the developer on enclave build. Enclave configuration is
+defined on enclave launch and cannot be modified afterwards.</p>
+<p>In addition to the calculated enclave and signer measurements, developer
+is expected to define a product ID and <a class="reference internal" href="sgx-intro.html#term-SVN"><span class="xref std std-term">SVN</span></a> for her enclaves.
+These identifiers are part of the <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a> and are expected to
+be used in <a class="reference internal" href="sgx-intro.html#term-Attestation"><span class="xref std std-term">Attestation</span></a>. They are also used by SGX key derivation
+to derive different keys per configuration.</p>
+<p>KSS adds two more attributes for enclave build and two new ones for
+enclave launch, which are part of the <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a>.
+Additionally, key policy attributes are extended to provide fine-grained
+control over key derivation.</p>
+<p>New build attributes:</p>
+<ul class="simple">
+<li><p>Extended product ID</p></li>
+<li><p>Family ID</p></li>
+</ul>
+<p>New enclave launch attributes:</p>
+<ul class="simple">
+<li><p>Config ID</p></li>
+<li><p>Config SVN</p></li>
+</ul>
+<p>This feature was not part of original SGX and therefore not supported by
+all SGX-enabled hardware.</p>
+</dd>
+<dt id="term-Launch-Enclave">Launch Enclave</dt><dt id="term-LE">LE</dt><dd><div class="admonition-todo admonition" id="todo-node-7">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a></p>
+</aside>
+</dd>
+<dt id="term-Local-Attestation">Local Attestation</dt><dd><p>In local attestation, the attesting SGX enclave collects attestation
+evidence in the form of an <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a> using the EREPORT hardware
+instruction. This form of attestation is used to send the attestation
+evidence to a local party (on the same physical machine).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="attestation.html"><span class="doc">Attestation and Secret Provisioning</span></a></p>
+</aside>
+</dd>
+<dt id="term-Intel-Attestation-Service">Intel Attestation Service</dt><dt id="term-IAS">IAS</dt><dd><p>Internet service provided by Intel for “old” <a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a>-based remote
+attestation. Enclaves send SGX quotes to the client/verifier who will
+forward them to IAS to check their validity.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sgx-intro.html#term-PCS"><span class="xref std std-term">PCS</span></a></dt><dd><p>Provisioning Certification Service, another Internet service
+provided by Intel.</p>
+</dd>
+</dl>
+</aside>
+</dd>
+<dt id="term-Memory-Encryption-Engine">Memory Encryption Engine</dt><dt id="term-MEE">MEE</dt><dd><div class="admonition-todo admonition" id="todo-node-8">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-OCALL">OCALL</dt><dd><div class="admonition-todo admonition" id="todo-node-9">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-SGX-Platform-Software">SGX Platform Software</dt><dt id="term-PSW">PSW</dt><dd><p>Software infrastructure provided by Intel with all special
+<a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a> (<a class="reference internal" href="sgx-intro.html#term-Provisioning-Enclave"><span class="xref std std-term">Provisioning Enclave</span></a>,
+<a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a>, <a class="reference internal" href="sgx-intro.html#term-Launch-Enclave"><span class="xref std std-term">Launch Enclave</span></a>). This mainly refers to
+the “old” EPID/IAS-based remote attestation.</p>
+</dd>
+<dt id="term-Processor-Reserved-Memory">Processor Reserved Memory</dt><dt id="term-PRM">PRM</dt><dd><div class="admonition-todo admonition" id="todo-node-10">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Provisioning-Enclave">Provisioning Enclave</dt><dt id="term-PE">PE</dt><dd><p>One of the Architectural Enclaves of the Intel SGX software
+infrastructure. It is part of the <a class="reference internal" href="sgx-intro.html#term-SGX-Platform-Software"><span class="xref std std-term">SGX Platform Software</span></a>. The
+Provisioning Enclave is used in <a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a> based remote attestation.
+This enclave communicates with the Intel Provisioning Service
+(<a class="reference internal" href="sgx-intro.html#term-IPS"><span class="xref std std-term">IPS</span></a>) to perform EPID provisioning. The result of this
+provisioning procedure is the private EPID key securely accessed by the
+Provisioning Enclave. This procedure happens only during the first
+deployment of the SGX machine (or, in rare cases, to provision a new EPID
+key after TCB upgrade). The main user of the Provisioning Enclave is the
+<a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a></p>
+</aside>
+</dd>
+<dt id="term-Provisioning-Certification-Enclave">Provisioning Certification Enclave</dt><dt id="term-PCE">PCE</dt><dd><p>One of the Architectural Enclaves of the Intel SGX software
+infrastructure. It is part of the <a class="reference internal" href="sgx-intro.html#term-SGX-Platform-Software"><span class="xref std std-term">SGX Platform Software</span></a> and
+<a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a>. The Provisioning Certification Enclave is used in
+<a class="reference internal" href="sgx-intro.html#term-DCAP"><span class="xref std std-term">DCAP</span></a> based remote attestation.  This enclave communicates with the
+Intel Provisioning Certification Service (<a class="reference internal" href="sgx-intro.html#term-PCS"><span class="xref std std-term">PCS</span></a>) to perform DCAP
+provisioning. The result of this provisioning procedure is the DCAP/ECDSA
+attestation collateral (mainly the X.509 certificate chains rooted in a
+well-known Intel certificate and Certificate Revocation Lists). This
+procedure happens during the first deployment of the SGX machine and then
+periodically to refresh the cached attestation collateral. Typically, to
+reduce the dependency on PCS, a cloud service provider introduces an
+intermediate caching service (Provisioning Certification Caching Service,
+or PCCS) that stores all the attestation collateral obtained from Intel.
+The main user of the Provisioning Certification Enclave is the
+<a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a></p>
+</aside>
+</dd>
+<dt id="term-Intel-Provisioning-Service">Intel Provisioning Service</dt><dt id="term-IPS">IPS</dt><dd><p>Internet service provided by Intel for EPID-based remote attestation.
+This service provides the corresponding EPID key to the Provisioning
+Enclave on a remote SGX machine.</p>
+</dd>
+<dt id="term-Intel-Provisioning-Certification-Service">Intel Provisioning Certification Service</dt><dt id="term-PCS">PCS</dt><dd><p>New internet service provided by Intel for new ECDSA-based remote
+attestation. Enclave provider creates its own internal Attestation Service
+where it caches PKI collateral from Intel’s PCS, and the verifier gets the
+certificate chain from the enclave provider to check validity.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sgx-intro.html#term-IAS"><span class="xref std std-term">IAS</span></a></dt><dd><p>Intel Attestation Service, another Internet service.</p>
+</dd>
+</dl>
+</aside>
+</dd>
+<dt id="term-Quoting-Enclave">Quoting Enclave</dt><dt id="term-QE">QE</dt><dd><p>One of the Architectural Enclaves of the Intel SGX software
+infrastructure. It is part of the <a class="reference internal" href="sgx-intro.html#term-SGX-Platform-Software"><span class="xref std std-term">SGX Platform Software</span></a>. The
+Quoting Enclave receives an <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a> and produces a
+corresponding <a class="reference internal" href="sgx-intro.html#term-SGX-Quote"><span class="xref std std-term">SGX Quote</span></a>. The identity of the Quoting Enclave is
+publicly known (it signer, its measurement and its attributes) and is
+vetted by public companies such as Intel (in the form of the certificate
+chain ending in a publicly known root certificate of the company).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="sgx-intro.html#term-Architectural-Enclaves"><span class="xref std std-term">Architectural Enclaves</span></a></p>
+</aside>
+</dd>
+<dt id="term-Remote-Attestation">Remote Attestation</dt><dd><p>In remote attestation, the attesting SGX enclave collects attestation
+evidence in the form of an <a class="reference internal" href="sgx-intro.html#term-SGX-Quote"><span class="xref std std-term">SGX Quote</span></a> using the <a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting
+Enclave</span></a> (and the <a class="reference internal" href="sgx-intro.html#term-Provisioning-Enclave"><span class="xref std std-term">Provisioning Enclave</span></a> if required). This form of
+attestation is used to send the attestation evidence to a remote party
+(not on the same physical machine).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="attestation.html"><span class="doc">Attestation and Secret Provisioning</span></a></p>
+</aside>
+</dd>
+<dt id="term-Intel-SGX-Software-Development-Kit">Intel SGX Software Development Kit</dt><dt id="term-Intel-SGX-SDK">Intel SGX SDK</dt><dt id="term-SGX-SDK">SGX SDK</dt><dt id="term-SDK">SDK</dt><dd><p>In the context of <a class="reference internal" href="glossary.html#term-SGX"><span class="xref std std-term">SGX</span></a>, this means a specific piece of software
+supplied by Intel which helps people write enclaves packed into <code class="docutils literal notranslate"><span class="pre">.so</span></code>
+files to be accessible like normal libraries (at least on Linux).
+Available together with a kernel module and documentation.</p>
+</dd>
+<dt id="term-SGX-Enclave-Control-Structure">SGX Enclave Control Structure</dt><dt id="term-SECS">SECS</dt><dd><div class="admonition-todo admonition" id="todo-node-11">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-SGX-Quote">SGX Quote</dt><dd><p>The SGX quote is the proof of trustworthiness of the enclave and is used
+during <a class="reference internal" href="sgx-intro.html#term-Remote-Attestation"><span class="xref std std-term">Remote Attestation</span></a>. The attesting enclave generates the
+enclave-specific <a class="reference internal" href="sgx-intro.html#term-SGX-Report"><span class="xref std std-term">SGX Report</span></a>, sends the request to the
+<a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a> using <a class="reference internal" href="sgx-intro.html#term-Local-Attestation"><span class="xref std std-term">Local Attestation</span></a>, and the Quoting
+Enclave returns back the SGX quote with the SGX report embedded in it. The
+resulting SGX quote contains the enclave’s measurement, attributes and
+other security-relevant fields, and is tied to the identity of the
+<a class="reference internal" href="sgx-intro.html#term-Quoting-Enclave"><span class="xref std std-term">Quoting Enclave</span></a> to prove its authenticity. The obtained SGX quote
+may be later sent to the verifying remote party, which examines the SGX
+quote and gains trust in the remote enclave.</p>
+</dd>
+<dt id="term-SGX-Report">SGX Report</dt><dd><p>The SGX report is a data structure that contains the enclave’s measurement,
+signer identity, attributes and a user-defined 64B string. The SGX report
+is generated using the <code class="docutils literal notranslate"><span class="pre">EREPORT</span></code> hardware instruction. It is used during
+<a class="reference internal" href="sgx-intro.html#term-Local-Attestation"><span class="xref std std-term">Local Attestation</span></a>. The SGX report is embedded into the
+<a class="reference internal" href="sgx-intro.html#term-SGX-Quote"><span class="xref std std-term">SGX Quote</span></a>.</p>
+</dd>
+<dt id="term-SGX2">SGX2</dt><dd><p>This refers to all new SGX instructions and other hardware features that
+were introduced after the release of the original SGX1.</p>
+<p>Encompasses at least <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a>, but is still work in progress.</p>
+</dd>
+<dt id="term-Service-Provider-ID">Service Provider ID</dt><dt id="term-SPID">SPID</dt><dd><p>An identifier provided by Intel, used together with an <a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a>
+API key to authenticate to the <a class="reference internal" href="sgx-intro.html#term-Intel-Attestation-Service"><span class="xref std std-term">Intel Attestation Service</span></a>. You can
+obtain an SPID through Intel’s <a class="reference external" href="https://api.portal.trustedservices.intel.com/EPID-attestation">Trusted Services Portal</a>.</p>
+<p>See <a class="reference internal" href="sgx-intro.html#term-EPID"><span class="xref std std-term">EPID</span></a> for a description of the difference between <em>linkable</em>
+and <em>unlinkable</em> quotes.</p>
+</dd>
+<dt id="term-State-Save-Area">State Save Area</dt><dt id="term-SSA">SSA</dt><dd><div class="admonition-todo admonition" id="todo-node-12">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+<dt id="term-Security-Version-Number">Security Version Number</dt><dt id="term-SVN">SVN</dt><dd><p>Each element of the SGX <a class="reference internal" href="sgx-intro.html#term-TCB"><span class="xref std std-term">TCB</span></a> is assigned a Security Version Number
+(SVN). For the hardware, these SVNs are referred to collectively as
+CPU_SVN, and for software referred as ISV_SVN. A TCB is considered up to
+date if all components of the TCB have SVNs greater than or equal to a
+threshold published by the author of the component.</p>
+</dd>
+<dt id="term-Trusted-Execution-Environment">Trusted Execution Environment</dt><dt id="term-TEE">TEE</dt><dd><p>A Trusted Execution Environment (TEE) is an environment where the code
+executed and the data accessed are isolated and protected in terms of
+confidentiality (no one has access to the data except the code running
+inside the TEE) and integrity (no one can change the code and its
+behavior).</p>
+</dd>
+<dt id="term-Trusted-Computing-Base">Trusted Computing Base</dt><dt id="term-TCB">TCB</dt><dd><p>In context of <a class="reference internal" href="glossary.html#term-SGX"><span class="xref std std-term">SGX</span></a> this has the usual meaning: the set of all
+components that are critical to security. Any vulnerability in TCB
+compromises security. Any problem outside TCB is not a vulnerability,
+i.e. should not compromise security.</p>
+<p>In context of Gramine there is also a different meaning
+(<a class="reference internal" href="glossary.html#term-Thread-Control-Block"><span class="xref std std-term">Thread Control Block</span></a>). Those two should not be confused.</p>
+</dd>
+<dt id="term-Thread-Control-Structure">Thread Control Structure</dt><dt id="term-TCS">TCS</dt><dd><div class="admonition-todo admonition" id="todo-node-13">
+<p class="admonition-title">Todo</p>
+<p>TBD</p>
+</aside>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gramine-users.html" class="btn btn-neutral float-left" title="Users of Gramine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

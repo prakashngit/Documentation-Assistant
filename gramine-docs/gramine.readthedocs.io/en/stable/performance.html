@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performance tuning and analysis &mdash; Gramine  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Build and install Gramine from source" href="devel/building.html" />
+    <link rel="prev" title="Attestation and Secret Provisioning" href="attestation.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "performance", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/performance.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="performance.html#">Performance tuning and analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#enabling-per-thread-and-process-wide-sgx-stats">Enabling per-thread and process-wide SGX stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#effects-of-system-calls-ocalls">Effects of system calls / ocalls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#exitless-feature">Exitless feature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#optional-cpu-features-avx-avx512-amx-mpx-pkru">Optional CPU features (AVX, AVX512, AMX, MPX, PKRU)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#multi-threaded-workloads">Multi-threaded workloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#multi-process-workloads">Multi-process workloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#choice-of-sgx-machine-1">Choice of SGX machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#glibc-malloc-tuning">Glibc malloc tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#gnu-libgomp-performance-bottleneck">GNU libgomp performance bottleneck</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#other-considerations">Other considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#profiling-with-perf">Profiling with <code class="docutils literal notranslate"><span class="pre">perf</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#installing-perf-provided-by-your-distribution">Installing <code class="docutils literal notranslate"><span class="pre">perf</span></code> provided by your distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#building-your-own-perf">Building your own <code class="docutils literal notranslate"><span class="pre">perf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#recording-samples-with-perf-record">Recording samples with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">record</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#further-reading">Further reading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#sgx-profiling">SGX profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#ocall-profiling">OCALL profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#profiling-sgx-hotspots-with-intel-vtune-profiler">Profiling SGX hotspots with Intel VTune Profiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#installing-vtune">Installing VTune</a></li>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#collecting-sgx-hotspots-and-viewing-the-report">Collecting SGX hotspots and viewing the report</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#other-useful-tools-for-profiling">Other useful tools for profiling</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/building.html">Build and install Gramine from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devel/DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="devel/features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Performance tuning and analysis</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/performance.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="performance-tuning-and-analysis">
+<h1>Performance tuning and analysis<a class="headerlink" href="performance.html#performance-tuning-and-analysis" title="Permalink to this headline"></a></h1>
+<p>This is the “best performance practices” document for Gramine performance
+tuning and explanation of possible software and hardware performance bottlenecks
+and limitations. In this document, we are highlighting only those manifest
+options relevant for performance benchmarking. Refer to
+<a class="reference internal" href="manifest-syntax.html"><span class="doc">Manifest syntax</span></a> for a full list.</p>
+<p><em>Note:</em> The below examples were run on a Mehlow machine. The performance numbers
+in these examples should not be considered representative and serve only
+illustration purposes.</p>
+<section id="enabling-per-thread-and-process-wide-sgx-stats">
+<h2>Enabling per-thread and process-wide SGX stats<a class="headerlink" href="performance.html#enabling-per-thread-and-process-wide-sgx-stats" title="Permalink to this headline"></a></h2>
+<p>See also <a class="reference internal" href="performance.html#perf"><span class="std std-ref">Profiling with perf</span></a> below for installing <code class="docutils literal notranslate"><span class="pre">perf</span></code>.</p>
+<p>Enable statistics using <code class="docutils literal notranslate"><span class="pre">sgx.enable_stats</span> <span class="pre">=</span> <span class="pre">true</span></code> manifest option. Now your
+graminized application correctly reports performance counters. This is useful
+when using e.g. <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code> to collect performance statistics. This manifest
+option also forces Gramine to dump SGX-related information on each
+thread/process exit. Here is an example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>libos/test/regression$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>gramine-sgx<span class="w"> </span>helloworld
+Hello<span class="w"> </span>world<span class="w"> </span><span class="o">(</span>helloworld<span class="o">)</span>!
+-----<span class="w"> </span>SGX<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span>thread<span class="w"> </span><span class="m">87219</span><span class="w"> </span>-----
+<span class="c1"># of EENTERs:        224</span>
+<span class="c1"># of EEXITs:         192</span>
+<span class="c1"># of AEXs:           201</span>
+<span class="c1"># of sync signals:   32</span>
+<span class="c1"># of async signals:  0</span>
+-----<span class="w"> </span>Total<span class="w"> </span>SGX<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span>process<span class="w"> </span><span class="m">87219</span><span class="w"> </span>-----
+<span class="c1"># of EENTERs:        224</span>
+<span class="c1"># of EEXITs:         192</span>
+<span class="c1"># of AEXs:           201</span>
+<span class="c1"># of sync signals:   32</span>
+<span class="c1"># of async signals:  0</span>
+
+Performance<span class="w"> </span>counter<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;gramine-sgx helloworld&#39;</span>:
+<span class="w">     </span><span class="m">3</span>,568,568,948<span class="w">      </span>cycles
+<span class="w">     </span><span class="m">1</span>,072,072,581<span class="w">      </span>instructions
+<span class="w">       </span><span class="m">172</span>,308,653<span class="w">      </span>branches
+</pre></div>
+</div>
+<p>How to read this output:</p>
+<ol class="arabic simple">
+<li><p>You can see that one thread was created, with Linux-host (actual) <code class="docutils literal notranslate"><span class="pre">TID</span> <span class="pre">=</span>
+<span class="pre">87219</span></code>. This one thread belongs to one process, so they have the same <code class="docutils literal notranslate"><span class="pre">TID</span>
+<span class="pre">=</span> <span class="pre">PID</span></code> and the same statistics. If the test application would have e.g. two
+threads, then there would be two “SGX stats for thread” outputs, and their
+values would sum up to the values reported in the final “Total SGX stats for
+process”.</p></li>
+<li><p>There are about 200 EENTERs and EEXITs. These are mostly due to OCALLs:
+recall that every OCALL requires one EEXIT to exit the enclave and one EENTER
+to re-enter it again. We can conclude that there are about 200 OCALLs. Also,
+the number of EENTERs is slightly higher than of EEXITs: this is because of
+ECALLs.  Recall that Gramine performs one ECALL for the whole process and
+one ECALL per each new thread (and possibly some more ECALLs to reset threads
+and other bookkeeping). You can consider ECALLs as “no-return” in Gramine:
+they only contribute to EENTERs and do not increase EEXITs (in reality,
+ECALLs perform EEXITs but only after the stats are printed).</p></li>
+<li><p>Why there are about 200 OCALLs in our trivial HelloWorld example? This is
+because even before HelloWorld’s <code class="docutils literal notranslate"><span class="pre">main()</span></code> function starts, Gramine and
+Glibc initialize themselves. For example, Gramine must open and read the
+manifest file – this requires several OCALLs. Glibc may need to open and load
+shared libraries – this requires more OCALLs. In general, you may consider
+200 OCALLs as the cost of initialization in Gramine.</p></li>
+<li><p>Why are there about 200 Asynchronous Exits (AEXs)? Most of these AEXs come
+from in-enclave exceptions and normal Linux interrupts. In particular,
+Linux’s scheduler interrupts each CPU every 4ms, or 250 times per second.
+Since our enclave workload runs for a fraction of a second, maybe 100 AEXs
+happen due to scheduler interrupts. Another 32 AEXs happen due to “sync
+signals” – in particular, SGX and Gramine trap-and-emulate the CPUID
+instruction. Each trap-and-emulate results in one AEX. Finally, the rest 100
+AEXs happen due to some other sources of interrupts: enclave page faults or
+network interrupts.</p></li>
+<li><p>What are the 32 sync signals? These are synchronous signals forwarded by the
+host Linux to Gramine. Synchronous signals are SIGILL (invalid instruction),
+SIGFPE (invalid floating-point result), SIGSEGV (segmentation fault), etc.
+These are exceptions originating from Glibc/application execution. For
+example, these 32 sync signals are trap-and-emulate cases for the CPUID
+instruction, forbidden in SGX enclaves (we know this because we manually
+inspected this logic). In particular, Glibc initializes itself and checks for
+different CPU information, and thus invokes CPUID 32 times.</p></li>
+<li><p>What are the 0 async signals? These are asynchronous signals forwarded by the
+host Linux to Gramine. These signals are SIGINT (interrupt), SIGCONT
+(continue), SIGKILL (the process is going to be killed), SIGCHLD (child
+process terminated) etc. None of these signals happened during HelloWorld
+execution.</p></li>
+<li><p>Performance counters provide a lot of different information. Here we only
+show the snippet with number of cycles, instructions, and branches taken. By
+itself, this particular output is not interesting. In reality, performance
+counters should be compared against “golden runs” to deduce any interesting
+trends.</p></li>
+</ol>
+</section>
+<section id="effects-of-system-calls-ocalls">
+<h2>Effects of system calls / ocalls<a class="headerlink" href="performance.html#effects-of-system-calls-ocalls" title="Permalink to this headline"></a></h2>
+<p>One of the main sources of overhead on modern SGX-enabled Intel processors is a
+pure software one: enclavized applications must communicate with the outside
+world, and for this communication they must perform system calls / OCALLs. Every
+OCALL results in one EEXIT to exit from the enclave to the untrusted world and
+then one EENTER to re-enter the enclave (unless you are using Exitless, see
+below).  Moreover, OCALLs typically copy some data from the enclave to the
+outside and vice versa – for example, network and file system OCALLs must copy
+network packets and files to/from the enclave.</p>
+<p>So, there are several sources of overhead that need to be understood with regard
+to OCALLs:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OCALL</span> <span class="pre">=</span> <span class="pre">EEXIT</span> <span class="pre">+</span> <span class="pre">host</span> <span class="pre">processing</span> <span class="pre">+</span> <span class="pre">EENTER</span></code>. Recall that each EEXIT flushes
+the CPU caches and possibly invalidates Branch Predictors and TLBs.
+Similarly, EENTER performs many checks and requires hardware-internal
+synchronization of cores. Some studies show each EEXIT and EENTER cost around
+8,000 – 12,000 cycles (compare it with normal syscalls costing around 100
+cycles each). Note that the cost of EENTER/EEXIT depends on the CPU model,
+its firmware, applied microcode patches, and other platform characteristics.</p></li>
+<li><p>OCALLs purge CPU caches. This means that after each OCALL, data that was
+cached in say L1 data cache is not there anymore. This effectively negates
+the effect of warm caches in the SGX environment.</p></li>
+<li><p>Many OCALLs perform I/O: they copy data to/from the enclave. Copying is
+obligatory to prevent Time-of-check to time-of-use (TOCTOU) attacks and is
+dictated by the SGX design. This is an unavoidable tax. In I/O intensive
+workloads, the overhead of copying may constitute 15-50% over the baseline
+performance of the native application. For example, databases and web servers
+copy user requests inside the enclave and copy the results/web pages out. In
+another example, applications that manipulate files perform a lot of file
+system I/O, copying data blocks in and out of the enclave.</p></li>
+<li><p>OCALLs generally correspond 1:1 to the system calls that the application
+performs, but not always. Typical system calls like <code class="docutils literal notranslate"><span class="pre">read()</span></code>, <code class="docutils literal notranslate"><span class="pre">write()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">recv()</span></code>, <code class="docutils literal notranslate"><span class="pre">send()</span></code> indeed correspond 1:1 to Gramine’s OCALLs and thus
+introduce almost no overhead in the code path. However, some system calls are
+emulated in a more sophisticated way: e.g., Linux-specific <code class="docutils literal notranslate"><span class="pre">epoll()</span></code> is
+emulated via more generic <code class="docutils literal notranslate"><span class="pre">poll()</span></code> and this requires some additional logic.
+Fortunately, such calls are never a real bottleneck in Gramine because they
+are not on hot paths of applications. Probably the only exceptional system
+call is <code class="docutils literal notranslate"><span class="pre">gettimeofday()</span></code> – and only on older Intel CPUs (see below).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">gettimeofday()</span></code> system call is special. On normal Linux, it is
+implemented via vDSO and a fast RDTSC instruction. Platforms older than
+Icelake typically forbid RDTSC inside an SGX enclave (this is a hardware
+limitation), and so <code class="docutils literal notranslate"><span class="pre">gettimeofday()</span></code> falls back to the expensive OCALL.
+Gramine is smart enough to identify whether the platform supports RDTSC
+inside enclaves, and uses the fast RDTSC logic to emulate <code class="docutils literal notranslate"><span class="pre">gettimeofday()</span></code>.
+<em>Rule of thumb:</em> if you think that the bottleneck of your deployment is
+<code class="docutils literal notranslate"><span class="pre">gettimeofday()</span></code>, move to a newer (Icelake) processor. If you cannot move
+to a newer platform, you are limited by SGX hardware (you can try to modify
+the application itself to issue less gettimeofday’s).</p></li>
+</ol>
+</section>
+<section id="exitless-feature">
+<h2>Exitless feature<a class="headerlink" href="performance.html#exitless-feature" title="Permalink to this headline"></a></h2>
+<p>Note this feature is currently insecure and not recommended for production
+usage (potentially susceptible to CVE-2022-21233 aka INTEL-SA-00657 and
+CVE-2022-21166 aka INTEL-SA-00615).</p>
+<p>Gramine supports the Exitless (or Switchless) feature – it trades off CPU cores
+for faster OCALL execution. More specifically, with Exitless, enclave threads do
+not exit the enclave on OCALLs but instead busy wait for untrusted helper
+threads which perform OCALLs (system calls) on their behalf.  Untrusted helper
+threads are created at Gramine start-up and burn CPU cycles busy waiting for
+requests for OCALLs from enclave threads (untrusted helper threads periodically
+sleep if there have been no OCALL requests for a long time to save some CPU
+cycles).</p>
+<p>Exitless is configured by <code class="docutils literal notranslate"><span class="pre">sgx.insecure__rpc_thread_num</span> <span class="pre">=</span> <span class="pre">xyz</span></code>. By default,
+the Exitless feature is disabled – all enclave threads perform an actual OCALL
+for each system call and exit the enclave. The feature can be disabled by
+specifying <code class="docutils literal notranslate"><span class="pre">sgx.insecure__rpc_thread_num</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
+<p>You must decide how many untrusted helper RPC threads your application needs. A
+rule of thumb: specify <code class="docutils literal notranslate"><span class="pre">sgx.insecure__rpc_thread_num</span> <span class="pre">==</span> <span class="pre">sgx.max_threads</span></code>,
+i.e., the number of untrusted RPC threads should be the same as the number of
+enclave threads. For example, native Redis 6.0 uses 3-4 enclave threads during
+its execution, plus Gramine uses another 1-2 helper enclave threads. So Redis
+manifest has an over-approximation of this number: <code class="docutils literal notranslate"><span class="pre">sgx.max_threads</span> <span class="pre">=</span> <span class="pre">8</span></code>. Thus,
+to correctly enable the Exitless feature, specify
+<code class="docutils literal notranslate"><span class="pre">sgx.insecure__rpc_thread_num</span> <span class="pre">=</span> <span class="pre">8</span></code>. Here is an example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># exitless disabled: `sgx.max_threads = 8` and `sgx.insecure__rpc_thread_num = 0`</span>
+CI-Examples/redis$<span class="w"> </span>gramine-sgx<span class="w"> </span>redis-server<span class="w"> </span>--save<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span>--protected-mode<span class="w"> </span>no<span class="w"> </span><span class="p">&amp;</span>
+CI-Examples/redis$<span class="w"> </span>src/src/redis-benchmark<span class="w"> </span>-t<span class="w"> </span><span class="nb">set</span>
+<span class="m">43010</span>.75<span class="w"> </span>requests<span class="w"> </span>per<span class="w"> </span>second
+
+<span class="c1"># exitless enabled: `sgx.max_threads = 8` and `sgx.insecure__rpc_thread_num = 8`</span>
+CI-Examples/redis$<span class="w"> </span>gramine-sgx<span class="w"> </span>redis-server<span class="w"> </span>--save<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span>--protected-mode<span class="w"> </span>no<span class="w"> </span><span class="p">&amp;</span>
+CI-Examples/redis$<span class="w"> </span>src/src/redis-benchmark<span class="w"> </span>-t<span class="w"> </span><span class="nb">set</span>
+<span class="m">68119</span>.89<span class="w"> </span>requests<span class="w"> </span>per<span class="w"> </span>second
+</pre></div>
+</div>
+<p>As you can see, enabling the Exitless feature improves performance of Redis by
+58%. This comes at a price: there are now 8 additional threads occupying
+additional CPU cores (you can see these additional threads by running <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">-Haux</span>
+<span class="pre">|</span> <span class="pre">grep</span> <span class="pre">loader</span></code> while Gramine is running). We recommend to use Exitless only for
+single-threaded applications or if you care more about latency than throughput.</p>
+<p>We also recommend to use core pinning via taskset or even isolating cores via
+<code class="docutils literal notranslate"><span class="pre">isolcpus</span></code> or disabling interrupts on cores via <code class="docutils literal notranslate"><span class="pre">nohz_full</span></code>. It is also
+beneficial to put all enclave threads on one set of cores (e.g., on first
+hyper-threads if you have hyper-threading enabled on your platform) and all
+untrusted RPC threads on another set of cores (e.g., on second hyper-threads).
+In general, the classical performance-tuning strategies are applicable for
+Gramine and Exitless multi-threaded workloads.</p>
+</section>
+<section id="optional-cpu-features-avx-avx512-amx-mpx-pkru">
+<h2>Optional CPU features (AVX, AVX512, AMX, MPX, PKRU)<a class="headerlink" href="performance.html#optional-cpu-features-avx-avx512-amx-mpx-pkru" title="Permalink to this headline"></a></h2>
+<p>SGX technology allows to specify which CPU features are required to run the SGX
+enclave. Gramine “inherits” this and has the manifest options for
+AVX/AVX512/AMX/MPX/PKRU CPU features under <code class="docutils literal notranslate"><span class="pre">sgx.cpu_features</span></code>. By default, all
+not-security-hardening CPU features (AVX, AVX512, AMX) are set to
+<code class="docutils literal notranslate"><span class="pre">&quot;unspecified&quot;</span></code> – this means that Gramine will allow running the SGX enclave
+on any platform, whether the platform has the CPU features or not.</p>
+<p>Gramine typically correctly identifies the features of the underlying platform
+and propagates the information on AVX/AVX512/AMX inside the enclave and to the
+application. It is recommended to leave these manifest options as-is (set to
+<code class="docutils literal notranslate"><span class="pre">&quot;unspecified&quot;</span></code>). However, we observed on some platforms that the graminized
+application cannot detect these features and falls back to a slow
+implementation. For example, some crypto libraries do not recognize AVX on the
+platform and use very slow functions, leading to 10-100x overhead over native
+(we still don’t know the reason for this behavior). If you suspect this can be
+your case, enable the features in the manifest, e.g., set <code class="docutils literal notranslate"><span class="pre">sgx.cpu_features.avx</span>
+<span class="pre">=</span> <span class="pre">&quot;required&quot;</span></code>.</p>
+<p>Gramine also allows to explicitly disable CPU features using the <code class="docutils literal notranslate"><span class="pre">&quot;disabled&quot;</span></code>
+keyword – this disables the corresponding CPU feature inside the SGX enclave
+even if this CPU feature is available on the system. This may improve enclave
+performance because this CPU feature will <em>not</em> be saved and restored during
+enclave entry/exit. But be aware that if the graminized application relies on
+this CPU feature, the application will crash with “illegal instruction”.</p>
+<p>For more information on SGX logic regarding optional CPU features, see the Intel
+Software Developer Manual, Table 38-3 (“Layout of ATTRIBUTES Structure”) under
+the SGX section.</p>
+</section>
+<section id="multi-threaded-workloads">
+<h2>Multi-threaded workloads<a class="headerlink" href="performance.html#multi-threaded-workloads" title="Permalink to this headline"></a></h2>
+<p>Gramine supports multi-threaded applications. Gramine implements many
+optimizations and performance-relevant system calls related to multi-threading
+and scheduling policies (e.g., <code class="docutils literal notranslate"><span class="pre">set_schedaffinity()</span></code>).</p>
+</section>
+<section id="multi-process-workloads">
+<h2>Multi-process workloads<a class="headerlink" href="performance.html#multi-process-workloads" title="Permalink to this headline"></a></h2>
+<p>Gramine supports multi-process applications, i.e., applications that run as
+several inter-dependent processes. Typical examples are bash scripts: one main
+bash script spawns many additional processes to perform some operations.
+Another typical example is Python: it usually spawns helper processes to obtain
+system information. Finally, many applications are multi-process by design,
+e.g., Nginx and Apache web servers spawn multiple worker processes.</p>
+<p>For each new child, the parent Gramine process creates a new process with a new
+Gramine instance and thus a new enclave. For example, if Nginx main process
+creates 4 workers, then there will be 5 Gramine instances and 5 SGX enclaves:
+one main Gramine process with its enclave and 4 child Gramine processes with 4
+enclaves.</p>
+<p>To create a new child process, Linux has the following system calls:
+<code class="docutils literal notranslate"><span class="pre">fork()</span></code>/<code class="docutils literal notranslate"><span class="pre">vfork()</span></code> and <code class="docutils literal notranslate"><span class="pre">clone()</span></code>. All these interfaces copy the whole
+memory of the parent process into the child, as well as all the resources like
+opened files, network connections, etc. In a normal environment, this copying is
+very fast because it uses the copy-on-write semantics. However, the SGX hardware
+doesn’t have the notions of copy-on-write  and sharing of memory. Therefore,
+Gramine emulates <code class="docutils literal notranslate"><span class="pre">fork/vfork/clone</span></code> via the checkpoint-and-restore mechanism:
+all enclave memory and resources of the parent process are serialized into one
+blob of data, the blob is encrypted and sent to the child process. The child
+process awaits this blob of data, receives it, decrypts it, and restores into
+its own enclave memory. This is a much more expensive operation than
+copy-on-write, therefore forking in Gramine is much slower than in native
+Linux. Some studies report 1,000x overhead of forking over native.</p>
+<p>Moreover, multi-process applications periodically need to communicate with each
+other. For example, the Nginx parent process sends a signal to one of the worker
+processes to inform that a new request is available for processing. All this
+Inter-Process Communication (IPC) is transparently encrypted in Gramine.
+Encryption by itself incurs 1-10% overhead. This means that a
+communication-heavy multi-process application may experience significant
+overheads.</p>
+<p>To summarize, there are two sources of overhead for multi-process applications
+in Gramine:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Fork()</span></code>, <code class="docutils literal notranslate"><span class="pre">vfork()</span></code> and <code class="docutils literal notranslate"><span class="pre">clone()</span></code> system calls are very expensive in
+Gramine and in SGX in general. This is because Intel SGX lacks the
+mechanisms for memory sharing and copy-on-write semantics. They are emulated
+via checkpoint-and-restore in Gramine.</p></li>
+<li><p>Inter-Process Communication (IPC) is moderately expensive in Gramine because
+all IPC is transparently encrypted/decrypted using the TLS-PSK with AES-GCM
+crypto.</p></li>
+</ol>
+</section>
+<section id="choice-of-sgx-machine-1">
+<span id="choice-of-sgx-machine"></span><h2>Choice of SGX machine<a class="headerlink" href="performance.html#choice-of-sgx-machine-1" title="Permalink to this headline"></a></h2>
+<p>Modern Icelake server machines remove many of the hardware bottlenecks of Intel
+SGX. If you must use an older machine (Skylake, Caby Lake, Mehlow), you should
+be aware that they have severe SGX-hardware limitations. In particular:</p>
+<ol class="arabic">
+<li><p><a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> size. You can think of EPC as a physical cache (just like L3
+cache) for enclave pages. On older machines (before Icelake servers), EPC is
+only 128-256MB in size. This means that if the application has a working set
+size of more than 100-200MB, enclave pages will be evicted from EPC into RAM.
+Eviction of enclave pages (also called EPC swapping or paging) is a very
+expensive hardware operation. Some applications have a working set size of
+MBs/GBs of data, so performance will be significantly impaired.</p>
+<p>Note that modern Icelake servers have EPC size of up to 1TB and therefore
+they are not affected by EPC swapping. A simple way to verify the amount of
+EPC available on your machine is to execute Gramine’s utility
+<code class="docutils literal notranslate"><span class="pre">is-sgx-available</span></code>.</p>
+</li>
+<li><p>RDTSC/RDTSCP instructions. These instructions are forbidden to execute in an
+SGX enclave on older machines. Unfortunately, many applications and runtimes
+use these instructions frequently, assuming that they are always available.
+This leads to significant overheads when running such applications: Gramine
+treats each RDTSC instruction as trap-and-emulate, which is very expensive
+(enclave performs an AEX, Gramine enters the enclave, fixes RDTSC, exits the
+enclave, and re-enters it from the interrupted point). Solution: move to
+newer Intel processors that like Icelake which allow RDTSC inside the
+enclave.</p></li>
+<li><p>CPUID and SYSCALL instructions. These instructions are forbidden to execute
+in an SGX enclave on all currently available machines. Fortunately,
+applications use these instructions typically only during initialization and
+never on hot paths. Gramine emulates CPUID and SYSCALL similarly to RDTSC,
+but since this happens very infrequently, it is not a realistic bottleneck.
+However, it is always advisable to verify that the application doesn’t rely
+on CPUID and SYSCALL too much. This is especially important for statically
+built applications that may rely on raw SYSCALL instructions instead of
+calling Glibc (recall that Gramine replaces native Glibc with our patched
+version that performs function calls inside Gramine instead of raw SYSCALL
+instructions and thus avoids this overhead).</p></li>
+<li><p>CPU topology. The CPU topology may negatively affect performance of Gramine.
+For example, if the machine has several NUMA domains, it is important to
+restrict Gramine runs to only one NUMA domain, e.g., via the command
+<code class="docutils literal notranslate"><span class="pre">numactl</span> <span class="pre">--cpunodebind=0</span> <span class="pre">--membind=0</span></code>. Otherwise Gramine may spread
+enclave threads and enclave memory across several NUMA domains, which will
+lead to higher memory access latencies and overall worse performance.</p></li>
+</ol>
+</section>
+<section id="glibc-malloc-tuning">
+<h2>Glibc malloc tuning<a class="headerlink" href="performance.html#glibc-malloc-tuning" title="Permalink to this headline"></a></h2>
+<p>Depending on the number of threads and the value of <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code>, you
+might encounter pathological performance due to a combination of various factors.</p>
+<p>Specifically, the default settings of glibc’s <code class="docutils literal notranslate"><span class="pre">malloc</span></code> assume that virtual memory is
+virtually unlimited, and, as an optimization, request a per-thread arena
+of 64 MiB from the kernel when a thread first calls <code class="docutils literal notranslate"><span class="pre">malloc</span></code>.</p>
+<p>Due to the limitations of SGX v1, we must back each allocation with physical memory
+immediately, which breaks the assumption that speculatively allocating 64 MiB is not
+a big deal — when many threads are spawned (and call <code class="docutils literal notranslate"><span class="pre">malloc</span></code>), the per-thread arenas
+might consume a large portion of the memory reserved for the enclave.</p>
+<p>When this happens, calls to <code class="docutils literal notranslate"><span class="pre">malloc</span></code> won’t fail, as the allocator will
+allocate a single page to serve the request instead. However, no attempt will
+be made to make use of the rest of the page, wasting most of the memory.
+Moreover, glibc will retry allocating the arena each time <code class="docutils literal notranslate"><span class="pre">malloc</span></code> gets
+called, perhaps in a hope that the memory situation that prevented the previous
+attempt from succeeding has since passed.</p>
+<p>All together, this means that, unless <code class="docutils literal notranslate"><span class="pre">64M</span> <span class="pre">*</span> <span class="pre">(application's</span> <span class="pre">thread</span> <span class="pre">count)</span></code> fits
+comfortably in <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code>, <code class="docutils literal notranslate"><span class="pre">malloc</span></code> will be much slower and much less
+memory-efficient than it should be, on some of the threads involved, because each
+call will now cause multiple relatively expensive calls to <code class="docutils literal notranslate"><span class="pre">mmap</span></code>, and effectively
+round up the request size to a multiple of 4096.</p>
+<p>One way to solve this is to limit the number of threads that are allowed to have
+their own arena. This can be done with either a call to <code class="docutils literal notranslate"><span class="pre">mallopt</span></code>, or an environment
+variable set in the manifest:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only create one malloc arena.</span>
+loader.env.MALLOC_ARENA_MAX<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+</pre></div>
+</div>
+<p>This does have its own performance implications, but the impact is much smaller
+than the pathological behavior described above.</p>
+<p>Another solution would be to set <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span></code> to a much higher value,
+to accomodate each thread creating its own arena. Do keep in mind, however,
+that each process spawns its own enclave, so in a multi-process application,
+the actual memory consumption will be a multiple of this setting. If the memory
+consumption is not a problem for your usecase, you might observe better
+performance with this approach than when limiting <code class="docutils literal notranslate"><span class="pre">MALLOC_ARENA_MAX</span></code>.</p>
+</section>
+<section id="gnu-libgomp-performance-bottleneck">
+<h2>GNU libgomp performance bottleneck<a class="headerlink" href="performance.html#gnu-libgomp-performance-bottleneck" title="Permalink to this headline"></a></h2>
+<p>Many applications use the <a class="reference external" href="https://gcc.gnu.org/onlinedocs/libgomp/">libgomp library</a>, the GNU Offloading and Multi
+Processing Runtime Library (previously known as GNU OpenMP Runtime Library).
+Notably PyTorch and TensorFlow use this library.</p>
+<p>Unfortunately, the libgomp library uses raw SYSCALL instructions in several
+places – in particular, to call the <code class="docutils literal notranslate"><span class="pre">futex()</span></code> system call – instead of the
+corresponding Glibc wrappers. This is detrimental to Gramine SGX performance,
+see <a class="reference internal" href="performance.html#choice-of-sgx-machine"><span class="std std-ref">Choice of SGX machine</span></a>.</p>
+<p>Gramine optionally provides a patched libgomp library that runs faster
+inside SGX enclaves. This patched libgomp library is <strong>not</strong> included in the
+default distribution of Gramine, so you need to build Gramine from sources and
+add <code class="docutils literal notranslate"><span class="pre">-Dlibgomp=enabled</span></code> when configuring the build (for details see
+<a class="reference internal" href="devel/building.html"><span class="doc">Build and install Gramine from source</span></a>). Successful build places the patched libgomp library
+together with other Gramine libraries. Please note that the build can take a
+long time: unfortunately, the only supported way of building libgomp is as part
+of a complete GCC build.</p>
+<p>After building Gramine with patched libgomp, there is typically no need to
+modify your Gramine manifest (as the library is placed into the Gramine
+runtime-libraries directory, which is typically already a part of the manifest).
+However, sometimes using the patched libgomp requires specifying the
+<code class="docutils literal notranslate"><span class="pre">LD_PRELOAD</span></code> environment variable. See <a class="reference external" href="https://github.com/gramineproject/examples/tree/master/pytorch">our PyTorch example</a> for one such
+case.</p>
+<p>The patched libgomp library can provide a significant boost: for example,
+PyTorch’s SGX performance overhead decreases on some workloads from 25% to 8%.</p>
+<p>To the best of our knowledge, an alternative implementation of OpenMP – the
+<em>libiomp</em> library – does <strong>not</strong> have performance bottlenecks under Gramine
+SGX. We recommend to switch to this library whenever possible, instead of
+building and using the patched libgomp.</p>
+</section>
+<section id="other-considerations">
+<h2>Other considerations<a class="headerlink" href="performance.html#other-considerations" title="Permalink to this headline"></a></h2>
+<p>For performance testing, always use the non-debug versions of all software. In
+particular, build Gramine in non-debug configuration
+(<code class="docutils literal notranslate"><span class="pre">meson</span> <span class="pre">--buildtype=release</span></code>). Also build the application itself in non-debug
+configuration (in the example Makefiles, simple <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">SGX=1</span></code> defaults to
+non-debug). Finally, disable the debug log of Gramine by specifying the manifest
+option <code class="docutils literal notranslate"><span class="pre">loader.log_level</span> <span class="pre">=</span> <span class="pre">&quot;none&quot;</span></code>.</p>
+<p>There are several manifest options that may improve performance of some
+workloads. The manifest options include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">libos.check_invalid_pointers</span> <span class="pre">=</span> <span class="pre">false</span></code> – disable checks of invalid pointers
+on system call invocations. Most real-world applications never provide invalid
+arguments to system calls, so there is no need in additional checks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sgx.preheat_enclave</span> <span class="pre">=</span> <span class="pre">true</span></code> – pre-fault all enclave pages during enclave
+initialization. This shifts the overhead of page faults on non-present enclave
+pages from runtime to enclave startup time. Using this option makes sense only
+if the whole enclave memory fits into <a class="reference internal" href="sgx-intro.html#term-EPC"><span class="xref std std-term">EPC</span></a> and if <a class="reference internal" href="sgx-intro.html#term-EDMM"><span class="xref std std-term">EDMM</span></a> is not
+used (<code class="docutils literal notranslate"><span class="pre">sgx.edmm_enable</span> <span class="pre">=</span> <span class="pre">false</span></code>).</p></li>
+</ul>
+<p>If your application periodically fails and complains about seemingly irrelevant
+things, it may be due to insufficient enclave memory. Please try to increase
+enclave size by tweaking <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;512M&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;1G&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">sgx.enclave_size</span> <span class="pre">=</span> <span class="pre">&quot;2G&quot;</span></code>, and so on. If this
+doesn’t help, it could be due to insufficient stack size: in this case try to
+increase <code class="docutils literal notranslate"><span class="pre">sys.stack.size</span> <span class="pre">=</span> <span class="pre">&quot;256K&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">sys.stack.size</span> <span class="pre">=</span> <span class="pre">&quot;2M&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sys.stack.size</span> <span class="pre">=</span> <span class="pre">&quot;4M&quot;</span></code> and so on. Finally, if Gramine complains about
+insufficient number of TCSs or threads, increase <code class="docutils literal notranslate"><span class="pre">sgx.max_threads</span> <span class="pre">=</span> <span class="pre">4</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sgx.max_threads</span> <span class="pre">=</span> <span class="pre">8</span></code>, <code class="docutils literal notranslate"><span class="pre">sgx.max_threads</span> <span class="pre">=</span> <span class="pre">16</span></code>, and so on.</p>
+<p>Do not forget about the cost of software encryption! Gramine transparently
+encrypts many means of communication:</p>
+<ol class="arabic simple">
+<li><p>Inter-Process Communication (IPC) is encrypted via TLS-PSK. Regular pipes,
+FIFO pipes, UNIX domain sockets are all transparently encrypted.</p></li>
+<li><p>Files mounted as <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">&quot;encrypted&quot;</span></code> are transparently encrypted/decrypted
+on each file access via SGX SDK Merkle-tree format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fork/vfork/clone</span></code> all require to generate an encrypted checkpoint of the
+whole enclave memory, send it from parent process to the child, and decrypt
+it (all via TLS-PSK).</p></li>
+<li><p>All SGX attestation, RA-TLS, and Secret Provisioning network communication is
+encrypted via TLS. Moreover, attestation depends on the internet speed and
+the remote party, so can also become a bottleneck.</p></li>
+</ol>
+<p>Parsing the manifest can be another source of overhead. If you have a really
+long manifest (several MBs in size), parsing such a manifest may significantly
+deteriorate start-up performance. This is rarely a case, but keep manifests as
+small as possible. Note that this overhead is due to our sub-optimal parser.
+Once Gramine moves to a better manifest parser, this won’t be an issue.</p>
+<p>Finally, recall that by default Gramine doesn’t propagate environment variables
+into the SGX enclave. Thus, environment variables like <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> and
+<code class="docutils literal notranslate"><span class="pre">MKL_NUM_THREADS</span></code> are not visible to the graminized application by default.
+To propagate them into the enclave, either use the insecure manifest option
+<code class="docutils literal notranslate"><span class="pre">loader.insecure__use_host_env</span> <span class="pre">=</span> <span class="pre">true</span></code> (don’t use this in production!) or
+specify them explicitly in the manifest via
+<code class="docutils literal notranslate"><span class="pre">loader.env.OMP_NUM_THREADS</span> <span class="pre">=</span> <span class="pre">&quot;8&quot;</span></code>. Also, it is always better to specify such
+environment variables explicitly because a graminized application may determine
+the number of available CPUs incorrectly.</p>
+</section>
+<section id="profiling-with-perf">
+<span id="perf"></span><h2>Profiling with <code class="docutils literal notranslate"><span class="pre">perf</span></code><a class="headerlink" href="performance.html#profiling-with-perf" title="Permalink to this headline"></a></h2>
+<p>This section describes how to use <a class="reference external" href="https://perf.wiki.kernel.org/index.php/Main_Page">perf</a>, a powerful Linux
+profiling tool.</p>
+<section id="installing-perf-provided-by-your-distribution">
+<h3>Installing <code class="docutils literal notranslate"><span class="pre">perf</span></code> provided by your distribution<a class="headerlink" href="performance.html#installing-perf-provided-by-your-distribution" title="Permalink to this headline"></a></h3>
+<p>Under Ubuntu:</p>
+<ol class="arabic simple">
+<li><p>Install <code class="docutils literal notranslate"><span class="pre">linux-tools-common</span></code>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">perf</span></code>. It will complain about not having a kernel-specific package,
+such as <code class="docutils literal notranslate"><span class="pre">linux-tools-4-15.0-122-generic</span></code>.</p></li>
+<li><p>Install the kernel-specific package.</p></li>
+</ol>
+<p>The above might not work if you have a custom kernel. In that case, you might
+want to use the distribution-provided version anyway (install
+<code class="docutils literal notranslate"><span class="pre">linux-tools-generic</span></code> and use <code class="docutils literal notranslate"><span class="pre">/usr/lib/linux-tools-&lt;VERSION&gt;/perf</span></code>), but it
+might not be fully compatible with your kernel. It might be better to build
+your own.</p>
+<p>You might also want to compile your own <code class="docutils literal notranslate"><span class="pre">perf</span></code> to make use of libraries that
+the default version is not compiled against.</p>
+</section>
+<section id="building-your-own-perf">
+<h3>Building your own <code class="docutils literal notranslate"><span class="pre">perf</span></code><a class="headerlink" href="performance.html#building-your-own-perf" title="Permalink to this headline"></a></h3>
+<ol class="arabic">
+<li><p>Download the kernel: run <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-r</span></code> to check your kernel version, then
+clone the right branch:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--single-branch<span class="w"> </span>--branch<span class="w"> </span>linux-5.4.y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+</pre></div>
+</div>
+</li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">linux/tools/perf</span></code> and run <code class="docutils literal notranslate"><span class="pre">make</span></code>.</p></li>
+<li><p>Check the beginning of the output. It will display warnings about missing
+libraries, and suggest how to install them.</p>
+<p>Install the missing ones, depending on the features you need. You will need
+at least <code class="docutils literal notranslate"><span class="pre">libdw-dev</span></code> and <code class="docutils literal notranslate"><span class="pre">libunwind-dev</span></code> to get proper symbols and stack
+trace. <code class="docutils literal notranslate"><span class="pre">libslang2-dev</span></code> is also nice, as it will enable a terminal UI for
+some commands.</p>
+</li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span></code> again and verify that the necessary features have been
+enabled. (You can also run <code class="docutils literal notranslate"><span class="pre">ldd</span> <span class="pre">perf</span></code> to check which shared libraries it
+uses).</p></li>
+<li><p>Install somewhere, e.g. <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span> <span class="pre">DESTDIR=/usr/local</span></code>.</p></li>
+</ol>
+</section>
+<section id="recording-samples-with-perf-record">
+<h3>Recording samples with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">record</span></code><a class="headerlink" href="performance.html#recording-samples-with-perf-record" title="Permalink to this headline"></a></h3>
+<p>To record (saves <code class="docutils literal notranslate"><span class="pre">perf.data</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>perf<span class="w"> </span>record<span class="w"> </span>gramine-direct<span class="w"> </span>application
+</pre></div>
+</div>
+<p>To view the report for <code class="docutils literal notranslate"><span class="pre">perf.data</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>perf<span class="w"> </span>report
+</pre></div>
+</div>
+<p>This is useful in non-SGX mode. Unfortunately, in SGX mode, it will not account
+correctly for the code inside the enclave.</p>
+<p>Some useful options for recording (<code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">record</span></code>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--call-graph</span> <span class="pre">dwarf</span></code>: collect information about callers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-F</span> <span class="pre">50</span></code>: collect 50 (or any other number) of samples per second,
+can be useful to reduce overhead and file size</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">cpu-clock</span></code>: sample the <code class="docutils literal notranslate"><span class="pre">cpu-clock</span></code> event, which will be triggered also
+inside enclave (as opposed to the default <code class="docutils literal notranslate"><span class="pre">cpu-cycles</span></code> event). Unfortunately
+such events will be counted towards <code class="docutils literal notranslate"><span class="pre">async_exit_pointer</span></code> instead of
+functions executing inside enclave (but see also <a class="reference internal" href="performance.html#sgx-profile"><span class="std std-ref">SGX profiling</span></a>).</p></li>
+</ul>
+<p>Some useful options for displaying the report (<code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span></code>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-children</span></code>: sort based on “self time”, i.e. time spent in a given
+function excluding its children (the default is to sort by total time spent in
+a function).</p></li>
+</ul>
+</section>
+<section id="further-reading">
+<h3>Further reading<a class="headerlink" href="performance.html#further-reading" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://perf.wiki.kernel.org/index.php/Main_Page">Perf Wiki</a></p></li>
+<li><p><a class="reference external" href="http://www.brendangregg.com/perf.html">Linux perf examples - Brendan Gregg</a></p></li>
+<li><p>Man pages: <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">perf</span> <span class="pre">record</span></code>, <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">perf</span> <span class="pre">report</span></code> etc.</p></li>
+</ul>
+</section>
+</section>
+<section id="sgx-profiling">
+<span id="sgx-profile"></span><h2>SGX profiling<a class="headerlink" href="performance.html#sgx-profiling" title="Permalink to this headline"></a></h2>
+<p>There is support for profiling the code inside the SGX enclave. Here is how to
+use it:</p>
+<ol class="arabic">
+<li><p>Compile Gramine with <code class="docutils literal notranslate"><span class="pre">-Dsgx=enabled</span> <span class="pre">--buildtype=debugoptimized</span></code>.</p>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">--buildtype=debug</span></code>, but <code class="docutils literal notranslate"><span class="pre">--buildtype=debugoptimized</span></code>
+(optimizations enabled) makes Gramine performance more similar to release
+build.</p>
+</li>
+<li><p>Profiling can be done only on debug enclaves. Add <code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">true</span></code> to
+manifest.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">sgx.profile.enable</span> <span class="pre">=</span> <span class="pre">&quot;main&quot;</span></code> to manifest (to collect data for the main
+process), or <code class="docutils literal notranslate"><span class="pre">sgx.profile.enable</span> <span class="pre">=</span> <span class="pre">&quot;all&quot;</span></code> (to collect data for all
+processes).</p></li>
+<li><p>(Add <code class="docutils literal notranslate"><span class="pre">sgx.profile.with_stack</span> <span class="pre">=</span> <span class="pre">true</span></code> for call chain information.)</p></li>
+<li><p>Run your application. It should say something like <code class="docutils literal notranslate"><span class="pre">Profile</span> <span class="pre">data</span> <span class="pre">written</span> <span class="pre">to</span>
+<span class="pre">sgx-perf.data</span></code> on process exit (in case of <code class="docutils literal notranslate"><span class="pre">sgx.profile.enable</span> <span class="pre">=</span> <span class="pre">&quot;all&quot;</span></code>,
+multiple files will be written).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span> <span class="pre">-i</span> <span class="pre">&lt;data</span> <span class="pre">file&gt;</span></code> (see <a class="reference internal" href="performance.html#perf"><span class="std std-ref">Profiling with perf</span></a> above).</p></li>
+</ol>
+<p>Some applications might run for a long time or forever (e.g. Redis), generating
+too much perf data. In such cases, user may want to terminate the application
+prematurely. Killing the application abruptly via SIGKILL will result in incorrect
+perf data. Instead, add <code class="docutils literal notranslate"><span class="pre">sys.enable_sigterm_injection</span> <span class="pre">=</span> <span class="pre">true</span></code> to manifest and
+terminate the application using command <code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">&lt;pid&gt;</span></code> (i.e. send SIGTERM).</p>
+<p><em>Note</em>: The accuracy of this tool is unclear (though we had positive experiences
+using the tool so far). The SGX profiling works by measuring the value of
+instruction pointer on each asynchronous enclave exit (AEX), which happen on
+Linux scheduler interrupts, as well as other events such as page faults. While
+we attempt to measure time (and not only count occurences), the results might be
+inaccurate.</p>
+<section id="ocall-profiling">
+<span id="sgx-profile-ocall"></span><h3>OCALL profiling<a class="headerlink" href="performance.html#ocall-profiling" title="Permalink to this headline"></a></h3>
+<p>It’s also possible to discover what OCALLs are being executed, which should help
+attribute the EEXIT numbers given by <code class="docutils literal notranslate"><span class="pre">sgx.enable_stats</span></code>. There are two ways to
+do that:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">sgx.profile.mode</span> <span class="pre">=</span> <span class="pre">&quot;ocall_inner&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">sgx.profile.with_stack</span> <span class="pre">=</span>
+<span class="pre">1</span></code>. This will give you a report on what enclave code is causing the OCALLs
+(best viewed with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span> <span class="pre">--no-children</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">with_stack</span></code> option is important: without it, the report will only show
+the last function before enclave exit, which is usually the same regardless of
+which OCALL we’re executing.</p>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">sgx.profile.mode</span> <span class="pre">=</span> <span class="pre">&quot;ocall_outer&quot;</span></code>. This will give you a report on what
+outer PAL code is handling the OCALLs (<code class="docutils literal notranslate"><span class="pre">sgx_ocall_open</span></code>, <code class="docutils literal notranslate"><span class="pre">sgx_ocall_write</span></code>
+etc.)</p></li>
+</ul>
+<p><strong>Warning</strong>: The report for OCALL modes should be interpreted in term of <em>number
+of OCALLs</em>, not time spent in them. The profiler records a sample every time an
+OCALL is executed, and <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span></code> displays percentages based on the number
+of samples.</p>
+</section>
+</section>
+<section id="profiling-sgx-hotspots-with-intel-vtune-profiler">
+<span id="vtune-sgx-profiling"></span><h2>Profiling SGX hotspots with Intel VTune Profiler<a class="headerlink" href="performance.html#profiling-sgx-hotspots-with-intel-vtune-profiler" title="Permalink to this headline"></a></h2>
+<p>This section describes how to use <a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/introduction.html">VTune</a>
+profiler to find SGX hotspots.</p>
+<section id="installing-vtune">
+<h3>Installing VTune<a class="headerlink" href="performance.html#installing-vtune" title="Permalink to this headline"></a></h3>
+<p>Please download and install Intel VTune Profiler from <a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html">here</a>.</p>
+</section>
+<section id="collecting-sgx-hotspots-and-viewing-the-report">
+<h3>Collecting SGX hotspots and viewing the report<a class="headerlink" href="performance.html#collecting-sgx-hotspots-and-viewing-the-report" title="Permalink to this headline"></a></h3>
+<ol class="arabic">
+<li><p>Compile Gramine with
+<code class="docutils literal notranslate"><span class="pre">-Dvtune=enabled</span> <span class="pre">-Dvtune_sdk_path=&lt;VTune</span> <span class="pre">SDK</span> <span class="pre">install</span> <span class="pre">path&gt;</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">vtune_sdk_path</span></code> is not provided, Gramine will use the default VTune
+installation path.</p>
+</li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">sgx.vtune_profile</span> <span class="pre">=</span> <span class="pre">true</span></code> and <code class="docutils literal notranslate"><span class="pre">sgx.debug</span> <span class="pre">=</span> <span class="pre">true</span></code> to the manifest.</p></li>
+<li><p>Run your application under VTune.</p>
+<p><code class="docutils literal notranslate"><span class="pre">vtune</span> <span class="pre">-collect</span> <span class="pre">sgx-hotspots</span> <span class="pre">-result-dir</span> <span class="pre">results</span> <span class="pre">--</span> <span class="pre">gramine-sgx</span> <span class="pre">&lt;workload&gt;</span></code></p>
+<p>It will output the data collected to a directory <code class="docutils literal notranslate"><span class="pre">results</span></code>.</p>
+</li>
+<li><p>To view the report, run
+<code class="docutils literal notranslate"><span class="pre">vtune</span> <span class="pre">-report</span> <span class="pre">hotspots</span> <span class="pre">-r</span> <span class="pre">&lt;vtune</span> <span class="pre">data</span> <span class="pre">collection</span> <span class="pre">output</span> <span class="pre">directory&gt;</span></code> or use
+Intel VTune Profiler GUI application.</p></li>
+</ol>
+</section>
+</section>
+<section id="other-useful-tools-for-profiling">
+<h2>Other useful tools for profiling<a class="headerlink" href="performance.html#other-useful-tools-for-profiling" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">strace</span> <span class="pre">-c</span></code> will display Linux system call statistics</p></li>
+<li><p>Valgrind (with <a class="reference external" href="https://valgrind.org/docs/manual/cl-manual.html">Callgrind</a>) unfortunately doesn’t
+work, see <a class="reference external" href="https://github.com/gramineproject/graphene/issues/1919">issue #1919</a> for discussion.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="attestation.html" class="btn btn-neutral float-left" title="Attestation and Secret Provisioning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="devel/building.html" class="btn btn-neutral float-right" title="Build and install Gramine from source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

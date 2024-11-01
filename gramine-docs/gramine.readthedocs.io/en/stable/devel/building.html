@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build and install Gramine from source &mdash; Gramine  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/gramine.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Debugging Gramine with GDB" href="debugging.html" />
+    <link rel="prev" title="Performance tuning and analysis" href="../performance.html" /> 
+
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/Documentation/", "features": {"docsearch_disabled": false}, "global_analytics_code": null, "language": "en", "page": "devel/building", "programming_language": "c", "project": "gramine", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {"gramine-contrib": "https://gramine.readthedocs.io/projects/contrib/en/latest/", "gramine-gsc": "https://gramine.readthedocs.io/projects/gsc/en/latest/"}, "theme": "sphinx_rtd_theme", "user_analytics_code": "", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="../../../_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="gramine" /><meta name="readthedocs-version-slug" content="stable" /><meta name="readthedocs-resolver-filename" content="/devel/building.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gramine_logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                stable
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Protect your container</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gsc-installation.html">Gramine Shielded Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../curated-installation.html">Ready-made SGX images</a></li>
+</ul>
+<p><span class="caption-text">Protect your application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Gramine installation options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run-sample-application.html">Run a sample application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials-index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scag-installation.html">Scaffolding for Gramine</a></li>
+</ul>
+<p><span class="caption-text">Configure Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-setup.html">Set up the host environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifest-syntax.html">Manifest syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attestation.html">Attestation and Secret Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance tuning and analysis</a></li>
+</ul>
+<p><span class="caption-text">Develop Gramine</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="building.html#">Build and install Gramine from source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="building.html#install-dependencies">Install dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="building.html#common-dependencies-1">Common dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="building.html#dependencies-for-sgx">Dependencies for SGX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="building.html#required-packages">1. Required packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="building.html#install-intel-sgx-sdk-psw">2. Install Intel SGX SDK/PSW</a></li>
+<li class="toctree-l4"><a class="reference internal" href="building.html#install-dependencies-for-dcap">3. Install dependencies for DCAP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="building.html#build-gramine">Build Gramine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="building.html#installation-prefix">Installation prefix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="building.html#additional-build-options">Additional build options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="building.html#prepare-a-signing-key">Prepare a signing key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html#advanced-building-without-network-access">Advanced: building without network access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building.html#legacy-kernel-and-hardware-1">Legacy kernel and hardware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="building.html#install-linux-kernel-with-patched-fsgsbase">1. Install Linux kernel with patched FSGSBASE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="building.html#install-the-intel-sgx-driver">2. Install the Intel SGX driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Gramine with GDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packaging.html">Packaging and distributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/api.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python/writing-sgx-sign-plugins.html">Writing plugins for signing SGX enclaves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new-syscall.html">Implementing new system call</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libos/libos-init.html">LibOS documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pal/host-abi.html">PAL host ABI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manpages/index.html">Manual pages</a></li>
+</ul>
+<p><span class="caption-text">Contribute to Gramine</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="onboarding.html">Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding-style.html">Coding style guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto-doc.html">How to write documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="charter.html">Technical Charter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DCO/index.html">Developer Certificate of Origin</a></li>
+</ul>
+<p><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Gramine features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../management-team.html">Management Team (Maintainers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gramine-users.html">Users of Gramine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgx-intro.html">Introduction to SGX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gramine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Build and install Gramine from source</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/gramineproject/gramine/blob/a971e30f3430b4b8079ec42f5d035ced68130bdc/Documentation/devel/building.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="build-and-install-gramine-from-source">
+<h1>Build and install Gramine from source<a class="headerlink" href="building.html#build-and-install-gramine-from-source" title="Permalink to this headline"></a></h1>
+<p>Gramine consists of several components:</p>
+<ul class="simple">
+<li><p>The Library OS itself (a shared library named <code class="docutils literal notranslate"><span class="pre">libsysdb.so</span></code>)</p></li>
+<li><p>The Platform Adaptation Layer, or PAL (a shared library named <code class="docutils literal notranslate"><span class="pre">libpal.so</span></code>)</p></li>
+<li><p>A patched C Library (shared library <code class="docutils literal notranslate"><span class="pre">libc.so</span></code> and possibly others).
+Currently there are two options: musl and GNU C Library (glibc).</p></li>
+</ul>
+<p>Building Gramine implies building at least the first two components. The
+build of the patched C library is optional but highly recommended for
+performance reasons. You can choose at most one of the libcs available. By
+default glibc is built.</p>
+<p>Gramine currently only works on the x86_64 architecture. Gramine is currently
+tested on Ubuntu 20.04/22.04, along with Linux kernel version 5.x. We recommend
+building and installing Gramine on Ubuntu with Linux kernel version 5.11 or
+higher. If you find problems with Gramine on other Linux distributions, contact
+us with a detailed <a class="reference external" href="https://github.com/gramineproject/gramine/issues/new/choose">bug report</a>.</p>
+<section id="install-dependencies">
+<h2>Install dependencies<a class="headerlink" href="building.html#install-dependencies" title="Permalink to this headline"></a></h2>
+<section id="common-dependencies-1">
+<span id="common-dependencies"></span><h3>Common dependencies<a class="headerlink" href="building.html#common-dependencies-1" title="Permalink to this headline"></a></h3>
+<p>Run the following command on Ubuntu LTS to install dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>autoconf<span class="w"> </span>bison<span class="w"> </span>gawk<span class="w"> </span>nasm<span class="w"> </span>ninja-build<span class="w"> </span>pkg-config<span class="w"> </span>python3<span class="w"> </span>python3-click<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>python3-jinja2<span class="w"> </span>python3-pip<span class="w"> </span>python3-pyelftools<span class="w"> </span>wget
+sudo<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;meson&gt;=0.56&#39;</span><span class="w"> </span><span class="s1">&#39;tomli&gt;=1.1.0&#39;</span><span class="w"> </span><span class="s1">&#39;tomli-w&gt;=0.4.0&#39;</span>
+</pre></div>
+</div>
+<p>You can also install Meson, python3-tomli and python3-tomli-w from apt instead
+of pip, but only if your distro is new enough to have Meson &gt;= 0.56,
+python3-tomli &gt;= 1.1.0 and python3-tomli-w &gt;= 0.4.0 (e.g. Ubuntu 22.04 or Debian
+11 with <code class="docutils literal notranslate"><span class="pre">bullseye-backports</span></code> repo enabled).</p>
+<p>For GDB support and to run all tests locally you also need to install:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libunwind8<span class="w"> </span>musl-tools<span class="w"> </span>python3-pytest
+</pre></div>
+</div>
+<p>If you want to build the patched <code class="docutils literal notranslate"><span class="pre">libgomp</span></code> library, you also need to install
+GCC’s build dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libgmp-dev<span class="w"> </span>libmpfr-dev<span class="w"> </span>libmpc-dev<span class="w"> </span>libisl-dev
+</pre></div>
+</div>
+</section>
+<section id="dependencies-for-sgx">
+<h3>Dependencies for SGX<a class="headerlink" href="building.html#dependencies-for-sgx" title="Permalink to this headline"></a></h3>
+<p>The build of Gramine with SGX support requires CPU with <a class="reference internal" href="../sgx-intro.html#term-FLC"><span class="xref std std-term">Flexible Launch
+Control (FLC)</span></a> feature and the corresponding SGX software infrastructure to
+be installed on the system. We require Linux kernel with SGX driver built in
+(<code class="docutils literal notranslate"><span class="pre">CONFIG_X86_SGX=y</span></code>, which is the case for most of available distribution
+kernels), which is available since version 5.11 (and also as backported patches
+to older kernels in certain distros).</p>
+<p>Kernel version can be checked using the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uname<span class="w"> </span>-r
+</pre></div>
+</div>
+<p>If your current kernel version is lower than 5.11, then you have two options:</p>
+<ul class="simple">
+<li><p>Update the Linux kernel to at least 5.11 in your OS distro. If you use Ubuntu,
+you can follow <a class="reference external" href="https://itsfoss.com/upgrade-linux-kernel-ubuntu/">this tutorial</a>.</p></li>
+<li><p>Install out-of-tree driver and use our provided patches to the Linux kernel
+version 5.4. See section <a class="reference internal" href="building.html#legacy-kernel-and-hardware"><span class="std std-ref">Legacy kernel and hardware</span></a> for the exact
+steps.</p></li>
+</ul>
+<section id="required-packages">
+<h4>1. Required packages<a class="headerlink" href="building.html#required-packages" title="Permalink to this headline"></a></h4>
+<p>Run the following commands on Ubuntu to install SGX-related dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libprotobuf-c-dev<span class="w"> </span>protobuf-c-compiler<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>protobuf-compiler<span class="w"> </span>python3-cryptography<span class="w"> </span>python3-pip<span class="w"> </span>python3-protobuf
+</pre></div>
+</div>
+</section>
+<section id="install-intel-sgx-sdk-psw">
+<h4>2. Install Intel SGX SDK/PSW<a class="headerlink" href="building.html#install-intel-sgx-sdk-psw" title="Permalink to this headline"></a></h4>
+<p>Follow the installation instructions from the latest version of “Intel SGX
+Software Installation Guide”:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf">https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf</a></p></li>
+</ul>
+<p>In general, various documentation for Intel SGX SDK/PSW can be found here:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/">https://download.01.org/intel-sgx/latest/dcap-latest/linux/docs/</a></p></li>
+<li><p><a class="reference external" href="https://download.01.org/intel-sgx/latest/linux-latest/docs/">https://download.01.org/intel-sgx/latest/linux-latest/docs/</a></p></li>
+</ul>
+<p>Additional information, package descriptions, etc. can be found in the official
+“Intel SGX for Linux” GitHub repo:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/intel/linux-sgx">https://github.com/intel/linux-sgx</a></p></li>
+</ul>
+</section>
+<section id="install-dependencies-for-dcap">
+<h4>3. Install dependencies for DCAP<a class="headerlink" href="building.html#install-dependencies-for-dcap" title="Permalink to this headline"></a></h4>
+<p>If you plan on enabling <code class="docutils literal notranslate"><span class="pre">-Ddcap</span></code> option, you need to install
+<code class="docutils literal notranslate"><span class="pre">libsgx-dcap-quote-verify</span></code> package (and its development counterpart):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Below commands work on Ubuntu 22.04 LTS and 20.04 LTS</span>
+sudo<span class="w"> </span>curl<span class="w"> </span>-fsSLo<span class="w"> </span>/usr/share/keyrings/intel-sgx-deb.asc<span class="w"> </span>https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/intel-sgx-deb.asc] https://download.01.org/intel-sgx/sgx_repo/ubuntu </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/intel-sgx.list
+
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libsgx-dcap-quote-verify-dev
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="build-gramine">
+<h2>Build Gramine<a class="headerlink" href="building.html#build-gramine" title="Permalink to this headline"></a></h2>
+<p>To build Gramine, you need to first set up the build directory. In the root
+directory of Gramine repo, run the following command (recall that “direct” means
+non-SGX version):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>meson<span class="w"> </span>setup<span class="w"> </span>build/<span class="w"> </span>--buildtype<span class="o">=</span>release<span class="w"> </span>-Ddirect<span class="o">=</span>enabled<span class="w"> </span>-Dsgx<span class="o">=</span>enabled<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-Dsgx_driver<span class="o">=(</span>upstream<span class="p">|</span>oot<span class="o">)</span><span class="w"> </span>-Dsgx_driver_include_path<span class="o">=</span>&lt;path-to-sgx-driver-sources&gt;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you plan to contribute changes to Gramine, then you should always build it
+with <code class="docutils literal notranslate"><span class="pre">--werror</span></code> added to the invocation above.</p>
+</aside>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you invoked <code class="docutils literal notranslate"><span class="pre">meson</span> <span class="pre">setup</span></code> once, the next invocation of this command will
+<em>not</em> have any effect. Instead, to change the build configuration, use
+<code class="docutils literal notranslate"><span class="pre">meson</span> <span class="pre">configure</span></code>. For example, if you built with <code class="docutils literal notranslate"><span class="pre">meson</span> <span class="pre">setup</span> <span class="pre">build/</span>
+<span class="pre">-Dsgx=disabled</span></code> first and now want to enable SGX, type <code class="docutils literal notranslate"><span class="pre">meson</span> <span class="pre">configure</span>
+<span class="pre">build/</span> <span class="pre">-Dsgx=enabled</span></code>.</p>
+</aside>
+<p>Set <code class="docutils literal notranslate"><span class="pre">-Ddirect=</span></code> and <code class="docutils literal notranslate"><span class="pre">-Dsgx=</span></code> options to <code class="docutils literal notranslate"><span class="pre">enabled</span></code> or <code class="docutils literal notranslate"><span class="pre">disabled</span></code>
+according to whether you built the corresponding PAL (the snippet assumes you
+built both).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-Dsgx_driver</span></code> parameter controls which SGX driver to use:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">upstream</span></code> (default) for upstreamed in-kernel driver (mainline Linux kernel
+5.11+),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oot</span></code> for non-DCAP, out-of-tree version of the driver.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">-Dsgx_driver_include_path</span></code> parameter must point to the absolute path
+where the SGX driver was downloaded or installed in the previous step. For
+example, for the OOT driver installed at the default path, you can specify
+<code class="docutils literal notranslate"><span class="pre">-Dsgx_driver_include_path=&quot;/opt/intel/linux-sgx-driver&quot;</span></code>. If this parameter
+is omitted, Gramine’s build system will try to determine the right path, so,
+it’s usually not needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have a DCAP driver installed on the system (e.g. on 18.04 Azure),
+then you can still use the upstream driver and specify the <a class="reference external" href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/arch/x86/include/uapi/asm/sgx.h?h=v5.11">upstream header
+file</a>.
+This is because the DCAP and the upstream drivers have compatible APIs.</p>
+</aside>
+<p>Set <code class="docutils literal notranslate"><span class="pre">-Dlibc</span></code> option to <code class="docutils literal notranslate"><span class="pre">musl</span></code> if you wish to build musl instead of glibc
+(which is built by default), or to <code class="docutils literal notranslate"><span class="pre">none</span></code> if you do not want to build any
+libc.</p>
+<p>Then, build and install Gramine by running the following:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ninja<span class="w"> </span>-C<span class="w"> </span>build/
+sudo<span class="w"> </span>ninja<span class="w"> </span>-C<span class="w"> </span>build/<span class="w"> </span>install
+</pre></div>
+</div>
+<section id="installation-prefix">
+<h3>Installation prefix<a class="headerlink" href="building.html#installation-prefix" title="Permalink to this headline"></a></h3>
+<p>By default, Meson uses installation prefix <code class="file docutils literal notranslate"><span class="pre">/usr/local</span></code>.</p>
+<ul class="simple">
+<li><p>When installing from sources, Gramine executables are placed under
+<code class="file docutils literal notranslate"><span class="pre">/usr/local/bin</span></code>. Some Linux distributions (notably CentOS) do not
+search for executables under this path. If your system reports that Gramine
+programs can not be found, you might need to edit your configuration files so
+that <code class="file docutils literal notranslate"><span class="pre">/usr/local/bin</span></code> is in your path (in <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> environment
+variable). Alternatively, you can modify the installation prefix (e.g. to
+<code class="file docutils literal notranslate"><span class="pre">/usr</span></code>) or the executable directory (e.g. <strong class="command">meson
+--bindir=/usr/bin</strong>).</p></li>
+<li><p>When installing from sources, Gramine Python modules are placed under
+<code class="file docutils literal notranslate"><span class="pre">/usr/local/lib/python3.xyz/site-packages</span></code> (or under
+<code class="file docutils literal notranslate"><span class="pre">/usr/local/lib/python3.xyz/dist-packages</span></code> on Debian-like distros). Some
+Linux distributions (notably Alpine) do not search for Python modules under
+this path. If your system fails to find Gramine Python modules, you might need
+to adjust <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable. Alternatively, you can modify
+the installation prefix, e.g. to <code class="file docutils literal notranslate"><span class="pre">/usr</span></code>.</p></li>
+</ul>
+<p>To install into some other place than <code class="file docutils literal notranslate"><span class="pre">/usr/local</span></code>, use <strong class="command">meson
+--prefix=&lt;prefix&gt;</strong>. Note that if you chose something else than <code class="file docutils literal notranslate"><span class="pre">/usr</span></code>
+then for things to work, you probably need to adjust several environment
+variables:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>What to add</p></th>
+<th class="head"><p>Read more</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">$PATH</span></code></p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">&lt;prefix&gt;/bin</span></code></p></td>
+<td><p><a class="reference external" href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html#tag_08_03">POSIX.1-2018 8.3</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">$PYTHONPATH</span></code></p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">&lt;prefix&gt;/lib/python&lt;version&gt;/site-packages</span></code></p></td>
+<td><p><em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/python3(1)">python3(1)</a></em></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">$PKG_CONFIG_PATH</span></code></p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">&lt;prefix&gt;/&lt;libdir&gt;/pkgconfig</span></code></p></td>
+<td><p><em class="manpage"><a class="manpage reference external" href="https://manpages.debian.org/pkg-config(1)">pkg-config(1)</a></em></p></td>
+</tr>
+</tbody>
+</table>
+<p>This very much depends on a particular distribution, so please consult
+relevant documentation provided by your distro.</p>
+</section>
+<section id="additional-build-options">
+<h3>Additional build options<a class="headerlink" href="building.html#additional-build-options" title="Permalink to this headline"></a></h3>
+<ul>
+<li><p>To build test binaries, run <strong class="command">meson -Dtests=enabled</strong>. This is
+necessary if you will be running regression tests. See
+<a class="reference internal" href="contributing.html"><span class="doc">Contributing to Gramine</span></a> for details.</p></li>
+<li><p>In order to run SGX tools with DCAP version of RA-TLS library
+(<code class="docutils literal notranslate"><span class="pre">ra_tls_verify_dcap.so</span></code>), build with <strong class="command">meson -Ddcap=enabled</strong> option.
+See <a class="reference external" href="https://github.com/gramineproject/gramine/blob/master/CI-Examples/ra-tls-mbedtls/README.md">RA-TLS example’s README</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>EPID version of RA-TLS library (<code class="docutils literal notranslate"><span class="pre">ra_tls_verify_epid.so</span></code>) is built by
+default.</p>
+</aside>
+</li>
+<li><p>To create a debug build, run <strong class="command">meson --buildtype=debug</strong>. This adds
+debug symbols in all Gramine components, builds them without optimizations,
+and enables detailed debug logs in Gramine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Debug builds are not suitable for production.</p>
+</aside>
+</li>
+<li><p>To create a debug build that does not disable optimizations, run
+<strong class="command">meson --buildtype=debugoptimized</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Debug builds are not suitable for production.</p>
+</aside>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is generally <em>not</em> recommended, because optimized builds lose some
+debugging information, and may cause GDB to display confusing tracebacks or
+garbage data. You should use <code class="docutils literal notranslate"><span class="pre">--buildtype=debugoptimized</span></code> only if you
+have a good reason (e.g. for profiling).</p>
+</aside>
+</li>
+<li><p>To compile with undefined behavior sanitization (UBSan), run
+<strong class="command">meson -Dubsan=enabled</strong>. This causes Gramine to abort when undefined
+behavior is detected (and display information about source line). UBSan can be
+enabled for both debug and non-debug builds.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>UBSan builds (even non-debug) are not suitable for production.</p>
+</aside>
+</li>
+<li><p>To compile with address sanitization (ASan), run
+<strong class="command">meson -Dasan=enabled</strong>. In this mode, Gramine will attempt to detect
+invalid memory accesses. ASan can be enabled for both debug and non-debug
+builds.</p>
+<p>ASan is supported only when compiling with Clang (before building, set the
+appropriate environment variables with <strong class="command">export CC=clang CXX=clang++
+AS=clang</strong>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>ASan builds (even non-debug) are not suitable for production.</p>
+</aside>
+</li>
+<li><p>To build with <code class="docutils literal notranslate"><span class="pre">-Werror</span></code>, run <strong class="command">meson --werror</strong>.</p></li>
+<li><p>To compile a patched version of GCC’s OpenMP library (<code class="docutils literal notranslate"><span class="pre">libgomp</span></code>), install
+GCC’s build prerequisites (see <a class="reference internal" href="building.html#common-dependencies"><span class="std std-ref">Common dependencies</span></a>), and use
+<strong class="command">meson -Dlibgomp=enabled</strong>.</p>
+<p>The patched version has significantly better performance under SGX
+(<code class="docutils literal notranslate"><span class="pre">libgomp</span></code> uses inline <code class="docutils literal notranslate"><span class="pre">SYSCALL</span></code> instructions for futex calls; our patch
+replaces them with a jump to Gramine LibOS, same as for <code class="docutils literal notranslate"><span class="pre">glibc</span></code>).</p>
+<p>Building the patched <code class="docutils literal notranslate"><span class="pre">libgomp</span></code> library is disabled by default because it can
+take a long time: unfortunately, the only supported way of building
+<code class="docutils literal notranslate"><span class="pre">libgomp</span></code> is as part of a complete GCC build.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="prepare-a-signing-key">
+<h2>Prepare a signing key<a class="headerlink" href="building.html#prepare-a-signing-key" title="Permalink to this headline"></a></h2>
+<p>These instructions are only required for systems using Intel SGX that have not
+already created a signing key.</p>
+<p>The following command generates an RSA 3072 key suitable for signing SGX
+enclaves and stores it in <code class="file docutils literal notranslate"><em><span class="pre">HOME</span></em><span class="pre">/.config/gramine/enclave-key.pem</span></code>.
+Protect this key and do not disclose it to anyone:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gramine-sgx-gen-private-key
+</pre></div>
+</div>
+<p>After signing the application’s manifest, users may ship the application and
+Gramine binaries, along with an SGX-specific manifest (<code class="docutils literal notranslate"><span class="pre">.manifest.sgx</span></code>
+extension), the SIGSTRUCT signature file (<code class="docutils literal notranslate"><span class="pre">.sig</span></code> extension), and the
+EINITTOKEN file (<code class="docutils literal notranslate"><span class="pre">.token</span></code> extension) to execute on another SGX-enabled host.</p>
+</section>
+<section id="advanced-building-without-network-access">
+<h2>Advanced: building without network access<a class="headerlink" href="building.html#advanced-building-without-network-access" title="Permalink to this headline"></a></h2>
+<p>First, before you cut your network access, you need to download (or otherwise
+obtain) a checkout of Gramine repository and all wrapped subprojects’
+distfiles. The files <code class="file docutils literal notranslate"><span class="pre">subprojects/</span><em><span class="pre">*</span></em><span class="pre">.wrap</span></code> describe those downloads and
+their respective SHA-256 checksums. You can use <strong class="command">meson subprojects
+download</strong> to download and check them automatically. Otherwise, you should put
+all those distfiles into <code class="file docutils literal notranslate"><span class="pre">subprojects/packagecache</span></code> directory. Pay
+attention to expected filenames as specified in wrap files. (You don’t need to
+checksum them separately, Meson will do that for you later if they’re mismatched
+or corrupted).</p>
+<p>Alternatively, you can prepare a “dist” tarball using <strong class="command">meson dist</strong>
+command, which apart from Gramine code will contain all wrapped subprojects and
+also git submodules. For this you need to create a dummy builddir using
+<strong class="command">meson setup</strong> command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>meson<span class="w"> </span>setup<span class="w"> </span>build-dist/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-Ddirect<span class="o">=</span>disabled<span class="w"> </span>-Dsgx<span class="o">=</span>disabled<span class="w"> </span>-Dskeleton<span class="o">=</span>enabled<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-Dlibc<span class="o">=</span>glibc<span class="w"> </span>-Dlibgomp<span class="o">=</span>enabled
+meson<span class="w"> </span>dist<span class="w"> </span>-C<span class="w"> </span>build-dist/<span class="w"> </span>--no-tests<span class="w"> </span>--include-subprojects<span class="w"> </span>--formats<span class="o">=</span>gztar
+</pre></div>
+</div>
+<p>The options specified with <code class="docutils literal notranslate"><span class="pre">-D</span></code> (especially <code class="docutils literal notranslate"><span class="pre">-Dlibc</span></code> and <code class="docutils literal notranslate"><span class="pre">-Dlibgomp</span></code>) are
+important, because they determine which subprojects will be included in the
+tarball. They need to match what you intend to build. The command
+<strong class="command">meson dist</strong> still needs network access, because it downloads
+subprojects and checks out git submodules. The tarballs are located in
+<code class="file docutils literal notranslate"><span class="pre">build-dist/meson-dist</span></code>. You can adjust <code class="docutils literal notranslate"><span class="pre">--formats</span></code> option to your
+needs.</p>
+<p>You can now sever your network connection:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>unshare<span class="w"> </span>-n<span class="w"> </span>su<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>If you build from dist tarball, unpack it and <strong class="command">cd</strong> to the main
+directory. If not, go to the repository checkout where you’ve downloaded
+<code class="file docutils literal notranslate"><span class="pre">subproject/packagecache</span></code>. In either case, you can now <strong class="command">meson
+setup</strong> your build directory with the switch <code class="docutils literal notranslate"><span class="pre">--wrap-mode=nodownload</span></code>, which
+prevents Meson from downloading subprojects. Those subprojects should already be
+downloaded and if you didn’t <strong class="command">unshare -n</strong>, it prevents a mistake.
+Proceed with compiling and installing as usual.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>meson<span class="w"> </span>setup<span class="w"> </span>build/<span class="w"> </span>--prefix<span class="o">=</span>/usr<span class="w"> </span>--wrap-mode<span class="o">=</span>nodownload<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-Ddirect<span class="o">=</span>enabled<span class="w"> </span>-Dsgx<span class="o">=</span>enabled<span class="w"> </span>-Dsgx_driver<span class="o">=</span>upstream
+meson<span class="w"> </span>compile<span class="w"> </span>-C<span class="w"> </span>build/
+meson<span class="w"> </span>install<span class="w"> </span>-C<span class="w"> </span>build/
+</pre></div>
+</div>
+</section>
+<section id="legacy-kernel-and-hardware-1">
+<span id="legacy-kernel-and-hardware"></span><h2>Legacy kernel and hardware<a class="headerlink" href="building.html#legacy-kernel-and-hardware-1" title="Permalink to this headline"></a></h2>
+<p>Although we recommend kernel version 5.11 or later, Gramine can be run on older
+kernels with out-of-tree SGX driver. OOT driver is also the only possibility to
+run Gramine on non-FLC hardware. In this configuration, we require kernel at
+least 5.4, and for kernels between 5.4 (inclusive) and 5.9 (exclusive) we
+additionally require FSGSBASE patchset (see below).</p>
+<p>Beware that some enterprise distributions provide kernels that report some old
+version, but actually provide upstream SGX driver that has been backported (like
+RHEL and derivatives since version 8, which has nominally kernel 4.18). If you
+have one of those enterprise kernels, this section does not apply. If in doubt,
+check kernel’s <code class="docutils literal notranslate"><span class="pre">.config</span></code> and consult your distro documentation.</p>
+<section id="install-linux-kernel-with-patched-fsgsbase">
+<h3>1. Install Linux kernel with patched FSGSBASE<a class="headerlink" href="building.html#install-linux-kernel-with-patched-fsgsbase" title="Permalink to this headline"></a></h3>
+<p>FSGSBASE is a feature in recent processors which allows direct access to the FS
+and GS segment base addresses. For more information about FSGSBASE and its
+benefits, see <a class="reference external" href="https://lwn.net/Articles/821719">this discussion</a>.</p>
+<p>FSGSBASE patchset was merged in Linux kernel version 5.9, so if your kernel
+version is 5.9 or higher, then the FSGSBASE feature is already supported and you
+can skip this step. For older kernels it is available as <a class="reference external" href="https://github.com/oscarlab/graphene-sgx-driver/tree/master/fsgsbase_patches">separate patches</a>.
+(Note that Gramine was prevously called <em>Graphene</em> and was hosted under
+a different organization, hence the name of the linked repository.)</p>
+<p>The following instructions to patch and compile a Linux kernel with FSGSBASE
+support below are written around Ubuntu 18.04 LTS (Bionic Beaver) with a Linux
+5.4 LTS stable kernel but can be adapted for other distros as necessary. These
+instructions ensure that the resulting kernel has FSGSBASE support.</p>
+<ol class="arabic">
+<li><p>Clone the repository with patches:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/oscarlab/graphene-sgx-driver
+</pre></div>
+</div>
+</li>
+<li><p>Setup a build environment for kernel development following <a class="reference external" href="https://wiki.ubuntu.com/KernelTeam/GitKernelBuild">the instructions
+in the Ubuntu wiki</a>.
+Clone Linux version 5.4 via:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--single-branch<span class="w"> </span>--branch<span class="w"> </span>linux-5.4.y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+<span class="nb">cd</span><span class="w"> </span>linux
+</pre></div>
+</div>
+</li>
+<li><p>Apply the provided FSGSBASE patches to the kernel source tree:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>am<span class="w"> </span>&lt;graphene-sgx-driver&gt;/fsgsbase_patches/*.patch
+</pre></div>
+</div>
+<p>The conversation regarding this patchset can be found in the kernel mailing
+list archives <a class="reference external" href="https://lore.kernel.org/lkml/20200528201402.1708239-1-sashal&#64;kernel.org">here</a>.</p>
+</li>
+<li><p>Build and install the kernel following <a class="reference external" href="https://wiki.ubuntu.com/KernelTeam/GitKernelBuild">the instructions in the Ubuntu wiki</a>.</p></li>
+<li><p>After rebooting, verify the patched kernel is the one that has been booted
+and is running:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uname<span class="w"> </span>-r
+</pre></div>
+</div>
+</li>
+<li><p>Also verify that the patched kernel supports FSGSBASE (the below command
+must return that bit 1 is set):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Linux kernel doesn&#39;t support FSGSBASE: patch or use higher version!</span>
+$<span class="w"> </span><span class="nv">LD_SHOW_AUXV</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>/bin/true<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>AT_HWCAP2
+AT_HWCAP2:<span class="w">       </span>0x0
+
+<span class="c1"># Linux kernel supports FSGSBASE (example where only bit 1 is set)</span>
+$<span class="w"> </span><span class="nv">LD_SHOW_AUXV</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>/bin/true<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>AT_HWCAP2
+AT_HWCAP2:<span class="w">       </span>0x2
+</pre></div>
+</div>
+</li>
+</ol>
+<p>After the patched Linux kernel is installed, you may proceed with installations
+of other SGX software infrastructure: the Intel SGX Linux driver, the Intel SGX
+SDK/PSW, and Gramine itself.</p>
+</section>
+<section id="install-the-intel-sgx-driver">
+<h3>2. Install the Intel SGX driver<a class="headerlink" href="building.html#install-the-intel-sgx-driver" title="Permalink to this headline"></a></h3>
+<p>This step depends on your hardware and kernel version. Note that if your kernel
+version is 5.11 or higher, then the Intel SGX driver is already installed and
+you can skip this step.</p>
+<p>If you have an older CPU without <a class="reference internal" href="../sgx-intro.html#term-FLC"><span class="xref std std-term">FLC</span></a> support, you need to download and
+install the following out-of-tree (OOT) Intel SGX driver:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/intel/linux-sgx-driver">https://github.com/intel/linux-sgx-driver</a></p></li>
+</ul>
+<p>For this driver, you need to set <code class="docutils literal notranslate"><span class="pre">vm.mmap_min_addr=0</span></code> in the system (<em>only
+required for the legacy SGX driver and not needed for newer DCAP/in-kernel
+drivers</em>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sysctl<span class="w"> </span>vm.mmap_min_addr<span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>Note that this is an inadvisable configuration for production systems.</p>
+<p>Alternatively, if your CPU supports <a class="reference internal" href="../sgx-intro.html#term-FLC"><span class="xref std std-term">FLC</span></a>, you can choose to install the
+DCAP version of the Intel SGX driver from:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/intel/SGXDataCenterAttestationPrimitives">https://github.com/intel/SGXDataCenterAttestationPrimitives</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../performance.html" class="btn btn-neutral float-left" title="Performance tuning and analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="debugging.html" class="btn btn-neutral float-right" title="Debugging Gramine with GDB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gramine Contributors.
+      <span class="commit">Revision <code>a971e30f</code>.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
